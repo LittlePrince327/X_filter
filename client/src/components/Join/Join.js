@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import Axios from 'axios'; // Import Axios
-
+import { Link, useNavigate } from 'react-router-dom'; // useNavigate 추가
+import Axios from 'axios';
 import './Join.css';
 
 function Join() {
-  const [Name, setUserId] = useState('');
+  const [Name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
+  const navigate = useNavigate(); // useNavigate 추가
 
   const handleLogin = () => {
     if (Name && password) {
@@ -31,13 +31,14 @@ function Join() {
         })
         .then((result) => {
           const { data, room } = result;
-          window.location.href = `/chat?name=${data.username}&room=${room}`;
+          // '/chat'로 이동하면서 정보를 'state' 객체에 전달합니다.
+          navigate('/chat', { state: { name: data.username, room: room } }); // navigate 사용
         })
         .catch((error) => {
-          setLoginError('아이디와 비밀번호를 확인해주세요.'); // Set the error message
+          setLoginError('아이디와 비밀번호를 확인해주세요.');
         });
     } else {
-      setLoginError('Please provide a user ID and password.');
+      setLoginError('아이디와 비밀번호를 제공해주세요.');
     }
   }
 
@@ -47,10 +48,10 @@ function Join() {
         <h1 className='heading'>X_FILTER</h1>
         <div>
           <input
-            placeholder='User ID'
+            placeholder='Name'
             className='joinInput'
             type='text'
-            onChange={(event) => setUserId(event.target.value)}
+            onChange={(event) => setName(event.target.value)}
           />
         </div>
         <div>
@@ -61,7 +62,7 @@ function Join() {
             onChange={(event) => setPassword(event.target.value)}
           />
         </div>
-        {loginError && <p className='error-message'>{loginError}</p>} {/* Display the error message */}
+        {loginError && <p className='error-message'>{loginError}</p>}
         <button className='button mt-20' onClick={handleLogin}>
           로그인
         </button>
@@ -75,10 +76,9 @@ function Join() {
   );
 }
 
-// Function to generate a random room address
 function generateRandomRoomAddress() {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  const length = 8; // Adjust the desired length of the room address
+  const length = 8;
   let result = '';
 
   for (let i = 0; i < length; i++) {

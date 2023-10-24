@@ -10,7 +10,7 @@ function App() {
       <Routes>
         <Route path="/chat" element={<Chat />} />
         <Route path="/" element={<Join />} />
-        <Route path="/signup" element={<Signup />} /> {/* Change "/Signup" to "/signup" */}
+        <Route path="/signup" element={<Signup />} /> 
       </Routes>
     </Router>
   );
