@@ -38,7 +38,7 @@ function Join() {
           setLoginError('아이디와 비밀번호를 확인해주세요.');
         });
     } else {
-      setLoginError('아이디와 비밀번호를 제공해주세요.');
+      setLoginError('아이디와 비밀번호를 입력해주세요.');
     }
   }
 
