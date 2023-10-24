@@ -1,6 +1,7 @@
 from rest_framework import serializers                       # 데이터를 다른 형식으로 변환하는 serizalization 모듈을 가져옴. 주로 JSON 또는 XML 형식으로 데이터를 표현할 때 사용
 from django.contrib.auth import get_user_model               # Django에서 사용자 모델을 가져오는 데 사용되는 함수
 
+
 class UserSerializer(serializers.ModelSerializer):           # DRF의 serializers.ModelSerializer를 상속하며, 사용자 모델 데이터를 JSON 형식으로 변환하거나 JSON 데이터를 사용자 모델로 역직렬화하는 역할
     class Meta:
         model = get_user_model()                             # get_user_model() 함수는 현재 사용 중인 사용자 모델을 가져오는 Django의 함수

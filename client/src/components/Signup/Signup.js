@@ -15,12 +15,35 @@ function Signup() {
   });
 
   const [passwordMismatch, setPasswordMismatch] = useState(false);
+  const [emailError, setEmailError] = useState(false);
+  const [usernameError, setUsernameError] = useState(false);
 
   const handleInputChange = (e) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
+
+    if (name === 'email') {
+      // Email format validation
+      const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+      if (!emailPattern.test(value)) {
+        setEmailError(true);
+      } else {
+        setEmailError(false);
+      }
+    }
+
+    if (name === 'username') {
+      // Check if the username matches an email format
+      const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+      if (emailPattern.test(value)) {
+        setUsernameError(true);
+      } else {
+        setUsernameError(false);
+      }
+    }
 
     if (formData.password !== formData.confirmPassword) {
       setPasswordMismatch(true);
@@ -35,20 +58,25 @@ function Signup() {
       return;
     }
 
+    if (emailError || usernameError) {
+      // Display an error message if email format or username format is incorrect
+      return;
+    }
+
     try {
-      // API 요청 보내기
+      // API request
       const response = await axios.post('http://localhost:8000/api/user-signup/', formData);
 
-      console.log('API 응답:', response);
+      console.log('API response:', response);
 
       if (response.status === 201) {
-        console.log('회원가입 성공!', response.data);
-        navigate('/'); // 회원가입 성공 시 리디렉션
+        console.log('Sign up successful!', response.data);
+        navigate('/');
       } else {
-        console.error('회원가입 실패:', response.data);
+        console.error('Sign up failed:', response.data);
       }
     } catch (error) {
-      console.error('회원가입 실패:', error);
+      console.error('Sign up failed:', error);
     }
   };
 
@@ -56,7 +84,7 @@ function Signup() {
     if (passwordMismatch) {
       const timeout = setTimeout(() => {
         setPasswordMismatch(false);
-      }, 1000);
+      }, 10000);
       return () => clearTimeout(timeout);
     }
   }, [passwordMismatch]);
@@ -106,12 +134,14 @@ function Signup() {
               placeholder="Email"
             />
           </div>
+          {usernameError && <p className={styles.errorMessage}>이메일 형식의 닉네임은 사용할 수 없습니다.</p>}
           {passwordMismatch && <p className={styles.errorMessage}>비밀번호가 일치하지 않습니다.</p>}
+          {emailError && <p className={styles.errorMessage}>유효하지 않은 이메일 형식입니다.</p>}
           <button className={`joinInput mt-20 ${styles.button}`} type="button" onClick={handleSignup}>
             회원가입
           </button>
           <button className={`joinInput mt-20 ${styles.button}`} type="button" onClick={() => navigate('/')}>
-            홈으로
+            홈
           </button>
         </form>
       </div>
