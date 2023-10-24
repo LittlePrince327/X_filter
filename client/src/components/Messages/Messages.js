@@ -1,7 +1,9 @@
 import React, {useEffect} from 'react';
 
-import ScrollToBottom from "react-scroll-to-bottom";
+import BasicScrollToBottom from "react-scroll-to-bottom";
 import Message from '../Message/Message';
+
+import './Messages.css';
 
 function Messages({ messages, name }) {
   useEffect(() => {
@@ -9,11 +11,11 @@ function Messages({ messages, name }) {
   }, [messages]);
 
   return (
-    <ScrollToBottom className="messages">
+    <BasicScrollToBottom className="messages">
       {messages.map((message, i) => {
         return <div key={i}><Message message={message} name={name} /></div>
       })}
-    </ScrollToBottom>
+    </BasicScrollToBottom>
   );
 }
 
