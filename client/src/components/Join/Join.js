@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom'; // useNavigate 추가
+import { Link, useNavigate } from 'react-router-dom';
 import Axios from 'axios';
 import './Join.css';
 
@@ -7,7 +7,7 @@ function Join() {
   const [Name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
-  const navigate = useNavigate(); // useNavigate 추가
+  const navigate = useNavigate();
 
   const handleLogin = () => {
     if (Name && password) {
@@ -15,7 +15,7 @@ function Join() {
         username: Name,
         password: password,
       };
-
+  
       Axios.post('http://localhost:8000/api/user-login/', requestData, {
         headers: {
           'Content-Type': 'application/json',
@@ -23,16 +23,11 @@ function Join() {
       })
         .then((response) => {
           if (response.status === 200) {
-            const room = generateRandomRoomAddress();
-            return { data: response.data, room };
+            localStorage.setItem('username', Name); // Store the username in localStorage
+            navigate('/chat');
           } else {
             return Promise.reject(response.data);
           }
-        })
-        .then((result) => {
-          const { data, room } = result;
-          // '/chat'로 이동하면서 정보를 'state' 객체에 전달합니다.
-          navigate('/chat', { state: { name: data.username, room: room } }); // navigate 사용
         })
         .catch((error) => {
           setLoginError('아이디와 비밀번호를 확인해주세요.');
@@ -40,7 +35,8 @@ function Join() {
     } else {
       setLoginError('아이디와 비밀번호를 입력해주세요.');
     }
-  }
+  };
+  
 
   return (
     <div className='joinOuterContainer'>
@@ -74,19 +70,6 @@ function Join() {
       </div>
     </div>
   );
-}
-
-function generateRandomRoomAddress() {
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  const length = 8;
-  let result = '';
-
-  for (let i = 0; i < length; i++) {
-    const randomIndex = Math.floor(Math.random() * characters.length);
-    result += characters.charAt(randomIndex);
-  }
-
-  return result;
 }
 
 export default Join;
