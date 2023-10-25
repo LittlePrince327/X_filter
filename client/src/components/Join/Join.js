@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom'; 
+import { Link, useNavigate } from 'react-router-dom';
 import Axios from 'axios';
 import './Join.css';
 
@@ -7,7 +7,7 @@ function Join() {
   const [Name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const handleLogin = () => {
     if (Name && password) {
@@ -15,7 +15,7 @@ function Join() {
         username: Name,
         password: password,
       };
-
+  
       Axios.post('http://localhost:8000/api/user-login/', requestData, {
         headers: {
           'Content-Type': 'application/json',
@@ -23,17 +23,11 @@ function Join() {
       })
         .then((response) => {
           if (response.status === 200) {
-
-            const room = 'X_FILTER';
-            return { data: response.data, room };
+            localStorage.setItem('username', Name); // Store the username in localStorage
+            navigate('/chat');
           } else {
             return Promise.reject(response.data);
           }
-        })
-        .then((result) => {
-          const { data, room } = result;
-
-          navigate('/chat', { state: { name: data.username, room: room } }); 
         })
         .catch((error) => {
           setLoginError('아이디와 비밀번호를 확인해주세요.');
@@ -41,7 +35,8 @@ function Join() {
     } else {
       setLoginError('아이디와 비밀번호를 입력해주세요.');
     }
-  }
+  };
+  
 
   return (
     <div className='joinOuterContainer'>

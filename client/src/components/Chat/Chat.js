@@ -6,7 +6,6 @@ import InfoBar from '../InfoBar/InfoBar';
 import Input from '../Input/Input';
 import Messages from '../Messages/Messages';
 
-
 import './Chat.css';
 
 const ENDPOINT = 'http://localhost:5000';
@@ -14,8 +13,7 @@ const ENDPOINT = 'http://localhost:5000';
 let socket;
 
 const Chat = () => {
-  const location = useLocation();
-  const name = location.state.name;
+  const name = localStorage.getItem('username') 
   const room = 'X_FILTER';
 
   const [users, setUsers] = useState('');
