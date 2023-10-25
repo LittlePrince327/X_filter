@@ -26,7 +26,7 @@ function Signup() {
     });
 
     if (name === 'email') {
-      // Email format validation
+
       const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
       if (!emailPattern.test(value)) {
         setEmailError(true);
@@ -36,7 +36,7 @@ function Signup() {
     }
 
     if (name === 'username') {
-      // Check if the username matches an email format
+
       const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
       if (emailPattern.test(value)) {
         setUsernameError(true);
@@ -59,12 +59,12 @@ function Signup() {
     }
 
     if (emailError || usernameError) {
-      // Display an error message if email format or username format is incorrect
+
       return;
     }
 
     try {
-      // API request
+
       const response = await axios.post('http://localhost:8000/api/user-signup/', formData);
 
       console.log('API response:', response);
