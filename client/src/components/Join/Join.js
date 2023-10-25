@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom'; // useNavigate 추가
+import { Link, useNavigate } from 'react-router-dom'; 
 import Axios from 'axios';
 import './Join.css';
 
@@ -7,7 +7,7 @@ function Join() {
   const [Name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
-  const navigate = useNavigate(); // useNavigate 추가
+  const navigate = useNavigate(); 
 
   const handleLogin = () => {
     if (Name && password) {
@@ -23,7 +23,8 @@ function Join() {
       })
         .then((response) => {
           if (response.status === 200) {
-            const room = generateRandomRoomAddress();
+
+            const room = 'X_FILTER';
             return { data: response.data, room };
           } else {
             return Promise.reject(response.data);
@@ -31,8 +32,8 @@ function Join() {
         })
         .then((result) => {
           const { data, room } = result;
-          // '/chat'로 이동하면서 정보를 'state' 객체에 전달합니다.
-          navigate('/chat', { state: { name: data.username, room: room } }); // navigate 사용
+
+          navigate('/chat', { state: { name: data.username, room: room } }); 
         })
         .catch((error) => {
           setLoginError('아이디와 비밀번호를 확인해주세요.');
@@ -74,19 +75,6 @@ function Join() {
       </div>
     </div>
   );
-}
-
-function generateRandomRoomAddress() {
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  const length = 8;
-  let result = '';
-
-  for (let i = 0; i < length; i++) {
-    const randomIndex = Math.floor(Math.random() * characters.length);
-    result += characters.charAt(randomIndex);
-  }
-
-  return result;
 }
 
 export default Join;

@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 import InfoBar from '../InfoBar/InfoBar';
 import Input from '../Input/Input';
 import Messages from '../Messages/Messages';
-// import TextContainer from '../TextContainer/TextContainer';
+
 
 import './Chat.css';
 
@@ -16,7 +16,7 @@ let socket;
 const Chat = () => {
   const location = useLocation();
   const name = location.state.name;
-  const room = location.state.room;
+  const room = 'X_FILTER';
 
   const [users, setUsers] = useState('');
   const [message, setMessage] = useState('');
