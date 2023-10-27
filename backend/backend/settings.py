@@ -81,24 +81,24 @@ DATABASES = {                                                                   
 }
 
 AUTH_PASSWORD_VALIDATORS = [                                                          # 사용자 비밀번호 유효성 검사 설정
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',     # 사용자의 비밀번호와 사용자의 속성(예: 사용자 이름)이 유사한지를 검사하는 비밀번호 유효성 검사기를 활성화. 사용자의 비밀번호와 사용자 이름과 같은 속성 간의 유사성을 확인하여 보안성을 높이려는 목적으로 사용
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',               # 비밀번호의 최소 길이를 검사하는 비밀번호 유효성 검사기를 활성화. 
-        'OPTIONS': {
-            'min_length': 8, # 비밀번호의 최소 길이를 8자로 설정
-        },
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',              # 일반적인, 자주 사용되는 비밀번호(예: "password123")를 사용하지 못하도록 검사하는 비밀번호 유효성 검사기를 활성화
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',             # 비밀번호에 숫자가 포함되는지 검사하는 비밀번호 유효성 검사기를 활성화. 사용자 비밀번호에 숫자를 포함해야 함을 강제
-        'OPTIONS': {
-            'min_digits': 4, # 비밀번호에 포함해야 하는 최소 숫자의 수
-        }
-    },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',     # 사용자의 비밀번호와 사용자의 속성(예: 사용자 이름)이 유사한지를 검사하는 비밀번호 유효성 검사기를 활성화. 사용자의 비밀번호와 사용자 이름과 같은 속성 간의 유사성을 확인하여 보안성을 높이려는 목적으로 사용
+    # },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',               # 비밀번호의 최소 길이를 검사하는 비밀번호 유효성 검사기를 활성화. 
+    #     'OPTIONS': {
+    #         'min_length': 8, # 비밀번호의 최소 길이를 8자로 설정
+    #     },
+    # },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',              # 일반적인, 자주 사용되는 비밀번호(예: "password123")를 사용하지 못하도록 검사하는 비밀번호 유효성 검사기를 활성화
+    # },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',             # 비밀번호에 숫자가 포함되는지 검사하는 비밀번호 유효성 검사기를 활성화. 사용자 비밀번호에 숫자를 포함해야 함을 강제
+    #     'OPTIONS': {
+    #         'min_digits': 4, # 비밀번호에 포함해야 하는 최소 숫자의 수
+    #     }
+    # },
 ]
 
 
@@ -127,3 +127,5 @@ CORS_ALLOW_CREDENTIALS = True                                                   
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+AUTH_USER_MODEL = 'login.CustomUser'

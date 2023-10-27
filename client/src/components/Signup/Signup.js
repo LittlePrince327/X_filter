@@ -12,7 +12,7 @@ function Signup() {
     email: '',
     password: '',
     confirmPassword: '',
-    name: '',                // 추가: 이름 필드
+    full_name: '',                // 추가: 이름 필드
     gender: '',              // 추가: 성별 필드
   });
 
@@ -135,7 +135,7 @@ function Signup() {
             <input
               className={`joinInput mt-20 ${styles.input}`}
               type="text"
-              name="name"
+              name="full_name"
               value={formData.name}
               onChange={handleInputChange}
               placeholder="Name"

@@ -9,7 +9,7 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework import permissions
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
-
+from login.models import CustomUser  # CustomUser 모델 임포트
 
 class UserSignup(APIView):
     permission_classes = [permissions.AllowAny]
