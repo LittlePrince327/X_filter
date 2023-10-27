@@ -15,7 +15,7 @@ function Join() {
         username: username,
         password: password,
       };
-  
+
       Axios.post('http://localhost:8000/api/user-login/', requestData, {
         headers: {
           'Content-Type': 'application/json',
@@ -36,7 +36,11 @@ function Join() {
       setLoginError('아이디와 비밀번호를 입력해주세요.');
     }
   };
-  
+
+  const handleForgotPassword = () => {
+    // "아이디/비밀번호 찾기" 버튼을 클릭했을 때 "ResetPassword" 컴포넌트로 이동
+    navigate('/resetpassword');
+  };
 
   return (
     <div className='joinOuterContainer'>
@@ -62,6 +66,11 @@ function Join() {
         <button className='button mt-20' onClick={handleLogin}>
           로그인
         </button>
+        <Link to="/resetpassword">
+          <button className='button mt-20' onClick={handleForgotPassword}>
+            아이디/비밀번호 찾기
+          </button>
+        </Link>
         <Link to="/signup">
           <button className='button mt-20' type='submit'>
             회원가입
