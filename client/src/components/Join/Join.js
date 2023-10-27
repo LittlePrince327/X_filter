@@ -4,15 +4,15 @@ import Axios from 'axios';
 import './Join.css';
 
 function Join() {
-  const [Name, setName] = useState('');
+  const [username, setName] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    if (Name && password) {
+    if (username && password) {
       const requestData = {
-        username: Name,
+        username: username,
         password: password,
       };
   
@@ -23,7 +23,7 @@ function Join() {
       })
         .then((response) => {
           if (response.status === 200) {
-            localStorage.setItem('username', Name); // Store the username in localStorage
+            localStorage.setItem('username', username); // Store the username in localStorage
             navigate('/chat');
           } else {
             return Promise.reject(response.data);

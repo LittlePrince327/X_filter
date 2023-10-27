@@ -9,7 +9,7 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework import permissions
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
-from login.models import CustomUser  # CustomUser 모델 임포트
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer 
 
 
 class UserSignup(APIView):
@@ -32,21 +32,19 @@ class UserSignup(APIView):
         return token
 
 class UserLogin(ObtainAuthToken):
-    def create_tokens(self, user):
-        token, created = Token.objects.get_or_create(user=user)
-        return {
-            'token': token.key,
-            'username': user.username
-        }
-
     def post(self, request, *args, **kwargs):
-        serializer = UserSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
-        token = self.token_obtain_pair(user)
+        
+        # 인증 토큰을 얻기 위해 TokenObtainPairSerializer 사용
+        token_serializer = TokenObtainPairSerializer(data=request.data)
+        token_serializer.is_valid(raise_exception=True)
+        tokens = token_serializer.validated_data
+
         return Response({
-            'access': token.access_token,
-            'refresh': token.refresh_token,
+            'access': tokens['access'],
+            'refresh': tokens['refresh'],
             'user_id': user.id,
             'username': user.username,
         }, status=status.HTTP_200_OK)
@@ -55,8 +53,8 @@ class UserLogin(ObtainAuthToken):
 class CustomTokenObtainPairView(TokenObtainPairView):
     def create_tokens(self, user):
         response_data = super().create_tokens(user)
-        email = self.request.data.get('email')
-        user_data = get_user_model().objects.get(email=email)
+        username = self.request.data.get('username')
+        user_data = get_user_model().objects.get(username=username)
         response_data['email'] = user_data.email
         return response_data
 
