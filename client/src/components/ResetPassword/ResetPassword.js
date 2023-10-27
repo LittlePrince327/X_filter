@@ -9,7 +9,7 @@ function ResetPassword() {
   const handleSearchUsername = () => {
     if (email) {
       // 클라이언트에서 서버로 이메일을 보내서 아이디를 조회
-      Axios.post('http://localhost:8000/api/get-username/', { email: email })
+      Axios.post('http://localhost:8000/reset_password/', { email: email })
         .then((response) => {
           setUsername(response.data.username);
         })
@@ -36,12 +36,12 @@ function ResetPassword() {
       {errorMessage && <p>{errorMessage}</p>}
       <h2>비밀번호 재설정</h2>
       <div>
-      <input
-            placeholder='아이디'
-            type='text'
-            onChange={(event) => setUsername(event.target.value)}
+        <input
+          placeholder='아이디'
+          type='text'
+          onChange={(event) => setUsername(event.target.value)}
         />
-        <br/>
+        <br />
         <input
           placeholder='이메일'
           type='email'

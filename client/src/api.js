@@ -16,6 +16,11 @@ const login = (credentials) => {
   return API.post('/api/user-login/', credentials);
 };
 
+// 아이디 찾기 요청
+const findUsername = (email) => {
+  return API.post('/reset_password/', { email });
+};
+
 // 다른 API 요청을 추가할 수 있습니다.
 
-export { signup, login };
+export { signup, login, findUsername };
