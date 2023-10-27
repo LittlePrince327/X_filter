@@ -18,7 +18,7 @@ const login = (credentials) => {
 
 // 아이디 찾기 요청
 const findUsername = (email) => {
-  return API.post('/reset_password/', { email });
+  return API.post('/idpassword/', { email });
 };
 
 // 다른 API 요청을 추가할 수 있습니다.

@@ -9,7 +9,7 @@ function ResetPassword() {
   const handleSearchUsername = () => {
     if (email) {
       // 클라이언트에서 서버로 이메일을 보내서 아이디를 조회
-      Axios.post('http://localhost:8000/reset_password/', { email: email })
+      Axios.post('http://localhost:8000/idpassword/', { email: email })
         .then((response) => {
           setUsername(response.data.username);
         })
