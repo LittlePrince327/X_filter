@@ -11,6 +11,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 from login.models import CustomUser  # CustomUser 모델 임포트
 
+
 class UserSignup(APIView):
     permission_classes = [permissions.AllowAny]
 
@@ -39,13 +40,16 @@ class UserLogin(ObtainAuthToken):
         }
 
     def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
-            user = serializer.validated_data['user']
-            token_data = self.create_tokens(user)
-            return Response(token_data)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer = UserSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        token = self.token_obtain_pair(user)
+        return Response({
+            'access': token.access_token,
+            'refresh': token.refresh_token,
+            'user_id': user.id,
+            'username': user.username,
+        }, status=status.HTTP_200_OK)
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
