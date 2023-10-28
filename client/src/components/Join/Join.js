@@ -37,6 +37,11 @@ function Join() {
     }
   };
 
+  const handleFindUsername = () => {
+    // "아이디 찾기" 버튼을 클릭했을 때 "FindUsername" 컴포넌트로 이동
+    navigate('/findusername');
+  };
+
   const handleForgotPassword = () => {
     // "아이디/비밀번호 찾기" 버튼을 클릭했을 때 "ResetPassword" 컴포넌트로 이동
     navigate('/resetpassword');
@@ -66,9 +71,14 @@ function Join() {
         <button className='button mt-20' onClick={handleLogin}>
           로그인
         </button>
+        <Link to="/findusername">
+          <button onClick={handleFindUsername} className='button mt-20'>
+            아이디 찾기
+          </button>
+        </Link>
         <Link to="/resetpassword">
-          <button className='button mt-20' onClick={handleForgotPassword}>
-            아이디/비밀번호 찾기
+          <button onClick={handleForgotPassword} className='button mt-20'>
+            비밀번호 재설정
           </button>
         </Link>
         <Link to="/signup">
