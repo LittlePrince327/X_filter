@@ -12,8 +12,8 @@ function Signup() {
     email: '',
     password: '',
     confirmPassword: '',
-    full_name: '',                // 추가: 이름 필드
-    gender: '',              // 추가: 성별 필드
+    full_name: '',                
+    gender: '',              
   });
 
   const [passwordMismatch, setPasswordMismatch] = useState(false);

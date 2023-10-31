@@ -23,7 +23,7 @@ function Join() {
       })
         .then((response) => {
           if (response.status === 200) {
-            localStorage.setItem('username', username); // Store the username in localStorage
+            localStorage.setItem('username', username); 
             navigate('/chat');
           } else {
             return Promise.reject(response.data);
@@ -38,12 +38,10 @@ function Join() {
   };
 
   const handleFindUsername = () => {
-    // "아이디 찾기" 버튼을 클릭했을 때 "FindUsername" 컴포넌트로 이동
     navigate('/findusername');
   };
 
   const handleForgotPassword = () => {
-    // "아이디/비밀번호 찾기" 버튼을 클릭했을 때 "ResetPassword" 컴포넌트로 이동
     navigate('/resetpassword');
   };
 

@@ -6,7 +6,7 @@ function ResetPassword() {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [showPasswordFields, setShowPasswordFields] = useState(false); // 비밀번호 입력 필드 표시 여부 상태 추가
+  const [showPasswordResetFields, setShowPasswordResetFields] = useState(false); 
 
   const handleResetPassword = () => {
     if (email && username) {
@@ -21,7 +21,7 @@ function ResetPassword() {
         username: username,
       })
         .then((response) => {
-          setShowPasswordFields(true);
+          setShowPasswordResetFields(true);
           console.log(response.data);
         })
         .catch((error) => {
@@ -34,7 +34,6 @@ function ResetPassword() {
   };
 
   const handleGoToPasswordReset = () => {
-    // 사용자 정보 조회에 성공한 후 비밀번호 재설정 페이지로 이동
     window.location.href = 'http://localhost:8000/idpassword/password_reset/';
   };
 
@@ -53,10 +52,10 @@ function ResetPassword() {
           type='email'
           onChange={(event) => setEmail(event.target.value)}
         />
-        <button onClick={handleResetPassword}>사용자 정보 조회하기</button>
+        <button onClick={handleResetPassword}>회원정보 조회하기</button>
       </div>
       {errorMessage && <p>{errorMessage}</p>}
-      {showPasswordFields && (
+      {showPasswordResetFields && (
         <button onClick={handleGoToPasswordReset}>비밀번호 재설정 페이지로 이동</button>
       )}
     </div>

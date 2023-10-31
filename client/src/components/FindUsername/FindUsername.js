@@ -1,4 +1,3 @@
-// FindUsername.js
 import React, { useState } from 'react';
 import Axios from 'axios';
 import './FindUsername.css';
