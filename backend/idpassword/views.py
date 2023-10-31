@@ -3,24 +3,14 @@ from django.contrib.auth import get_user_model
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 import json
-from django.views.decorators.http import require_http_methods
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import PasswordResetView
-from django.contrib.auth.forms import SetPasswordForm
-from django.contrib.auth import update_session_auth_hash
-from django.contrib.auth import get_user_model
 from django.shortcuts import render
-from django.template.loader import get_template
 from django.core.mail import send_mail
 from django.urls import reverse
-from django.contrib.auth import get_user_model
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
-from django.contrib.auth.tokens import default_token_generator
-from django.urls import reverse
-from django.core.mail import send_mail
-from django.contrib.auth.tokens import default_token_generator
-from django.utils.http import urlsafe_base64_encode
+from django.core.exceptions import ObjectDoesNotExist
 
 @csrf_exempt
 @require_POST
@@ -42,22 +32,36 @@ def get_username_by_email(request: HttpRequest):
     else:
         return JsonResponse({'message': '잘못된 요청입니다.'}, status=400)
 
-@csrf_exempt
-@require_http_methods(["POST"])
-def reset_password(request: HttpRequest):
-    username = request.POST.get('username')
-    email = request.POST.get('email')
+def reset_password(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            username = data.get('username')
+            email = data.get('email')
+
+            try:
+                user = get_user_model().objects.get(email=email, username=username)
+                # Assuming you'd trigger the password reset mechanism here
+                # For example, generating a password reset token and sending an email to the user
+                # For the sake of this example, let's return a success message
+                return JsonResponse("User found. Password reset initiated.")
+            except ObjectDoesNotExist:
+                return JsonResponse({"error": "User not found."}, status=404)
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON format."}, status=400)
+    else:
+        return JsonResponse({"error": "Only POST requests are allowed."}, status=405)
     # new_password = request.POST.get('new_password')
     # confirm_password = request.POST.get('confirm_password')
 
-    if not (username and email ):
-        return JsonResponse({'message': '모든 필드를 입력하세요.'}, status=400)
+    # if not (username and email ):
+    #     return JsonResponse({'message': '모든 필드를 입력하세요.'}, status=400)
 
-    user_model = get_user_model()
-    try:
-        user = user_model.objects.get(username=username, email=email)
-    except user_model.DoesNotExist:
-        return JsonResponse({'message': '입력한 정보와 일치하는 사용자를 찾을 수 없습니다.'}, status=400)
+    # user_model = get_user_model()
+    # try:
+    #     user = user_model.objects.get(username=username, email=email)
+    # except user_model.DoesNotExist:
+    #     return JsonResponse({'message': '입력한 정보와 일치하는 사용자를 찾을 수 없습니다.'}, status=400)
 
 class UserPasswordResetView(PasswordResetView):
     template_name = 'registration/password_reset_email.html'

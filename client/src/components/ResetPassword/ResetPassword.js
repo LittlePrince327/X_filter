@@ -7,24 +7,10 @@ function ResetPassword() {
   const [username, setUsername] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [csrfToken, setCsrfToken] = useState('');
   const [errorMessage, setErrorMessage] = useState(''); // 오류 메시지 상태 추가
   const [showPasswordFields, setShowPasswordFields] = useState(false); // 비밀번호 입력 필드 표시 상태
 
-  
-  // CSRF 토큰 요청
-  useEffect(() => {
-    const getCsrfToken = async () => {
-      try {
-        const response = await Axios.get('http://localhost:8000/get-csrf-token/');
-        setCsrfToken(response.data.csrfToken);
-      } catch (error) {
-        console.error('CSRF 토큰 요청 실패:', error);
-      }
-    };
 
-    getCsrfToken();
-  }, []);
 
 
   const handleResetPassword = () => {
@@ -36,15 +22,12 @@ function ResetPassword() {
       }
 
       Axios.post('http://localhost:8000/idpassword/resetpassword', {
-        email,
-        username,
-      }, {
-        headers: {
-          'X-CSRFToken': csrfToken
-        }
-      })
-        .then((response) => {
+        email : email,
+        username : username,
+      }, 
+      ).then((response) => {
           setShowPasswordFields(true); // 유효성 검사 성공 시 비밀번호 입력 필드 표시
+          console.log(response.data);
         })
         .catch((error) => {
           console.error('비밀번호 재설정 실패:', error);
