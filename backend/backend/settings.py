@@ -27,8 +27,8 @@ INSTALLED_APPS = [                                                              
 ]
 
 MIDDLEWARE = [                                                                        # HTTP 요청 및 응답을 처리하는 미들웨어 목록
-    'corsheaders.middleware.CorsMiddleware',                                          # "Cross-Origin Resource Sharing" (CORS)를 관리하는 데 사용. 웹 페이지가 다른 도메인에서 리소스(예: 이미지 또는 데이터)를 로드할 때 보안 정책을 설정하고 관리, 이를 통해 웹 애플리케이션이 여러 도메인 간에 데이터를 공유할 수 있음
     'django.middleware.security.SecurityMiddleware',                                  # 웹 애플리케이션의 보안을 강화하는 데 사용. 예를 들어, HTTP 헤더를 설정하고 보안 관련 측면을 관리하여 웹 애플리케이션을 보다 안전하게 만듬
+    'corsheaders.middleware.CorsMiddleware',                                          # "Cross-Origin Resource Sharing" (CORS)를 관리하는 데 사용. 웹 페이지가 다른 도메인에서 리소스(예: 이미지 또는 데이터)를 로드할 때 보안 정책을 설정하고 관리, 이를 통해 웹 애플리케이션이 여러 도메인 간에 데이터를 공유할 수 있음
     'django.contrib.sessions.middleware.SessionMiddleware',                           # 사용자 세션(세션은 사용자 상태 정보를 저장하는 데 사용되는 것)을 처리. 사용자가 로그인하거나 웹 애플리케이션에서 상태 정보를 유지하는 데 사용
     'django.middleware.common.CommonMiddleware',                                      # 일반적인 웹 요청 및 응답 관련 작업을 처리. 예를 들어, URL 리디렉션, 슬래시 처리 등의 작업을 수행
     'django.middleware.csrf.CsrfViewMiddleware',                                      # Cross-Site Request Forgery (CSRF) 공격으로부터 웹 애플리케이션을 보호하기 위해 사용. 사용자가 웹 페이지를 로드하거나 요청을 보낼 때, 요청이 신뢰할 수 있는지 확인하는 역할
@@ -39,17 +39,17 @@ MIDDLEWARE = [                                                                  
 
 ROOT_URLCONF = 'backend.urls'                                                         # 프로젝트의 URL 패턴을 정의하는 모듈
 
-TEMPLATES = [                                                                         # 템플릿 엔진 설정
+TEMPLATES = [                                                                       
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',                 # Django의 내장 템플릿 엔진을 사용하도록 지정
-        'DIRS': [BASE_DIR / 'templates'],                                             # 템플릿 파일이 위치하는 디렉토리를 지정, BASE_DIR는 이전에 설정한 디렉토리의 경로를 나타내고, 여기에 'templates'라는 폴더를 추가하여 템플릿 파일이 저장된 위치를 지정
-        'APP_DIRS': True,                                                             # 애플리케이션 디렉토리 내의 'templates' 폴더를 자동으로 검색하도록 설정하는 옵션
-        'OPTIONS': {                                                                  # 템플릿 엔진의 추가적인 옵션들을 설정할 수 있는 옵션 블록
-            'context_processors': [                                                   # 템플릿 렌더링 시 사용되는 컨텍스트 프로세서를 설정. 컨텍스트 프로세서는 템플릿에서 사용할 수 있는 변수 및 데이터를 제공하는 역할
-                'django.template.context_processors.debug',                           # 디버그 관련 정보를 템플릿에 제공하는 컨텍스트 프로세서를 추가
-                'django.template.context_processors.request',                         # HTTP 요청(request)와 관련된 정보를 템플릿에 제공하는 컨텍스트 프로세서를 추가
-                'django.contrib.auth.context_processors.auth',                        # 사용자 인증과 관련된 정보를 템플릿에 제공하는 컨텍스트 프로세서를 추가
-                'django.contrib.messages.context_processors.messages',                # 메시지와 관련된 정보를 템플릿에 제공하는 컨텍스트 프로세서를 추가
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',               
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],                               
+        'APP_DIRS': True,                                                            
+        'OPTIONS': {                                                                  
+            'context_processors': [                                                   
+                'django.template.context_processors.debug',                          
+                'django.template.context_processors.request',                        
+                'django.contrib.auth.context_processors.auth',                       
+                'django.contrib.messages.context_processors.messages',               
             ],
         },
     },
@@ -126,8 +126,30 @@ CORS_ALLOWED_ORIGINS = [                                                        
 
 CORS_ALLOW_CREDENTIALS = True                                                          # CORS 요청에서 인증 정보를 전송할지 여부를 나타냄
 
+CORS_ALLOW_ALL_ORIGINS = True
+
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-AUTH_USER_MODEL = 'login.CustomUser'
+AUTH_USER_MODEL = 'login.CustomUser' 
 
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# 메일을 호스트하는 서버
+EMAIL_HOST = 'smtp.gmail.com'
+
+# gmail과의 통신하는 포트
+EMAIL_PORT = '587'
+
+# 발신할 이메일
+EMAIL_HOST_USER = 'iamdoxoak@gmail.com'
+
+
+# 발신할 메일의 비밀번호
+EMAIL_HOST_PASSWORD = 'ajrp ytxx mmvk sxmi'
+# TLS 보안 방법
+EMAIL_USE_TLS = True
+
+# 사이트와 관련한 자동응답을 받을 이메일 주소
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

@@ -1,39 +1,45 @@
 import React, { useState } from 'react';
 import Axios from 'axios';
+import './ResetPassword.css';
 
 function ResetPassword() {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [showPasswordFields, setShowPasswordFields] = useState(false); // 비밀번호 입력 필드 표시 여부 상태 추가
 
-  const handleSearchUsername = () => {
-    if (email) {
-      // 클라이언트에서 서버로 이메일을 보내서 아이디를 조회
-      Axios.post('http://localhost:8000/idpassword/', { email: email })
+  const handleResetPassword = () => {
+    if (email && username) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        setErrorMessage('올바른 이메일 주소를 입력해주세요.');
+        return;
+      }
+
+      Axios.post('http://localhost:8000/idpassword/resetpassword', {
+        email: email,
+        username: username,
+      })
         .then((response) => {
-          setUsername(response.data.username);
+          setShowPasswordFields(true);
+          console.log(response.data);
         })
         .catch((error) => {
-          setErrorMessage('사용자 정보를 찾을 수 없습니다.');
+          console.error('비밀번호 재설정 실패:', error);
+          setErrorMessage('비밀번호 재설정에 실패했습니다.');
         });
     } else {
-      setErrorMessage('이메일을 입력해주세요.');
+      setErrorMessage('아이디, 이메일을 입력해주세요.');
     }
+  };
+
+  const handleGoToPasswordReset = () => {
+    // 사용자 정보 조회에 성공한 후 비밀번호 재설정 페이지로 이동
+    window.location.href = 'http://localhost:8000/idpassword/password_reset/';
   };
 
   return (
     <div>
-      <h2>아이디 찾기</h2>
-      <div>
-        <input
-          placeholder='이메일'
-          type='email'
-          onChange={(event) => setEmail(event.target.value)}
-        />
-        <button onClick={handleSearchUsername}>아이디 찾기</button>
-      </div>
-      {username && <p>사용자 아이디: {username}</p>}
-      {errorMessage && <p>{errorMessage}</p>}
       <h2>비밀번호 재설정</h2>
       <div>
         <input
@@ -47,9 +53,12 @@ function ResetPassword() {
           type='email'
           onChange={(event) => setEmail(event.target.value)}
         />
-        <button onClick={handleSearchUsername}>비밀번호 재설정</button>
+        <button onClick={handleResetPassword}>사용자 정보 조회하기</button>
       </div>
       {errorMessage && <p>{errorMessage}</p>}
+      {showPasswordFields && (
+        <button onClick={handleGoToPasswordReset}>비밀번호 재설정 페이지로 이동</button>
+      )}
     </div>
   );
 }
