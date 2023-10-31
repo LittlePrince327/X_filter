@@ -1,6 +1,6 @@
 import re
 from django.contrib.auth import get_user_model
-from django.db import IntegrityError
+from .serializers import UserSerializer
 from rest_framework import serializers, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -9,28 +9,8 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework import permissions
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer 
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = get_user_model()
-        fields = ['id', 'username', 'password', 'email']
-        extra_kwargs = {'password': {'write_only': True}}
-
-    def validate_username(self, value):
-        if re.match(r'^[\w\.-]+@[\w\.-]+$', value):
-            raise serializers.ValidationError("이메일 형태는 아이디로 사용할 수 없습니다.", code='invalid_username')
-        return value
-
-    def create(self, validated_data):
-        try:
-            user = get_user_model().objects.create_user(
-                username=validated_data['username'],
-                email=validated_data['email'],
-                password=validated_data['password']
-            )
-            return user
-        except IntegrityError as e:
-            raise serializers.ValidationError("Username or email already exists.")
 
 class UserSignup(APIView):
     permission_classes = [permissions.AllowAny]
@@ -52,28 +32,29 @@ class UserSignup(APIView):
         return token
 
 class UserLogin(ObtainAuthToken):
-    def create_tokens(self, user):
-        token, created = Token.objects.get_or_create(user=user)
-        return {
-            'token': token.key,
-            'username': user.username
-        }
-
     def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
-            user = serializer.validated_data['user']
-            token_data = self.create_tokens(user)
-            return Response(token_data)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer = self.serializer_class(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        
+        # 인증 토큰을 얻기 위해 TokenObtainPairSerializer 사용
+        token_serializer = TokenObtainPairSerializer(data=request.data)
+        token_serializer.is_valid(raise_exception=True)
+        tokens = token_serializer.validated_data
+
+        return Response({
+            'access': tokens['access'],
+            'refresh': tokens['refresh'],
+            'user_id': user.id,
+            'username': user.username,
+        }, status=status.HTTP_200_OK)
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     def create_tokens(self, user):
         response_data = super().create_tokens(user)
-        email = self.request.data.get('email')
-        user_data = get_user_model().objects.get(email=email)
+        username = self.request.data.get('username')
+        user_data = get_user_model().objects.get(username=username)
         response_data['email'] = user_data.email
         return response_data
 

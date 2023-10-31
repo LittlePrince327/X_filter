@@ -4,18 +4,18 @@ import Axios from 'axios';
 import './Join.css';
 
 function Join() {
-  const [Name, setName] = useState('');
+  const [username, setName] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    if (Name && password) {
+    if (username && password) {
       const requestData = {
-        username: Name,
+        username: username,
         password: password,
       };
-  
+
       Axios.post('http://localhost:8000/api/user-login/', requestData, {
         headers: {
           'Content-Type': 'application/json',
@@ -23,7 +23,7 @@ function Join() {
       })
         .then((response) => {
           if (response.status === 200) {
-            localStorage.setItem('username', Name); // Store the username in localStorage
+            localStorage.setItem('username', username); // Store the username in localStorage
             navigate('/chat');
           } else {
             return Promise.reject(response.data);
@@ -36,7 +36,16 @@ function Join() {
       setLoginError('아이디와 비밀번호를 입력해주세요.');
     }
   };
-  
+
+  const handleFindUsername = () => {
+    // "아이디 찾기" 버튼을 클릭했을 때 "FindUsername" 컴포넌트로 이동
+    navigate('/findusername');
+  };
+
+  const handleForgotPassword = () => {
+    // "아이디/비밀번호 찾기" 버튼을 클릭했을 때 "ResetPassword" 컴포넌트로 이동
+    navigate('/resetpassword');
+  };
 
   return (
     <div className='joinOuterContainer'>
@@ -62,6 +71,16 @@ function Join() {
         <button className='button mt-20' onClick={handleLogin}>
           로그인
         </button>
+        <Link to="/findusername">
+          <button onClick={handleFindUsername} className='button mt-20'>
+            아이디 찾기
+          </button>
+        </Link>
+        <Link to="/resetpassword">
+          <button onClick={handleForgotPassword} className='button mt-20'>
+            비밀번호 재설정
+          </button>
+        </Link>
         <Link to="/signup">
           <button className='button mt-20' type='submit'>
             회원가입
