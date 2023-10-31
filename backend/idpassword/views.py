@@ -3,13 +3,24 @@ from django.contrib.auth import get_user_model
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 import json
+from django.views.decorators.http import require_http_methods
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import PasswordResetView
+from django.contrib.auth.forms import SetPasswordForm
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth import get_user_model
+from django.shortcuts import render
+from django.template.loader import get_template
 from django.core.mail import send_mail
-from django.template.loader import render_to_string
+from django.urls import reverse
+from django.contrib.auth import get_user_model
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
-from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth.tokens import default_token_generator
+from django.urls import reverse
+from django.core.mail import send_mail
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode
 
 @csrf_exempt
 @require_POST
@@ -31,48 +42,62 @@ def get_username_by_email(request: HttpRequest):
     else:
         return JsonResponse({'message': '잘못된 요청입니다.'}, status=400)
 
-class CustomPasswordResetView(PasswordResetView):
-    email_template_name = 'registration/password_reset_email.html'  # 사용할 맞춤형 이메일 템플릿 지정
+@csrf_exempt
+@require_http_methods(["POST"])
+def reset_password(request: HttpRequest):
+    username = request.POST.get('username')
+    email = request.POST.get('email')
+    # new_password = request.POST.get('new_password')
+    # confirm_password = request.POST.get('confirm_password')
+
+    if not (username and email ):
+        return JsonResponse({'message': '모든 필드를 입력하세요.'}, status=400)
+
+    user_model = get_user_model()
+    try:
+        user = user_model.objects.get(username=username, email=email)
+    except user_model.DoesNotExist:
+        return JsonResponse({'message': '입력한 정보와 일치하는 사용자를 찾을 수 없습니다.'}, status=400)
+
+class UserPasswordResetView(PasswordResetView):
+    template_name = 'registration/password_reset_email.html'
 
     def form_valid(self, form):
-        username = self.request.POST.get('username')
-        email = form.cleaned_data.get('email')
-        
-        user_model = get_user_model()
-        
+        UserModel = get_user_model()
+        email = self.request.POST.get("email")
+
+        # 이메일을 이용하여 사용자 가져오기
+        user = self.get_user_by_email(email)
+        if user:
+            opts = {
+                'use_https': self.request.is_secure(),
+                'token_generator': default_token_generator,
+                'from_email': None,  # 사용자가 설정한 이메일로 변경
+                'email_template_name': self.email_template_name,
+                'subject_template_name': self.subject_template_name,
+                'request': self.request,
+                'html_email_template_name': self.html_email_template_name,
+                'extra_email_context': self.extra_email_context,
+            }
+            form.save(**opts)
+            
+            # 비밀번호 재설정 URL 생성
+            uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+            token = default_token_generator.make_token(user)
+            reset_url = reverse('password_reset_confirm', kwargs={'uidb64': uidb64, 'token': token})
+            
+            # 사용자에게 전송할 이메일 생성
+            email_subject = '비밀번호 재설정을 위한 안내'
+            email_body = f'비밀번호 재설정을 위한 링크: {reset_url}'
+            send_mail(email_subject, email_body, 'iamdoxoak@gmail.com', [user.email])
+
+            return super().form_valid(form)
+        else:
+            return render(self.request, 'registration/password_reset_done_fail.html')
+
+    def get_user_by_email(self, email):
         try:
-            user = user_model.objects.get(username=username, email=email)
-        except user_model.DoesNotExist:
-            return JsonResponse({'message': '입력한 username과 email이 일치하지 않습니다.'}, status=400)
-        
-        # 입력한 username과 email이 일치하는 경우에만 이메일 전송
-        opts = {
-            'use_https': self.request.is_secure(),
-            'token_generator': default_token_generator,
-            'from_email': None,
-            'request': self.request,
-        }
-        form.save(**opts)
-        
-        uid = urlsafe_base64_encode(force_bytes(user.pk))
-        token = default_token_generator.make_token(user)
-        protocol = 'https' if self.request.is_secure() else 'http'
-        domain = self.request.META['HTTP_HOST']
-        context = {
-            'protocol': protocol,
-            'domain': domain,
-            'uid': uid,
-            'token': token,
-            'site_name': 'YourSiteName',  # 사이트 이름을 변경해주세요
-            'user': user,
-            'subject': 'Password Reset',
-            'email': email,
-            'body': 'Please reset your password by clicking the link below:'
-        }
-
-        # 맞춤형 이메일 전송
-        subject = 'Password Reset'
-        email_body = render_to_string('registration/password_reset_email.html', context)
-        send_mail(subject, email_body, None, [email])
-
-        return JsonResponse({'message': '이메일을 확인해주세요.'})
+            user = get_user_model().objects.get(email=email)
+            return user
+        except get_user_model().DoesNotExist:
+            return None

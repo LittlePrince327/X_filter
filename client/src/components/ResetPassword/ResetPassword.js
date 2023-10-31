@@ -1,25 +1,83 @@
-// ResetPassword.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
 import './ResetPassword.css';
 
 function ResetPassword() {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [csrfToken, setCsrfToken] = useState('');
+  const [errorMessage, setErrorMessage] = useState(''); // 오류 메시지 상태 추가
+  const [showPasswordFields, setShowPasswordFields] = useState(false); // 비밀번호 입력 필드 표시 상태
+
+  
+  // CSRF 토큰 요청
+  useEffect(() => {
+    const getCsrfToken = async () => {
+      try {
+        const response = await Axios.get('http://localhost:8000/get-csrf-token/');
+        setCsrfToken(response.data.csrfToken);
+      } catch (error) {
+        console.error('CSRF 토큰 요청 실패:', error);
+      }
+    };
+
+    getCsrfToken();
+  }, []);
+
 
   const handleResetPassword = () => {
     if (email && username) {
-      Axios.post('http://localhost:8000/idpassword/resetpassword/', { email, username })
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        setErrorMessage('올바른 이메일 주소를 입력해주세요.');
+        return;
+      }
+
+      Axios.post('http://localhost:8000/idpassword/resetpassword', {
+        email,
+        username,
+      }, {
+        headers: {
+          'X-CSRFToken': csrfToken
+        }
+      })
         .then((response) => {
-          // 비밀번호 재설정 성공 메시지나 추가적인 작업을 수행할 수 있습니다.
+          setShowPasswordFields(true); // 유효성 검사 성공 시 비밀번호 입력 필드 표시
         })
         .catch((error) => {
+          console.error('비밀번호 재설정 실패:', error);
           setErrorMessage('비밀번호 재설정에 실패했습니다.');
         });
     } else {
-      setErrorMessage('아이디와 이메일을 입력해주세요.');
+      setErrorMessage('아이디, 이메일을 입력해주세요.');
     }
+  };
+
+  // 이전 코드에서 handlePasswordReset 함수
+  const handlePasswordReset = () => {
+    if (newPassword !== confirmPassword) {
+      setErrorMessage('비밀번호가 일치하지 않습니다.');
+      return;
+    }
+
+    // 새로운 비밀번호를 백엔드로 전송
+    Axios.post('http://localhost:8000/idpassword/resetpassword', {
+      username,
+      email,
+      new_password: newPassword,
+      confirm_password: confirmPassword
+    })
+      .then((response) => {
+        console.log('비밀번호 업데이트 성공:', response);
+        setErrorMessage('비밀번호가 성공적으로 변경되었습니다.');
+        setShowPasswordFields(false);
+      })
+      .catch((error) => {
+        console.error('비밀번호 업데이트 실패:', error);
+        setErrorMessage('비밀번호 변경에 실패했습니다.');
+      });
   };
 
   return (
@@ -39,6 +97,21 @@ function ResetPassword() {
         />
         <button onClick={handleResetPassword}>비밀번호 재설정</button>
       </div>
+      {showPasswordFields && (
+        <div>
+          <input
+            placeholder='새로운 비밀번호'
+            type='password'
+            onChange={(event) => setNewPassword(event.target.value)}
+          />
+          <input
+            placeholder='비밀번호 확인'
+            type='password'
+            onChange={(event) => setConfirmPassword(event.target.value)}
+          />
+          <button onClick={handlePasswordReset}>비밀번호 재설정</button>
+        </div>
+      )}
       {errorMessage && <p>{errorMessage}</p>}
     </div>
   );
