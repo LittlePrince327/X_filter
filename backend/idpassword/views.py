@@ -31,7 +31,8 @@ def get_username_by_email(request: HttpRequest):
             return JsonResponse({'message': '잘못된 JSON 요청입니다.'}, status=400)
     else:
         return JsonResponse({'message': '잘못된 요청입니다.'}, status=400)
-
+    
+@csrf_exempt
 def reset_password(request):
     if request.method == "POST":
         try:
@@ -39,29 +40,20 @@ def reset_password(request):
             username = data.get('username')
             email = data.get('email')
 
+            User = get_user_model()
+
             try:
-                user = get_user_model().objects.get(email=email, username=username)
-                # Assuming you'd trigger the password reset mechanism here
-                # For example, generating a password reset token and sending an email to the user
-                # For the sake of this example, let's return a success message
-                return JsonResponse("User found. Password reset initiated.")
-            except ObjectDoesNotExist:
-                return JsonResponse({"error": "User not found."}, status=404)
+                user = User.objects.get(email=email, username=username)
+                # 비밀번호 재설정 메커니즘을 트리거할 것으로 가정합니다.
+                # 예를 들어, 비밀번호 재설정 토큰 생성 및 사용자에게 이메일 전송
+                # 이 예제를 위해, 성공 메시지를 반환하겠습니다.
+                return JsonResponse({"message": "사용자를 찾았습니다. 비밀번호 재설정이 시작되었습니다."})  # 딕셔너리 객체를 반환하도록 변경
+            except User.DoesNotExist:
+                return JsonResponse({"error": "사용자를 찾을 수 없습니다."}, status=404)
         except json.JSONDecodeError:
-            return JsonResponse({"error": "Invalid JSON format."}, status=400)
+            return JsonResponse({"error": "잘못된 JSON 형식입니다."}, status=400)
     else:
-        return JsonResponse({"error": "Only POST requests are allowed."}, status=405)
-    # new_password = request.POST.get('new_password')
-    # confirm_password = request.POST.get('confirm_password')
-
-    # if not (username and email ):
-    #     return JsonResponse({'message': '모든 필드를 입력하세요.'}, status=400)
-
-    # user_model = get_user_model()
-    # try:
-    #     user = user_model.objects.get(username=username, email=email)
-    # except user_model.DoesNotExist:
-    #     return JsonResponse({'message': '입력한 정보와 일치하는 사용자를 찾을 수 없습니다.'}, status=400)
+        return JsonResponse({"error": "POST 요청만 허용됩니다."}, status=405)
 
 class UserPasswordResetView(PasswordResetView):
     template_name = 'registration/password_reset_email.html'
