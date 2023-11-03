@@ -8,12 +8,9 @@ from django.views.decorators.csrf import get_token  # get_token을 가져오기 
 
 urlpatterns = [
     path('admin/', admin.site.urls),                                                       # 사용자가 웹 브라우저에서 "/admin/"으로 이동하면, Django의 관리자 페이지로 이동
-    path('api/user-signup/', views.UserSignup.as_view(), name='user-signup'),              # 사용자가 웹 브라우저에서 "/api/user-signup/"으로 이동하면, views.UserSignup 클래스를 호출하여 사용자 등록(sign-up) 페이지로 이동
-    path('api/user-login/', views.UserLogin.as_view(), name='user-login'),                 # 사용자가 웹 브라우저에서 "/api/user-login/"으로 이동하면, views.UserLogin 클래스를 호출하여 사용자 로그인(login) 페이지로 이동
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),           # 사용자가 웹 브라우저에서 "/api/token/"으로 이동하면, TokenObtainPairView 클래스를 호출하여 JWT(토큰)를 발급
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),          # 사용자가 웹 브라우저에서 "/api/token/refresh/"으로 이동하면, TokenRefreshView 클래스를 호출하여 기존의 JWT(토큰)를 갱신
-    path('idpassword/', include('idpassword.urls')),  
+    path('api/', include('login.urls')),
     path('get-csrf-token/', csrf_exempt(get_token), name='get-csrf-token'),
     path('accounts/', include('django.contrib.auth.urls')),
+
 ]
 

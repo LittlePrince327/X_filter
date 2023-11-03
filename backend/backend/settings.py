@@ -24,6 +24,7 @@ INSTALLED_APPS = [                                                              
     'rest_framework.authtoken',        # Django REST framework의 인증 토큰을 구현하는 데 사용 //  API 사용자의 인증 및 권한 관리를 지원
     'idpassword',
 
+
 ]
 
 MIDDLEWARE = [                                                                        # HTTP 요청 및 응답을 처리하는 미들웨어 목록
