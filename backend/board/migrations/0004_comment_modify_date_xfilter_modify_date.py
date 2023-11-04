@@ -6,17 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('pybo', '0003_answer_author'),
+        ('board', '0003_comment_author'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='answer',
+            model_name='comment',
             name='modify_date',
             field=models.DateTimeField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='question',
+            model_name='xfilter',
             name='modify_date',
             field=models.DateTimeField(blank=True, null=True),
         ),

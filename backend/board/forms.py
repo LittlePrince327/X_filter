@@ -1,11 +1,11 @@
 from django import forms
-from pybo.models import Question, Answer
+from board.models import Xfilter, Comment
 
 
-class QuestionForm(forms.ModelForm):
+class XfilterForm(forms.ModelForm):
     class Meta:
-        model = Question  # 사용할 모델
-        fields = ['subject', 'content']  # QuestionForm에서 사용할 Question 모델의 속성
+        model = Xfilter  
+        fields = ['subject', 'content']  
         labels = {
             'subject': '제목',
             'content': '내용',
@@ -14,7 +14,7 @@ class QuestionForm(forms.ModelForm):
 
 class AnswerForm(forms.ModelForm):
     class Meta:
-        model = Answer
+        model = Comment
         fields = ['content']
         labels = {
             'content': '답변내용',

@@ -23,7 +23,7 @@ INSTALLED_APPS = [                                                              
     'rest_framework',                  # Django REST framework를 사용하여 RESTful API를 개발하는 데 필요한 기능을 제공하는 앱 // API 개발 및 관리를 지원
     'rest_framework.authtoken',        # Django REST framework의 인증 토큰을 구현하는 데 사용 //  API 사용자의 인증 및 권한 관리를 지원
     'idpassword',
-    'pybo',
+    'board',
 
 
 ]

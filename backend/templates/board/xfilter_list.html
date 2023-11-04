@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
-{% load pybo_filter %}
+{% load board_filter %}
 {% block content %}
 <div class="container my-3">
     <div class="row my-3">
         <div class="col-6">
-            <a href="{% url 'pybo:question_create' %}" class="btn btn-primary">질문 등록하기</a>
+            <a href="{% url 'board:xfilter_create' %}" class="btn btn-primary">질문 등록하기</a>
         </div>
         <div class="col-6">
             <div class="input-group">
@@ -25,21 +25,21 @@
         </tr>
         </thead>
         <tbody>
-        {% if question_list %}
-        {% for question in question_list %}
+        {% if xfilter_list %}
+        {% for xfilter in xfilter_list %}
         <tr class="text-center">
             <td>
                 <!-- 번호 = 전체건수 - 시작인덱스 - 현재인덱스 + 1 -->
-                {{ question_list.paginator.count|sub:question_list.start_index|sub:forloop.counter0|add:1 }}
+                {{ xfilter_list.paginator.count|sub:xfilter_list.start_index|sub:forloop.counter0|add:1 }}
             </td>
             <td class="text-start">
-                <a href="{% url 'pybo:detail' question.id %}">{{ question.subject }}</a>
-                {% if question.answer_set.count > 0 %}
-                <span class="text-danger small mx-2">{{ question.answer_set.count }}</span>
+                <a href="{% url 'board:detail' xfilter.id %}">{{ xfilter.subject }}</a>
+                {% if xfilter.comment_set.count > 0 %}
+                <span class="text-danger small mx-2">{{ xfilter.comment_set.count }}</span>
                 {% endif %}
             </td>
-            <td>{{ question.author.username }}</td>
-            <td>{{ question.create_date }}</td>
+            <td>{{ xfilter.author.username }}</td>
+            <td>{{ xfilter.create_date }}</td>
         </tr>
         {% endfor %}
         {% else %}
@@ -52,9 +52,9 @@
     <!-- 페이징처리 시작 -->
     <ul class="pagination justify-content-center">
         <!-- 이전페이지 -->
-        {% if question_list.has_previous %}
+        {% if xfilter_list.has_previous %}
         <li class="page-item">
-            <a class="page-link" data-page="{{ question_list.previous_page_number }}"
+            <a class="page-link" data-page="{{ xfilter_list.previous_page_number }}"
                href="javascript:void(0)">이전</a>
         </li>
         {% else %}
@@ -64,9 +64,9 @@
         </li>
         {% endif %}
         <!-- 페이지리스트 -->
-        {% for page_number in question_list.paginator.page_range %}
-        {% if page_number >= question_list.number|add:-5 and page_number <= question_list.number|add:5 %}
-        {% if page_number == question_list.number %}
+        {% for page_number in xfilter_list.paginator.page_range %}
+        {% if page_number >= xfilter_list.number|add:-5 and page_number <= xfilter_list.number|add:5 %}
+        {% if page_number == xfilter_list.number %}
         <li class="page-item active" aria-current="page">
             <a class="page-link" data-page="{{ page_number }}"
                href="javascript:void(0)">{{ page_number }}</a>
@@ -80,9 +80,9 @@
         {% endif %}
         {% endfor %}
         <!-- 다음페이지 -->
-        {% if question_list.has_next %}
+        {% if xfilter_list.has_next %}
         <li class="page-item">
-            <a class="page-link" data-page="{{ question_list.next_page_number }}"
+            <a class="page-link" data-page="{{ xfilter_list.next_page_number }}"
                href="javascript:void(0)">다음</a>
         </li>
         {% else %}

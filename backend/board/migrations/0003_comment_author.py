@@ -9,12 +9,12 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('pybo', '0001_initial'),
+        ('board', '0002_xfilter_author'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='question',
+            model_name='comment',
             name='author',
             field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
             preserve_default=False,
