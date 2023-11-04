@@ -1,21 +1,20 @@
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseNotAllowed
 from django.shortcuts import render, get_object_or_404, redirect, resolve_url
 from django.utils import timezone
-
 from pybo.forms import AnswerForm
 from pybo.models import Question, Answer
+from django.contrib.auth import get_user_model
 
+CustomUser = get_user_model()
 
-@login_required(login_url='common:login')
 def answer_create(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     if request.method == "POST":
         form = AnswerForm(request.POST)
         if form.is_valid():
             answer = form.save(commit=False)
-            answer.author = request.user  # author 속성에 로그인 계정 저장
+            answer.author = CustomUser.objects.get(id=request.user.id) 
             answer.create_date = timezone.now()
             answer.question = question
             answer.save()
@@ -25,7 +24,6 @@ def answer_create(request, question_id):
         return HttpResponseNotAllowed('Only POST is possible.')
     context = {'question': question, 'form': form}
     return render(request, 'pybo/question_detail.html', context)
-
 
 
 def answer_modify(request, answer_id):
@@ -47,21 +45,20 @@ def answer_modify(request, answer_id):
     return render(request, 'pybo/answer_form.html', context)
 
 
-
 def answer_delete(request, answer_id):
     answer = get_object_or_404(Answer, pk=answer_id)
     if request.user != answer.author:
         messages.error(request, '삭제권한이 없습니다')
+        return redirect('pybo:detail', question_id=answer.question.id)
     else:
         answer.delete()
     return redirect('pybo:detail', question_id=answer.question.id)
 
 
-
 def answer_vote(request, answer_id):
     answer = get_object_or_404(Answer, pk=answer_id)
     if request.user == answer.author:
-        messages.error(request, '본인이 작성한 글은 추천할수 없습니다')
+        messages.error(request, '본인이 작성한 글은 추천할 수 없습니다')
     else:
         answer.voter.add(request.user)
     return redirect('{}#answer_{}'.format(
