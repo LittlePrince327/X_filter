@@ -12,7 +12,8 @@ packages_to_install = [
     "kss==4.5.4",
     "matplotlib==3.7.3",
     "wordcloud==1.9.2",
-    "JPype1==1.4.1"
+    "JPype1==1.4.1",
+    "rhinoMorph==4.0.1.12"
 ]
 
 for package in packages_to_install:
@@ -36,7 +37,8 @@ packages_to_show = [
     "kss",
     "matplotlib",
     "wordcloud",
-    "JPype1"
+    "JPype1",
+    "rhinoMorph==4.0.1.12"
 ]
 
 for package in packages_to_show:
