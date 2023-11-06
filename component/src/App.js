@@ -4,6 +4,7 @@ import Join from "./Join/Join";
 import Signup from "./Signup/Signup";
 import FindUsername from "./FindUsername/FindUsername";
 import ResetPassword from "./ResetPassword/ResetPassword";
+import Main from "./Main/Main";
 
 function App() {
   return (
@@ -13,6 +14,8 @@ function App() {
         <Route path="/signup" element={<Signup />} /> 
         <Route path="/findusername" element={<FindUsername />} />
         <Route path="/resetpassword" element={<ResetPassword />} />
+        <Route path="/main" element={<Main />} />
+
       </Routes>
     </Router>
   );

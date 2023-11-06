@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-import styles from './Signup.module.css';
+import styles from './Signup.css';
 
 function Signup() {
   const navigate = useNavigate();
