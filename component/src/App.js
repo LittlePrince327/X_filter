@@ -1,9 +1,9 @@
 import React from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Join from "./components/Join/Join";
-import Signup from "./components/Signup/Signup";
-import FindUsername from "./components/FindUsername/FindUsername";
-import ResetPassword from "./components/ResetPassword/ResetPassword";
+import Join from "./Join/Join";
+import Signup from "./Signup/Signup";
+import FindUsername from "./FindUsername/FindUsername";
+import ResetPassword from "./ResetPassword/ResetPassword";
 
 function App() {
   return (
