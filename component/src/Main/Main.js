@@ -9,7 +9,7 @@ const Main = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://your-django-backend-url/data', {
+      const response = await axios.get('http://localhost:8000/board/resetpassword', {
         params: { page: page, keyword: keyword }
       });
       setData(response.data);

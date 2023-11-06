@@ -4,7 +4,6 @@ from login import views                                                         
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView           # Django Rest Framework에서 JSON Web Token(JWT)을 사용한 인증을 처리하기 위한 모듈을 가져옴. JWT는 사용자가 로그인하고 인증하는 데 사용되며, TokenObtainPairView는 JWT를 발급하고, TokenRefreshView는 기존 JWT를 갱신하는 데 사용
 from django.views.decorators.csrf import csrf_exempt  # CSRF 보호를 제외하기 위한 모듈
 from django.views.decorators.csrf import get_token  # get_token을 가져오기 위한 import 추가
-from board.views import base_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),                                                       # 사용자가 웹 브라우저에서 "/admin/"으로 이동하면, Django의 관리자 페이지로 이동
@@ -13,7 +12,6 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('board/', include('board.urls')),
     path('common/', include('common.urls')),
-    path('', base_views.index, name='index'),  # '/' 에 해당되는 path
     path('idpassword/', include('idpassword.urls')),
 ]
 
