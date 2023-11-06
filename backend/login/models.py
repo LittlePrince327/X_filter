@@ -31,7 +31,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(default=timezone.now)
     full_name = models.CharField(max_length=50, blank=True)
     gender = models.CharField(max_length=10, choices=[('male', '남성'), ('female', '여성')], blank=True)
-
     groups = models.ManyToManyField(Group, blank=True, related_name='custom_users', related_query_name='custom_user')
     user_permissions = models.ManyToManyField(Permission, blank=True, related_name='custom_users', related_query_name='custom_user')
 

@@ -12,13 +12,10 @@ urlpatterns = [
     path('api/user-login/', views.UserLogin.as_view(), name='user-login'),                 # 사용자가 웹 브라우저에서 "/api/user-login/"으로 이동하면, views.UserLogin 클래스를 호출하여 사용자 로그인(login) 페이지로 이동
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),           # 사용자가 웹 브라우저에서 "/api/token/"으로 이동하면, TokenObtainPairView 클래스를 호출하여 JWT(토큰)를 발급
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),          # 사용자가 웹 브라우저에서 "/api/token/refresh/"으로 이동하면, TokenRefreshView 클래스를 호출하여 기존의 JWT(토큰)를 갱신
-<<<<<<< HEAD
-    path('fileupload/', include('fileupload.urls')),
     path('api/', include('userprofile.urls')),  # 'userprofile' 앱의 URL을 포함
-=======
     path('idpassword/', include('idpassword.urls')),  
     path('get-csrf-token/', csrf_exempt(get_token), name='get-csrf-token'),
     path('accounts/', include('django.contrib.auth.urls')),
->>>>>>> f61da2d88ae55c8458862d79c482228c53e886d1
+
 ]
 

@@ -1,29 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import io from 'socket.io-client';
-import { useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import io from "socket.io-client";
+import { useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
+import InfoBar from "../InfoBar/InfoBar";
+import Input from "../Input/Input";
+import Messages from "../Messages/Messages";
 
-import InfoBar from '../InfoBar/InfoBar';
-import Input from '../Input/Input';
-import Messages from '../Messages/Messages';
+import "./Chat.css";
 
-import './Chat.css';
-
-const ENDPOINT = 'http://localhost:5000';
+const ENDPOINT = "http://localhost:5000";
 
 let socket;
 
 const Chat = () => {
-  const name = localStorage.getItem('username') 
-  const room = 'X_FILTER';
+  const name = localStorage.getItem("username");
+  const room = "X_FILTER";
 
-  const [users, setUsers] = useState('');
-  const [message, setMessage] = useState('');
+  const [users, setUsers] = useState("");
+  const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
     socket = io(ENDPOINT);
 
-    socket.emit('join', { name, room }, (error) => {
+    socket.emit("join", { name, room }, (error) => {
       if (error) {
         alert(error);
       }
@@ -31,11 +31,11 @@ const Chat = () => {
   }, [name, room]);
 
   useEffect(() => {
-    socket.on('message', (message) => {
+    socket.on("message", (message) => {
       setMessages((messages) => [...messages, message]);
     });
 
-    socket.on('roomData', ({ users }) => {
+    socket.on("roomData", ({ users }) => {
       setUsers(users);
     });
   }, []);
@@ -44,7 +44,7 @@ const Chat = () => {
     event.preventDefault();
 
     if (message) {
-      socket.emit('sendMessage', message, () => setMessage(''));
+      socket.emit("sendMessage", message, () => setMessage(""));
     }
   };
 
@@ -53,7 +53,16 @@ const Chat = () => {
       <div className="container">
         <InfoBar room={room} />
         <Messages messages={messages} name={name} />
-        <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
+        <Input
+          message={message}
+          setMessage={setMessage}
+          sendMessage={sendMessage}
+        />
+      </div>
+      <div>
+        <h1>User Profile</h1>
+        <Link to="/profile/edit">Edit Profile</Link>
+        {/* 다른 프로필 정보 표시 */}
       </div>
     </div>
   );
