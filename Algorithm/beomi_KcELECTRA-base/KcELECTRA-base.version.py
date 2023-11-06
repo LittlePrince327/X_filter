@@ -11,7 +11,8 @@ packages_to_install = [
     "PyKoSpacing==0.5",
     "kss==4.5.4",
     "matplotlib==3.7.3",
-    "wordcloud==1.9.2"
+    "wordcloud==1.9.2",
+    "JPype1==1.4.1"
 ]
 
 for package in packages_to_install:
@@ -34,7 +35,8 @@ packages_to_show = [
     "PyKoSpacing",
     "kss",
     "matplotlib",
-    "wordcloud"
+    "wordcloud",
+    "JPype1"
 ]
 
 for package in packages_to_show:
