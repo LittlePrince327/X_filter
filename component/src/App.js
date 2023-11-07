@@ -5,6 +5,7 @@ import Signup from './Signup/Signup';
 import FindUsername from './FindUsername/FindUsername';
 import ResetPassword from './ResetPassword/ResetPassword';
 import Board from './Board/Board'; 
+import Detail from './Detail/Detail'; 
 
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
         <Route path="/findusername" element={<FindUsername />} />
         <Route path="/resetpassword" element={<ResetPassword />} />
         <Route path="/board" element={<Board />} />
+        <Route path="/detail" element={<Detail />} />
       </Routes>
     </Router>
   );
