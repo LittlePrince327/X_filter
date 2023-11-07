@@ -4,22 +4,18 @@ const API = axios.create({
   baseURL: 'http://localhost:8000', 
 });
 
-// 회원가입 요청 API
 const signup = (userData) => {
   return API.post('/api/user-signup/', userData);
 };
 
-// 로그인 요청 API
 const login = (credentials) => {
   return API.post('/api/user-login/', credentials);
 };
 
-// 아이디 찾기 요청 API
 const findUsername = (email) => {
   return API.post('/idpassword/findusername', { email });
 };
 
-// 비밀번호 재설정을 위한 요청 API
 const resetPassword = (userData) => {
   return API.post('/idpassword/resetpassword/', userData);
 };
@@ -32,7 +28,51 @@ const detail = (xfilterId) => {
   return API.get(`/board/xfilter/${xfilterId}/`);
 };
 
+const createPost = (content) => {
+  return API.post('/board/xfilter/create/', { content });
+};
+
+const createComment = (content, postId) => {
+  return API.post(`/board/comment/create/${postId}/`, { content });
+};
+
+const editPost = (postId) => {
+  return API.post(`/board/xfilter/modify/${postId}/`);
+};
+
+const editComment = (commentId) => {
+  return API.post(`/board/comment/modify/${commentId}/`);
+};
+
+const deletePost = (postId) => {
+  return API.delete(`/board/xfilter/delete/${postId}/`);
+};
+
+const deleteComment = (commentId) => {
+  return API.delete(`/board/comment/delete/${commentId}/`);
+};
+
+const recommendPost = (postId) => {
+  return API.post(`/board/xfilter/vote/${postId}/`);
+};
+
+const recommendComment = (commentId) => {
+  return API.post(`/board/comment/vote/${commentId}/`);
+};
 
 export { 
-  signup, login, findUsername, resetPassword, search, detail
+  signup, 
+  login, 
+  findUsername, 
+  resetPassword, 
+  search, 
+  detail, 
+  createPost, 
+  createComment, 
+  editPost, 
+  editComment, 
+  deletePost, 
+  deleteComment, 
+  recommendPost, 
+  recommendComment 
 };

@@ -1,7 +1,7 @@
-import re
+
 from django.contrib.auth import get_user_model
 from .serializers import UserSerializer
-from rest_framework import serializers, status
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
@@ -10,7 +10,11 @@ from rest_framework import permissions
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer 
-
+from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from login.models import CustomUser  # 여기에는 사용자 모델을 넣어야 합니다
+from login.serializers import serializers  # 여기에는 사용자 시리얼라이저를 넣어야 합니다
 
 class UserSignup(APIView):
     permission_classes = [permissions.AllowAny]
@@ -63,3 +67,20 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         if response.status_code == 200:
             response.data = self.create_tokens(self.user)
         return response
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_user_info(request):
+    user_id = request.user.id  # 인증된 사용자의 ID 가져오기
+    try:
+        user = CustomUser.objects.get(id=user_id)  # 해당 ID를 가진 사용자 레코드를 DB에서 가져옴
+        # 사용자 정보를 시리얼라이즈하기 위한 작업(예시)
+        serialized_user = {
+            'username': user.username,
+            'email': user.email,
+            # 다른 필드들을 추가할 수 있음
+        }
+        return Response(serialized_user)
+    except CustomUser.DoesNotExist:
+        return Response({'error': '사용자를 찾을 수 없습니다.'}, status=404)

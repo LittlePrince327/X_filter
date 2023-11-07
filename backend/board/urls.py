@@ -1,6 +1,6 @@
 from django.urls import path
-
 from .views import xfilter_views, comment_views, base_views
+
 app_name = 'board'
 
 urlpatterns = [

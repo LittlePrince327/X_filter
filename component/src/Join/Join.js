@@ -22,9 +22,10 @@ function Join() {
         },
       })
         .then((response) => {
+          console.log(response.data.access)
           if (response.status === 200) {
-            localStorage.setItem('username', username); 
-            navigate('/chat');
+            localStorage.setItem('token', response.data.access);
+            navigate('/board'); // 또는 다음 페이지로 이동
           } else {
             return Promise.reject(response.data);
           }

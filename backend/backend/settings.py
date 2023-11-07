@@ -121,6 +121,8 @@ STATICFILES_DIRS = [
 
 LOGIN_REDIRECT_URL = '/'                                                               # 로그인 후 리디렉션할 URL
 
+LOGIN_URL = 'http://localhost:3000'
+
 LOGOUT_REDIRECT_URL = '/'                                                              # 로그아웃 후 리디렉션할 URL
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'                                   # Django 3.2 버전부터 추가된 설정으로, 모델의 기본 자동 증가(primary key) 필드 유형을 지정하는 데 사용. 이 설정은 사용자가 직접 모델의 primary key 필드 유형을 지정하지 않았을 때, Django에서 자동으로 생성하는 primary key 필드 유형을 결정

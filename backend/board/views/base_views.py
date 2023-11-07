@@ -4,9 +4,13 @@ from django.http import Http404
 from board.serializers import XfilterSerializer
 from board.models import Xfilter
 from django.db.models import Q
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def xfilter_list(request):                                              # 검색기능 담당
+    print(request.headers)  # 콘솔에서 헤더 확인
     kw = request.GET.get('kw', '')                                      # 검색어
     xfilter_list = Xfilter.objects.order_by('-create_date')
     if kw:
@@ -22,7 +26,9 @@ def xfilter_list(request):                                              # 검색
     return Response(serializer.data)
 
 @api_view(['GET'])                                                     # 게시글 상세 조회
-def xfilter_detail(xfilter_id):
+@permission_classes([IsAuthenticated])
+def xfilter_detail(xfilter_id,request):
+    print(request.headers)  # 콘솔에서 헤더 확인
     try:
         xfilter = Xfilter.objects.get(pk=xfilter_id)
     except Xfilter.DoesNotExist:

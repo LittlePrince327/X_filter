@@ -7,33 +7,56 @@ const Board = () => {
     const [xfilterList, setXfilterList] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const navigate = useNavigate();
-    const [currentPost, setCurrentPost] = useState(null); // 새로운 state 추가
+    const [currentPost, setCurrentPost] = useState(null); // Additional state for the selected post
+    const [userInfo, setUserInfo] = useState(null); // State to hold user information
 
-    const fetchXfilterList = async (searchTerm) => {
+    const fetchXfilterList = async (term) => {
         try {
-            const response = await axios.get(`http://localhost:8000/board/xfilter/?kw=${searchTerm}`);
+            const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+
+            const response = await axios.get(`http://localhost:8000/board/xfilter/?kw=${term}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}` // Send the token in the request header
+                }
+            });
             setXfilterList(response.data);
         } catch (error) {
-            console.error('xfilters를 가져오는 중 에러 발생:', error);
+            console.error('Error fetching xfilters:', error);
         }
     };
 
     useEffect(() => {
-        fetchXfilterList(searchTerm);
-    }, [searchTerm]);
-
-    const handleXfilterClick = async (id) => {
-        try {
-            const response = await axios.get(`http://localhost:8000/board/xfilter/${id}/`);
-            setCurrentPost(response.data); // 선택된 게시글 정보를 currentPost state에 설정
-        } catch (error) {
-            console.error('xfilter 상세 정보를 가져오는 중 에러 발생:', error);
+        const token = localStorage.getItem('token');
+        console.log('Token:', token); // 이 위치에 console.log를 추가하여 토큰 확인
+        if (token) {
+            // Fetch user information using the token
+            axios.get('http://localhost:8000/api/get_user_info/', {
+                headers: {
+                    Authorization: `Bearer ${token}`, // Send the token in the request header
+                },
+            })
+            .then((response) => {
+                setUserInfo(response.data); // Update the user information state
+            })
+            .catch((error) => {
+                console.error('Error fetching user info:', error);
+            });
         }
-    };
+    }, []);
+
+
 
     const handleSearch = () => {
         fetchXfilterList(searchTerm);
     };
+
+    const handleXfilterClick = (id) => {
+        // Define the behavior when an xfilter is clicked
+        // This could be a navigation, updating state, or making an API call
+        // For now, let's log the clicked xfilter ID
+        console.log(`Clicked xfilter ID: ${id}`);
+    };
+
 
     return (
         <div className={styles.container}>
