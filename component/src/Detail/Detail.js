@@ -55,6 +55,7 @@ const Detail = () => {
                 console.error('게시물 제출 오류:', error);
             });
     };
+    
     const handleCommentSubmit = (event) => {
         event.preventDefault();
         const content = event.target.content.value;

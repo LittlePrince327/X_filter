@@ -28,8 +28,8 @@ const detail = (xfilterId) => {
   return API.get(`/board/xfilter/${xfilterId}/`);
 };
 
-const get_user_info = (content) => {
-  return API.post('/api/get-user-info');
+const get_user_info = (full_name) => {
+  return API.post('/api/get-user-info', {full_name});
 };
 
 const createPost = (content) => {
