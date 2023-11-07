@@ -78,6 +78,7 @@ def get_user_info(request):
         serialized_user = {
             'username': user.username,
             'email': user.email,
+            'full_name': user.full_name,
             # 다른 필드들을 추가할 수 있음
         }
         return Response(serialized_user)

@@ -11,31 +11,37 @@ const Detail = () => {
     const [userData, setUserData] = useState(null);
 
     useEffect(() => {
-        // 로컬 스토리지에서 사용자 토큰을 가져옴
         const tokenFromStorage = localStorage.getItem('token');
+    
+        const fetchUserInfo = async () => {
+            try {
+                const response = await axios.get(`http://localhost:8000/api/get_user_info/`, {
+                    headers: {
+                        Authorization: `Bearer ${tokenFromStorage}`,
+                    },
+                });
+    
+                if (response.data.full_name) {
+                    localStorage.setItem('full_name', response.data.full_name); // Storing full_name in local storage
+                }
+    
+                setUserData(response.data);
+            } catch (error) {
+                console.error('Error fetching user information:', error);
+            }
+        };
+    
         if (tokenFromStorage) {
             setUserToken(tokenFromStorage);
-            // 토큰이 있다면, 해당 토큰을 사용하여 사용자 정보 요청
-            axios.get(`http://localhost:8000/api/get_user_info`, {
-                headers: {
-                    Authorization: `Bearer ${tokenFromStorage}`,
-                },
-            })
-            .then(response => {
-                // 서버에서 사용자 정보를 가져오고, 상태에 저장
-                setUserData(response.data);
-            })
-            .catch(error => {
-                console.error('사용자 정보를 가져오는 동안 오류 발생:', error);
-            });
+            fetchUserInfo();
         }
-    }, []); // 빈 배열을 넘겨 최초 렌더링 후에만 호출
+    }, []);
 
     const handlePostSubmit = (event) => {
         event.preventDefault();
         const content = event.target.content.value;
 
-        axios.post(`${BASE_URL}/board/xfilter/create/`, { content }, {
+        axios.post(`http://localhost:8000/board/xfilter/create/`, { content }, {
             headers: {
                 Authorization: `Bearer ${userToken}`, // userToken은 유저의 인증 토큰
             },
