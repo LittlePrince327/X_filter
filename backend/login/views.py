@@ -4,7 +4,6 @@ from .serializers import UserSerializer
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework import permissions
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -14,7 +13,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from login.models import CustomUser  # 여기에는 사용자 모델을 넣어야 합니다
-from login.serializers import serializers  # 여기에는 사용자 시리얼라이저를 넣어야 합니다
+
 
 class UserSignup(APIView):
     permission_classes = [permissions.AllowAny]

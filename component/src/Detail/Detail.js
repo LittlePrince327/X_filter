@@ -16,7 +16,7 @@ const Detail = () => {
         if (tokenFromStorage) {
             setUserToken(tokenFromStorage);
             // 토큰이 있다면, 해당 토큰을 사용하여 사용자 정보 요청
-            axios.get(`${BASE_URL}/get-user-info`, {
+            axios.get(`http://localhost:8000/api/get_user_info`, {
                 headers: {
                     Authorization: `Bearer ${tokenFromStorage}`,
                 },

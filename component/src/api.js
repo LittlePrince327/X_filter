@@ -28,6 +28,10 @@ const detail = (xfilterId) => {
   return API.get(`/board/xfilter/${xfilterId}/`);
 };
 
+const get_user_info = (content) => {
+  return API.post('/api/get-user-info');
+};
+
 const createPost = (content) => {
   return API.post('/board/xfilter/create/', { content });
 };
@@ -67,6 +71,7 @@ export {
   resetPassword, 
   search, 
   detail, 
+  get_user_info,
   createPost, 
   createComment, 
   editPost, 
