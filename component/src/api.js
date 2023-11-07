@@ -4,6 +4,8 @@ const API = axios.create({
   baseURL: 'http://localhost:8000', 
 });
 
+const BASE_URL = 'http://localhost:8000/'
+
 const signup = (userData) => {
   return API.post('/api/user-signup/', userData);
 };
@@ -32,8 +34,21 @@ const get_user_info = (full_name) => {
   return API.post('/api/get-user-info', {full_name});
 };
 
-const createPost = (content) => {
-  return API.post('/board/xfilter/create/', { content });
+async function postBoard(content, author, create_date, userToken) {
+  const body = {
+    content: content,
+    author: author,
+    create_date : create_date
+  };
+  const headerOption = {
+    headers: {
+      Authorization: `Bearer ${userToken}`
+    }
+  };
+
+  const response = await axios.post(`${BASE_URL}/board/xfilter/create`, body, headerOption);
+  const data = await response.data;
+  return data;
 };
 
 const createComment = (content, postId) => {
@@ -72,7 +87,7 @@ export {
   search, 
   detail, 
   get_user_info,
-  createPost, 
+  postBoard, 
   createComment, 
   editPost, 
   editComment, 

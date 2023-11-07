@@ -2,12 +2,11 @@ from login.models import CustomUser
 from django.db import models
 
 class Xfilter(models.Model):
-    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='author_xfilter')
-    subject = models.CharField(max_length=200)
+    # author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='author_xfilter')
     content = models.TextField()
-    create_date = models.DateTimeField(auto_now_add=True)  # 수정됨
+    create_date = models.DateTimeField()  # 수정됨
     modify_date = models.DateTimeField(auto_now=True, null=True, blank=True)  # 수정됨
-    voter = models.ManyToManyField(CustomUser, related_name='voter_xfilter')
+    # voter = models.ManyToManyField(CustomUser, related_name='voter_xfilter')
 
     def __str__(self):
         return self.subject
