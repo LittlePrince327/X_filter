@@ -5,7 +5,8 @@ import Signup from './Signup/Signup';
 import FindUsername from './FindUsername/FindUsername';
 import ResetPassword from './ResetPassword/ResetPassword';
 import Board from './Board/Board'; 
-import Detail from './Detail/Detail'; 
+import MakeBoard from './MakeBoard/MakeBoard'; 
+import DetailBoard from './DetailBoard/DetailBoard';
 
 
 function App() {
@@ -17,7 +18,8 @@ function App() {
         <Route path="/findusername" element={<FindUsername />} />
         <Route path="/resetpassword" element={<ResetPassword />} />
         <Route path="/board" element={<Board />} />
-        <Route path="/detail" element={<Detail />} />
+        <Route path="/makeboard" element={<MakeBoard />} />
+        <Route path="/detail/:id" element={<DetailBoard />} />
       </Routes>
     </Router>
   );

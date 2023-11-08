@@ -44,9 +44,13 @@ const Board = () => {
             console.error('Error fetching filtered xfilters:', error);
         }
     };
+    const formatDate = (dateString) => {
+        const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+        return new Date(dateString).toLocaleString('ko-KR', options);
+    };
 
     useEffect(() => {
-        fetchXfilterList(); // 초기 렌더링 시 전체 데이터 가져오도록 설정
+        fetchXfilterList();
     }, []);
 
     return (
@@ -56,7 +60,7 @@ const Board = () => {
                     <button
                         className={`${styles.customBtn} btn btn-primary`}
                         type="button"
-                        onClick={() => navigate('/detail')}
+                        onClick={() => navigate('/makeboard')}
                     >
                         게시글 작성하기
                     </button>
@@ -93,13 +97,13 @@ const Board = () => {
                     {xfilterList.map((xfilter, index) => (
                         <tr
                             className="text-center"
-                            key={xfilter.id}
-                            onClick={() => navigate(`/detail/${xfilter.id}`)}
+                            key={xfilter.xfilter_id}
+                            onClick={() => navigate(`/detail/${xfilter.xfilter_id}`)} 
                         >
                             <td>{xfilter.id}</td>
                             <td className="text-start">{xfilter.content}</td>
                             <td>{xfilter.author}</td>
-                            <td>{xfilter.create_date}</td>
+                            <td>{formatDate(xfilter.create_date)}</td>
                         </tr>
                     ))}
                 </tbody>

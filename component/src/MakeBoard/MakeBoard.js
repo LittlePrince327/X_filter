@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import styles from './Detail.module.css';
+import styles from './MakeBoard.module.css';
 import {
     get_user_info,
     postBoard, 
@@ -12,7 +12,7 @@ import {
     recommendComment
 } from '../api';
 
-const Detail = () => {
+const MakeBoard = () => {
     const postId = 123;
     const commentId = 456;
     const [userToken, setUserToken] = useState('');
@@ -190,4 +190,4 @@ const Detail = () => {
     );
 }
 
-export default Detail;
+export default MakeBoard;
