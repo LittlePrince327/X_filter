@@ -5,7 +5,6 @@ from board.models import Xfilter
 from django.contrib.auth import get_user_model
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.decorators import login_required
 import json
 
 CustomUser = get_user_model()
@@ -18,7 +17,7 @@ def xfilter_create_api(request):
             data = json.loads(request.body)
             form = XfilterForm(data)
             if form.is_valid():
-                print("성공")
+                print(data)
                 form.save()
                 return JsonResponse({'message': 'XFilter created'}, status=200)
             return JsonResponse({'message': 'Internal Server Error', 'details': form.errors}, status=500)
@@ -29,7 +28,6 @@ def xfilter_create_api(request):
 
 # XFilter 수정 API 엔드포인트
 @csrf_exempt
-@login_required
 def xfilter_modify_api(request, xfilter_id):
     xfilter = get_object_or_404(Xfilter, pk=xfilter_id)
     if not request.user.has_perm('board.change_xfilter', xfilter):
@@ -47,7 +45,6 @@ def xfilter_modify_api(request, xfilter_id):
 
 # XFilter 삭제 API 엔드포인트
 @csrf_exempt
-@login_required
 def xfilter_delete_api(request, xfilter_id):
     xfilter = get_object_or_404(Xfilter, pk=xfilter_id)
     if not request.user.has_perm('board.delete_xfilter', xfilter):
@@ -58,7 +55,6 @@ def xfilter_delete_api(request, xfilter_id):
 
 # XFilter 추천 API 엔드포인트
 @csrf_exempt
-@login_required
 def xfilter_vote_api(request, xfilter_id):
     xfilter = get_object_or_404(Xfilter, pk=xfilter_id)
     if request.user == xfilter.author:

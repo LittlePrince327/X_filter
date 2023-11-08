@@ -50,7 +50,7 @@ const Detail = () => {
     const handlepostBoard = async (event) => {
         event.preventDefault();
         const content = event.target.content.value;
-        const author = localStorage.getItem('full_name');
+        const author = localStorage.getItem('author');
         const create_date = new Date().toISOString();
 
         try {

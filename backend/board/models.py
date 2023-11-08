@@ -2,7 +2,7 @@ from login.models import CustomUser
 from django.db import models
 
 class Xfilter(models.Model):
-    # author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='author_xfilter')
+    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=1)  # For example, setting a default author
     content = models.TextField()
     create_date = models.DateTimeField()  # 수정됨
     modify_date = models.DateTimeField(auto_now=True, null=True, blank=True)  # 수정됨
