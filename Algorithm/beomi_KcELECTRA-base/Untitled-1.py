@@ -1770,14 +1770,14 @@ workbook = openpyxl.Workbook()
 sheet = workbook.active
 
 # 정규 표현식을 사용하여 숫자와 텍스트 추출
-pattern = r"(\d+)\.\s(.*?)\n"
-matches = re.findall(pattern, text)
+pattern = r"(\d+)\.\s(.*?)\n\n"
+matches = re.findall(pattern, text, re.DOTALL)
 
 row = 1  # 행 초기화
 for match in matches:
     number, content = match
     sheet.cell(row, 1, int(number))  # 숫자 입력
-    sheet.cell(row, 2, content)  # 텍스트 입력
+    sheet.cell(row, 2, content.strip())  # 텍스트 입력 (공백 제거)
     row += 1
 
 # 엑셀 파일 저장
