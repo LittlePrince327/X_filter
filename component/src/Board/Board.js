@@ -94,7 +94,7 @@ const Board = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {xfilterList.map((xfilter, index) => (
+                    {xfilterList.map((xfilter) => (
                         <tr
                             className="text-center"
                             key={xfilter.xfilter_id}
