@@ -9,7 +9,7 @@ class Xfilter(models.Model):
     # voter = models.ManyToManyField(CustomUser, related_name='voter_xfilter')
 
     def __str__(self):
-        return self.subject
+        return self.content
 
 class Comment(models.Model):
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='author_comment')

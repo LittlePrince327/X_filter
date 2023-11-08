@@ -107,7 +107,7 @@ AUTH_PASSWORD_VALIDATORS = [                                                    
 
 LANGUAGE_CODE = 'ko-kr'                                                                # 기본 언어 코드
 
-TIME_ZONE = 'UTC'                                                                      # 시간대 설정
+TIME_ZONE = 'Asia/Seoul'                                                               # 시간대 설정
 
 USE_I18N = True                                                                        # "Internationalization"의 약자로, 다국어 및 지역화 기능을 활성화하거나 비활성화하는 설정
 
