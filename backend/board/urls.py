@@ -14,9 +14,6 @@ urlpatterns = [
     path('xfilter/delete/<int:xfilter_id>/', xfilter_views.xfilter_delete_api, name='xfilter_delete'),
     path('xfilter/vote/<int:xfilter_id>/', xfilter_views.xfilter_vote_api, name='xfilter_vote'),
 
-    # xfilter/board
-    
-
     # comment
     path('comment/create/<int:xfilter_id>/', comment_views.comment_create_api, name='comment_create'),
     path('comment/modify/<int:comment_id>/', comment_views.comment_modify_api, name='comment_modify'),

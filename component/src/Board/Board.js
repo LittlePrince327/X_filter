@@ -98,10 +98,12 @@ const Board = () => {
                         <tr
                             className="text-center"
                             key={xfilter.xfilter_id}
-                            onClick={() => navigate(`/detail/${xfilter.xfilter_id}`)} 
+                            onClick={() => navigate(`/detail/${xfilter.xfilter_id}`)}
                         >
                             <td>{xfilter.id}</td>
-                            <td className="text-start">{xfilter.content}</td>
+                            <td className="text-start">
+                                {xfilter.content.length > 20 ? `${xfilter.content.substring(0, 20)}...` : xfilter.content}
+                            </td>
                             <td>{xfilter.author}</td>
                             <td>{formatDate(xfilter.create_date)}</td>
                         </tr>

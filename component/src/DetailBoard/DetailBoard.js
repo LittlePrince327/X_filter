@@ -1,13 +1,21 @@
-// 이 코드는 게시글을 클릭했을 때 선택한 정보만 표시합니다.
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styles from './DetailBoard.module.css';
-
+import {
+  postComment,
+  editBoard, 
+  deleteBoard, 
+  recommendBoard,
+  editComment,
+  deleteComment,
+  recommendComment
+} from '../api';
 const BASE_URL = 'http://localhost:8000/';
 
 const DetailBoard = ({ xfilter_id }) => {
   const [xfilter, setXfilter] = useState(null);
   const [commentContent, setCommentContent] = useState('');
+  const [commentId, setCommentId] = useState(null); // Adding state for commentId
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchXfilter = async () => {
@@ -25,44 +33,80 @@ const DetailBoard = ({ xfilter_id }) => {
     fetchXfilter();
   }, [xfilter_id]);
 
-  // 추가된 함수로 수정할 수 있습니다.
-  const handleCommentSubmit = async (e) => {
-    e.preventDefault();
+  const handleeditBoard = async (event) => {
+    event.preventDefault();
     try {
-      await axios.post(`${BASE_URL}board/xfilter/${xfilter_id}/comment/create`, {
-        content: commentContent,
-      });
-      fetchXfilter();
-      setCommentContent('');
+      const updatedContent = event.target.content.value;
+      const postId = xfilter.id; // Assuming xfilter has an 'id'
+      const response = await editBoard(postId, updatedContent);
+      console.log(response);
     } catch (error) {
-      console.error('Error adding comment:', error);
+      console.error('게시글 수정 오류:', error);
     }
   };
 
-  const handleModify = async () => {
+  const handledeleteBoard = async () => {
     try {
-      await axios.put(`${BASE_URL}board/xfilter/modify/${xfilter_id}`, /* updated data */);
-      fetchXfilter();
+      const postId = xfilter.id; // Assuming xfilter has an 'id'
+      const response = await deleteBoard(postId);
+      console.log(response);
     } catch (error) {
-      console.error('Error modifying xfilter:', error);
+      console.error('게시글 삭제 오류:', error);
     }
   };
 
-  const handleDelete = async () => {
+  const handlerecommendBoard = async () => {
+    const type = 'post';
     try {
-      await axios.delete(`${BASE_URL}board/xfilter/delete/${xfilter_id}`);
-      // 삭제 이후의 네비게이션 또는 다른 액션을 처리할 수 있습니다.
+      const postId = xfilter.id; // Assuming xfilter has an 'id'
+      const response = await recommendBoard(type, postId);
+      console.log(response);
     } catch (error) {
-      console.error('Error deleting xfilter:', error);
+      console.error('게시글 추천 오류:', error);
     }
   };
 
-  const handleRecommend = async () => {
+  const handlepostComment = async (event) => {
+    event.preventDefault();
+    const content = event.target.content.value;
+
     try {
-      await axios.post(`${BASE_URL}board/xfilter/recommend/${xfilter_id}`);
-      fetchXfilter();
+      const postId = xfilter.id; // Assuming xfilter has an 'id'
+      const response = await postComment(content, postId);
+      console.log(response);
     } catch (error) {
-      console.error('Error recommending xfilter:', error);
+      console.error('댓글 제출 오류:', error);
+    }
+  }
+
+  const handleeditComment = async (event) => {
+    event.preventDefault();
+    const updatedContent = event.target.content.value;
+    // Extract the commentId from the form or state
+    const commentId = 29;
+    try {
+      const response = await editComment(commentId, updatedContent);
+      console.log(response);
+    } catch (error) {
+      console.error('댓글 수정 오류:', error);
+    }
+  };
+
+  const handledeleteComment = async (commentId) => {
+    try {
+      const response = await deleteComment(commentId);
+      console.log(response);
+    } catch (error) {
+      console.error('댓글 삭제 오류:', error);
+    }
+  };
+
+  const handlerecommendComment = async (commentId) => {
+    try {
+      const response = await recommendComment(commentId);
+      console.log(response);
+    } catch (error) {
+      console.error('댓글 추천 오류:', error);
     }
   };
 
@@ -75,46 +119,50 @@ const DetailBoard = ({ xfilter_id }) => {
   }
 
   return (
-    <div className="container my-3">
-      <h2 className="border-bottom py-2">Xfilter Details</h2>
-      <div className="card my-3">
-        <div className="card-body">
-          <div className="card-text">{xfilter.content}</div>
-          <div className="d-flex justify-content-end">
-            <div className="badge bg-light text-dark p-2 text-start">
-              <div className="mb-2">{xfilter.author}</div>
-              <div>{xfilter.create_date}</div>
-            </div>
+    <div className="container my-3" style={{ backgroundColor: 'white' }}>
+      <div className="top section">
+        <form onSubmit={handlepostComment}>
+          <div>
+            <label htmlFor="content" className="form-label">게시글</label>
+            <textarea className="form-control" name="content" id="content" rows={10}></textarea>
           </div>
-        </div>
-      </div>
-      <div className="my-3">
-        <button className="btn btn-primary" onClick={handleModify}>
-          수정하기
-        </button>
-        <button className="btn btn-danger" onClick={handleDelete}>
-          삭제하기
-        </button>
-        <button className="btn btn-success" onClick={handleRecommend}>
+          <button type="submit" className="btn btn-primary my-2">게시하기</button>
+        </form>
+        <button onClick={handlerecommendBoard} className="btn btn-outline-success mx-2">
           추천하기
         </button>
-      </div>
-      <form onSubmit={handleCommentSubmit} className="my-3">
-        <div className="mb-3">
-          <label htmlFor="commentContent" className="form-label">
-            댓글 작성
-          </label>
-          <textarea
-            name="content"
-            id="commentContent"
-            className="form-control"
-            rows="3"
-            value={commentContent}
-            onChange={(e) => setCommentContent(e.target.value)}
-          ></textarea>
+
+        <div className={styles.actionButtons}>
+          <button onClick={handleeditBoard} className="btn btn-outline-secondary mx-2">
+            수정
+          </button>
+          <button onClick={handledeleteBoard} className="btn btn-outline-danger">
+            삭제
+          </button>
         </div>
-        <input type="submit" value="댓글 등록" className="btn btn-primary" />
-      </form>
+      </div>
+
+      <div className="bottom-section">
+        <form onSubmit={handlepostComment}>
+          <div>
+            <label htmlFor="content" className="form-label">댓글</label>
+            <textarea className="form-control" name="content" id="content" rows={10}></textarea>
+          </div>
+          <button type="submit" className="btn btn-primary my-2">댓글달기</button>
+        </form>
+        <button onClick={() => handlerecommendComment(commentId)} className="btn btn-outline-success mx-2">
+          추천하기
+        </button>
+
+        <div className={styles.actionButtons}>
+          <button onClick={handleeditComment} className="btn btn-outline-secondary mx-2">
+            수정
+          </button>
+          <button onClick={() => handledeleteComment(commentId)} className="btn btn-outline-danger">
+            삭제
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
