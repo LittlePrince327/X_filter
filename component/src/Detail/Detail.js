@@ -19,26 +19,31 @@ const Detail = () => {
     const [userData, setUserData] = useState(null);
 
 
-    // 토큰 받아서 local storage에 저장
     useEffect(() => {
         const tokenFromStorage = localStorage.getItem('token');
-
+    
         const fetchData = async () => {
             if (tokenFromStorage) {
-                setUserToken(tokenFromStorage);
                 try {
                     const response = await get_user_info(tokenFromStorage);
                     if (response.full_name) {
-                        localStorage.setItem('full_name', response.full_name);
+                        // 사용자의 토큰과 전체 이름이 정확한지 확인합니다.
+                        localStorage.setItem('author', response.full_name);
                     }
+                    setUserToken(tokenFromStorage);
+                    // 사용자 토큰을 로컬 저장소에 설정합니다.
+                    localStorage.setItem('token', tokenFromStorage);
                     setUserData(response);
+                    // 전체 이름을 로컬 저장소에 설정합니다.
+                    localStorage.setItem('author', response.full_name);
                 } catch (error) {
-                    console.error('사용자 정보를 가져오는 중 오류가 발생했습니다:', error);
+                    console.error('사용자 정보 가져오는 중 오류:', error);
                 }
             }
         };
         fetchData();
-    }, [setUserToken, setUserData]);
+    }, []);
+    
 
 
     // 게시글 작성

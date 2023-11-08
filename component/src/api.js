@@ -2,19 +2,20 @@ import axios from 'axios';
 
 const BASE_URL = 'http://localhost:8000/';
 
-async function get_user_info(full_name, userToken) {
-  const body = {
-    full_name: full_name
-  };
+async function get_user_info(userToken) {
   const headerOption = {
     headers: {
       Authorization: `Bearer ${userToken}`
     }
   };
-
-  const response = await axios.post(`${BASE_URL}/api/get-user-info`, body, headerOption);
-  const data = response.data;
-  return data;
+  try {
+    const response = await axios.get(`${BASE_URL}/api/get_user_info/`, headerOption);
+    const userData = response.data;
+    return userData;
+  } catch (error) {
+    console.error('사용자 정보 가져오는 중 오류:', error);
+    throw error; // 오류 처리나 예외 처리를 위해 오류를 다시 throw하는 것이 유용합니다.
+  }
 }
 
 async function postBoard(content, author, create_date, userToken) {

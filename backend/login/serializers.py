@@ -1,7 +1,5 @@
 from rest_framework import serializers
-from django.contrib.auth import get_user_model
 from django.db import IntegrityError
-import re
 from login.models import CustomUser  # CustomUser 모델 임포트
 
 class UserSerializer(serializers.ModelSerializer):
