@@ -10,12 +10,12 @@ const Board = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const navigate = useNavigate();
 
-    const fetchXfilterList = async (term) => {
+    const fetchXfilterList = async () => {
         try {
-            const token = localStorage.getItem('token'); // Retrieve the JWT token from local storage (replace 'authToken' with your key)
+            const token = localStorage.getItem('token'); // 토큰을 가져옵니다
             const response = await axios.get(`${BASE_URL}board/xfilter/`, {
                 headers: {
-                    Authorization: `Bearer ${token}` // Include the JWT token in the request headers
+                    Authorization: `Bearer ${token}`
                 }
             });
             setXfilterList(response.data);
@@ -24,12 +24,29 @@ const Board = () => {
         }
     };
 
-    const handleSearch = () => {
-        fetchXfilterList(searchTerm);
+    const handleSearch = async () => {
+        try {
+            if (searchTerm.trim() !== '') {
+                const token = localStorage.getItem('token'); // 토큰을 가져옵니다
+                const response = await axios.get(
+                    `${BASE_URL}board/xfilter/?kw=${searchTerm}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
+                );
+                setXfilterList(response.data); // 검색 결과를 state에 설정
+            } else {
+                fetchXfilterList(); // 검색어가 비어 있으면 전체 데이터를 가져옵니다
+            }
+        } catch (error) {
+            console.error('Error fetching filtered xfilters:', error);
+        }
     };
 
     useEffect(() => {
-        fetchXfilterList(''); // Fetch xfilter list on initial load
+        fetchXfilterList(); // 초기 렌더링 시 전체 데이터 가져오도록 설정
     }, []);
 
     return (
@@ -77,12 +94,10 @@ const Board = () => {
                         <tr
                             className="text-center"
                             key={xfilter.id}
-                            onClick={() => navigate(`/detail/${xfilter.id}`)} // You can set your route for detailed view
+                            onClick={() => navigate(`/detail/${xfilter.id}`)}
                         >
                             <td>{xfilter.id}</td>
-                            <td className="text-start">
-                                {xfilter.content}
-                            </td>
+                            <td className="text-start">{xfilter.content}</td>
                             <td>{xfilter.author}</td>
                             <td>{xfilter.create_date}</td>
                         </tr>

@@ -14,11 +14,8 @@ def xfilter_list(request):
     xfilter_list = Xfilter.objects.order_by('-create_date')
     if kw:
         xfilter_list = xfilter_list.filter(
-            Q(subject__icontains=kw) |
             Q(content__icontains=kw) |
-            Q(comment__content__icontains=kw) |
-            Q(author__username__icontains=kw) |
-            Q(comment__author__username__icontains=kw)
+            Q(author__icontains=kw)
         ).distinct()
 
     serializer = XfilterSerializer(xfilter_list, many=True)
