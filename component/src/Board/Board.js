@@ -3,20 +3,19 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import styles from './Board.module.css';
 
+const BASE_URL = 'http://localhost:8000/';
+
 const Board = () => {
     const [xfilterList, setXfilterList] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const navigate = useNavigate();
-    const [currentPost, setCurrentPost] = useState(null); // Additional state for the selected post
-    const [userInfo, setUserInfo] = useState(null); // State to hold user information
 
     const fetchXfilterList = async (term) => {
         try {
-            const token = localStorage.getItem('token'); // Retrieve the token from localStorage
-
-            const response = await axios.get(`http://localhost:8000/board/xfilter/?kw=${term}`, {
+            const token = localStorage.getItem('token'); // Retrieve the JWT token from local storage (replace 'authToken' with your key)
+            const response = await axios.get(`${BASE_URL}board/xfilter/`, {
                 headers: {
-                    'Authorization': `Bearer ${token}` // Send the token in the request header
+                    Authorization: `Bearer ${token}` // Include the JWT token in the request headers
                 }
             });
             setXfilterList(response.data);
@@ -25,38 +24,13 @@ const Board = () => {
         }
     };
 
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        console.log('Token:', token); // 이 위치에 console.log를 추가하여 토큰 확인
-        if (token) {
-            // Fetch user information using the token
-            axios.get('http://localhost:8000/api/get_user_info/', {
-                headers: {
-                    Authorization: `Bearer ${token}`, // Send the token in the request header
-                },
-            })
-            .then((response) => {
-                setUserInfo(response.data); // Update the user information state
-            })
-            .catch((error) => {
-                console.error('Error fetching user info:', error);
-            });
-        }
-    }, []);
-
-
-
     const handleSearch = () => {
         fetchXfilterList(searchTerm);
     };
 
-    const handleXfilterClick = (id) => {
-        // Define the behavior when an xfilter is clicked
-        // This could be a navigation, updating state, or making an API call
-        // For now, let's log the clicked xfilter ID
-        console.log(`Clicked xfilter ID: ${id}`);
-    };
-
+    useEffect(() => {
+        fetchXfilterList(''); // Fetch xfilter list on initial load
+    }, []);
 
     return (
         <div className={styles.container}>
@@ -103,31 +77,18 @@ const Board = () => {
                         <tr
                             className="text-center"
                             key={xfilter.id}
-                            onClick={() => handleXfilterClick(xfilter.id)}
+                            onClick={() => navigate(`/detail/${xfilter.id}`)} // You can set your route for detailed view
                         >
-                            <td>{index + 1}</td>
+                            <td>{xfilter.id}</td>
                             <td className="text-start">
-                                <a href={`#/${xfilter.id}`}>{xfilter.subject}</a>
-                                {xfilter.comment_set.count > 0 && (
-                                    <span className="text-danger small mx-2">
-                                        {xfilter.comment_set.count}
-                                    </span>
-                                )}
+                                {xfilter.content}
                             </td>
-                            <td>{xfilter.author.username}</td>
+                            <td>{xfilter.author}</td>
                             <td>{xfilter.create_date}</td>
                         </tr>
                     ))}
                 </tbody>
             </table>
-            {currentPost && ( // 선택된 게시글 정보를 보여줌
-                <div className={styles.currentPost}>
-                    <h3>{currentPost.subject}</h3>
-                    <p>{currentPost.content}</p>
-                    <p>작성자: {currentPost.author.username}</p>
-                    {/* 기타 원하는 정보들을 추가하세요 */}
-                </div>
-            )}
         </div>
     );
 };
