@@ -50,7 +50,7 @@ async function postComment(content, author, create_date, xfilter_id, userToken) 
       },
     };
 
-    const response = await axios.post(`${BASE_URL}/board/comment/create/${xfilter_id}/`, body, headerOption);
+    const response = await axios.post(`${BASE_URL}board/comment/create/${xfilter_id}/`, body, headerOption);
     const data = response.data;
     return data;
   } catch (error) {

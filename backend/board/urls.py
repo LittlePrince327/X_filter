@@ -7,7 +7,7 @@ urlpatterns = [
     # base
     path('xfilter/', base_views.xfilter_list, name='xfilter-list'),
     path('xfilter/<int:xfilter_id>/', base_views.xfilter_detail, name='xfilter-detail'),
-    path('xfilter/comment', base_views.comment_list, name='comment-list'),
+    path('xfilter/comment/', base_views.comment_list, name='comment-list'),
 
 
     # xfilter

@@ -21,8 +21,8 @@ const DetailBoard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const token = localStorage.getItem('token');
   const [showCommentTextarea, setShowCommentTextarea] = useState(false);
-  const [isCommenting, setIsCommenting] = useState(false); 
-  const [comments, setComments] = useState([]); 
+  const [isCommenting, setIsCommenting] = useState(false);
+  const [comments, setComments] = useState([]);
 
   const fetchXfilter = async () => {
     if (token) {
@@ -54,10 +54,12 @@ const DetailBoard = () => {
 
   const fetchComments = async () => {
     try {
-      if (xfilter) {
-        const commentsResponse = await axios.get(`${BASE_URL}comments/${xfilter.id}`);
-        setComments(commentsResponse.data);
-      }
+      const commentsResponse = await axios.get(`${BASE_URL}board/xfilter/comment?xfilter_id=${xfilter_id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setComments(commentsResponse.data);
     } catch (error) {
       console.error('댓글 불러오기 오류:', error);
     }
@@ -89,9 +91,9 @@ const DetailBoard = () => {
     const content = event.target.content.value;
     const author = localStorage.getItem('author');
     const create_date = new Date().toISOString();
-  
+
     try {
-      const data = await postComment(content, author, create_date, xfilter.id, token); // Use xfilter.id directly here
+      const data = await postComment(content, author, create_date, xfilter_id, token); // Use xfilter.id directly here
       console.log('댓글 작성 완료:', data);
       event.target.content.value = '';
       setIsCommenting(false);
