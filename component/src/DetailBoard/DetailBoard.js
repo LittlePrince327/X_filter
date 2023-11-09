@@ -101,6 +101,11 @@ const DetailBoard = () => {
     }
   };
 
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+    return new Date(dateString).toLocaleString('ko-KR', options);
+};
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -109,36 +114,33 @@ const DetailBoard = () => {
     return <div>No data available</div>;
   }
 
+
   return (
     <div className="container my-3" style={{ backgroundColor: 'white', color: 'black' }}>
-      <div className="top section">
-        <div>
-          <label htmlFor="content" className="form-label">제목</label>
-          <p>{xfilter.title}</p>
+      <div className="detail-container" style={{ display: 'flex', flexDirection: 'column' }}>
+        <div style={{ display: 'flex' }}>
+          <div className="detail-section" style={{ flex: 1, marginRight: '10px' }}>
+            <label htmlFor="content" className="form-label">작성자</label>
+            <p>{xfilter.author}</p>
+          </div>
+          <div className="detail-section" style={{ flex: 2, border: '1px solid #ccc', borderRadius: '5px', padding: '10px' }}>
+            <label htmlFor="content" className="form-label">내용</label>
+            <p>{xfilter.content}</p>
+          </div>
+          <div className="detail-section" style={{ flex: 1, marginLeft: '10px' }}>
+            <label htmlFor="content" className="form-label">작성일시</label>
+            <p>{formatDate(xfilter.create_date)}</p>
+          </div>
         </div>
-        <button onClick={handlerecommendBoard} className="btn btn-outline-success mx-2">
-          추천하기
-        </button>
-
-        <div className={styles.actionButtons}>
-          <button onClick={handledeleteBoard} className="btn btn-outline-danger">
-            삭제
-          </button>
-        </div>
-      </div>
-
-      <div className="bottom-section">
-        <div>
-          <label htmlFor="content" className="form-label">작성자</label>
-          <p>{xfilter.author}</p>
-        </div>
-        <div>
-          <label htmlFor="content" className="form-label">작성일시</label>
-          <p>{xfilter.create_date}</p>
-        </div>
-        <div>
-          <label htmlFor="content" className="form-label">내용</label>
-          <p>{xfilter.content}</p>
+        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <div className={styles.actionButtons}>
+            <button onClick={handledeleteBoard} className="btn btn-outline-danger">
+              삭제하기
+            </button>
+            <button onClick={handlerecommendBoard} className="btn btn-outline-success mx-2">
+              추천하기
+            </button>
+          </div>
         </div>
       </div>
     </div>
