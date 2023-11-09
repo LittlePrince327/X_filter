@@ -22,6 +22,7 @@ const DetailBoard = () => {
   const token = localStorage.getItem('token');
   const [showCommentTextarea, setShowCommentTextarea] = useState(false);
   const [isCommenting, setIsCommenting] = useState(false); // New state to toggle comment section visibility
+  const [comments, setComments] = useState([]); // State to hold comments
 
   const fetchXfilter = async () => {
     if (token) {
@@ -47,7 +48,20 @@ const DetailBoard = () => {
 
   useEffect(() => {
     fetchXfilter();
+    fetchComments();
   }, [xfilter_id, token]);
+
+
+  const fetchComments = async () => {
+    try {
+      if (xfilter) {
+        const commentsResponse = await axios.get(`${BASE_URL}comments/${xfilter.id}`);
+        setComments(commentsResponse.data);
+      }
+    } catch (error) {
+      console.error('댓글 불러오기 오류:', error);
+    }
+  };
 
   const handledeleteBoard = async () => {
     try {
@@ -75,17 +89,33 @@ const DetailBoard = () => {
     const content = event.target.content.value;
     const author = localStorage.getItem('author');
     const create_date = new Date().toISOString();
-    const xfilter_id = xfilter.id; // xfilter_id 값으로 사용
+    const xfilter_id = xfilter.id;
 
     try {
       const data = await postComment(content, author, create_date, xfilter_id, token);
-      console.log('Comment posted:', data);
+      console.log('댓글 작성 완료:', data);
       event.target.content.value = '';
       setIsCommenting(false);
+      updateComments(); // 댓글이 추가될 때마다 DB에서 최신 데이터를 불러옴
     } catch (error) {
-      console.error('Error posting comment:', error);
+      console.error('댓글 작성 오류:', error);
     }
   };
+
+  const updateComments = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const commentsResponse = await axios.get(`${BASE_URL}board/xfilter/comment`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setComments(commentsResponse.data);
+    } catch (error) {
+      console.error('댓글 업데이트 오류:', error);
+    }
+  };
+
 
 
   const handledeleteComment = async (commentId) => {
@@ -170,6 +200,27 @@ const DetailBoard = () => {
             </button>
           </form>
         )}
+        <div className="comment-section">
+          {comments.map((comment) => (
+            <div key={comment.id} className="comment-box">
+              <div>
+                <p>
+                  <strong>작성자: </strong>{comment.author}
+                </p>
+              </div>
+              <div>
+                <p>
+                  <strong>내용: </strong>{comment.content}
+                </p>
+              </div>
+              <div>
+                <p>
+                  <strong>작성일시: </strong>{formatDate(comment.create_date)}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

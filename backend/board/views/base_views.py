@@ -1,8 +1,8 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from django.http import Http404
-from board.serializers import XfilterSerializer
-from board.models import Xfilter
+from board.serializers import XfilterSerializer, CommentSerializer
+from board.models import Xfilter, Comment
 from django.db.models import Q
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -32,3 +32,15 @@ def xfilter_detail(request, xfilter_id):
     serializer = XfilterSerializer(xfilter)
     return Response(serializer.data)
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def comment_list(request):
+    kw = request.GET.get('kw', '')  
+    comment_list = Comment.objects.order_by('-create_date')
+    if kw:
+        comment_list = comment_list.filter(
+            content__icontains=kw
+        )
+
+    serializer = CommentSerializer(comment_list, many=True)
+    return Response(serializer.data)
