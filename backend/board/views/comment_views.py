@@ -10,30 +10,25 @@ import json
 
 CustomUser = get_user_model()
 
+# comment 생성 API 엔드포인트
 @csrf_exempt
 def comment_create_api(request, xfilter_id):
     if request.method == "POST":
         try:
             data = json.loads(request.body)
-            print(data)
             form = CommentForm(data)
             if form.is_valid():
-                print('5')
                 comment = form.save(commit=False)
-                print('6')
-                comment.xfilter_id = xfilter_id  # xfilter_id를 직접 설정
-                print('7')
+                comment.xfilter_id = xfilter_id  
                 comment.save()
-                print('8')
-                return JsonResponse({'message': 'Comment created'}, status=200)  # "XFilter created"에서 "Comment created"로 수정
+                return JsonResponse({'message': 'Comment created'}, status=200)  
             return JsonResponse({'message': 'Invalid form data', 'details': form.errors}, status=400)
         except Exception as e:
             print(e)
             return JsonResponse({'message': 'Internal Server Error'}, status=500)
     return JsonResponse({'message': 'Only POST requests allowed'}, status=405)
 
-
-# Create API endpoint for deleting a comment
+# comment 삭제 API 엔드포인트
 def comment_delete_api(request, comment_id):
     comment = get_object_or_404(Comment, pk=comment_id)
     if request.user != comment.author:
@@ -42,7 +37,7 @@ def comment_delete_api(request, comment_id):
     comment.delete()
     return JsonResponse({'success': 'Comment deleted'})
 
-# Create API endpoint for voting on a comment
+# comment 추천 API 엔드포인트
 def comment_vote_api(request, comment_id):
     comment = get_object_or_404(Comment, pk=comment_id)
     if request.user == comment.author:

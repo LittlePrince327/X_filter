@@ -23,7 +23,7 @@ def xfilter_list(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def xfilter_detail(request, xfilter_id):  # xfilter_id 매개변수를 받을 수 있도록 변경
+def xfilter_detail(request, xfilter_id):  
     try:
         xfilter = Xfilter.objects.get(pk=xfilter_id)
     except Xfilter.DoesNotExist:

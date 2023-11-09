@@ -9,6 +9,7 @@ import json
 
 CustomUser = get_user_model()
 
+# XFilter 생성 API 엔드포인트
 @csrf_exempt
 def xfilter_create_api(request):
     if request.method == "POST":
