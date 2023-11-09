@@ -12,7 +12,7 @@ const Board = () => {
 
     const fetchXfilterList = async () => {
         try {
-            const token = localStorage.getItem('token'); // 토큰을 가져옵니다
+            const token = localStorage.getItem('token');
             const response = await axios.get(`${BASE_URL}board/xfilter/`, {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -27,7 +27,7 @@ const Board = () => {
     const handleSearch = async () => {
         try {
             if (searchTerm.trim() !== '') {
-                const token = localStorage.getItem('token'); // 토큰을 가져옵니다
+                const token = localStorage.getItem('token');
                 const response = await axios.get(
                     `${BASE_URL}board/xfilter/?kw=${searchTerm}`,
                     {
@@ -36,14 +36,15 @@ const Board = () => {
                         }
                     }
                 );
-                setXfilterList(response.data); // 검색 결과를 state에 설정
+                setXfilterList(response.data);
             } else {
-                fetchXfilterList(); // 검색어가 비어 있으면 전체 데이터를 가져옵니다
+                fetchXfilterList();
             }
         } catch (error) {
             console.error('Error fetching filtered xfilters:', error);
         }
     };
+
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
         return new Date(dateString).toLocaleString('ko-KR', options);
@@ -97,18 +98,19 @@ const Board = () => {
                     {xfilterList.map((xfilter) => (
                         <tr
                             className="text-center"
-                            key={xfilter.xfilter_id}
-                            onClick={() => navigate(`/detail/${xfilter.xfilter_id}`)}
+                            key={xfilter.id} 
+                            onClick={() => navigate(`/detail/${xfilter.id}`)} 
                         >
                             <td>{xfilter.id}</td>
                             <td className="text-start">
-                                {xfilter.content.length > 20 ? `${xfilter.content.substring(0, 20)}...` : xfilter.content}
+                                {xfilter.content.length > 20 ? `${xfilter.content.substring(0, 40)}...` : xfilter.content}
                             </td>
                             <td>{xfilter.author}</td>
                             <td>{formatDate(xfilter.create_date)}</td>
                         </tr>
                     ))}
                 </tbody>
+
             </table>
         </div>
     );

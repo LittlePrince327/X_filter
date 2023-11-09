@@ -8,6 +8,7 @@ urlpatterns = [
     path('xfilter/', base_views.xfilter_list, name='xfilter-list'),
     path('xfilter/<int:xfilter_id>/', base_views.xfilter_detail, name='xfilter-detail'),
 
+
     # xfilter
     path('xfilter/create', xfilter_views.xfilter_create_api, name='xfilter_create'),
     path('xfilter/modify/<int:xfilter_id>/', xfilter_views.xfilter_modify_api, name='xfilter_modify'),

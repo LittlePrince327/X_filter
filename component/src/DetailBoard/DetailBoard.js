@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styles from './DetailBoard.module.css';
+import { useNavigate, useParams } from 'react-router-dom'; // useParams hook
 import {
   postComment,
-  editBoard, 
-  deleteBoard, 
+  editBoard,
+  deleteBoard,
   recommendBoard,
   editComment,
   deleteComment,
@@ -12,17 +13,24 @@ import {
 } from '../api';
 const BASE_URL = 'http://localhost:8000/';
 
-const DetailBoard = ({ xfilter_id }) => {
+const DetailBoard = () => {
+  const navigate = useNavigate();
+  const { id: xfilter_id } = useParams(); // Accessing URL parameters using useParams hook
   const [xfilter, setXfilter] = useState(null);
   const [commentContent, setCommentContent] = useState('');
-  const [commentId, setCommentId] = useState(null); // Adding state for commentId
+  const [commentId, setCommentId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchXfilter = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}board/xfilter/${xfilter_id}/`);
-      setXfilter(response.data);
-      setIsLoading(false);
+      if (xfilter_id) {
+        const response = await axios.get(`${BASE_URL}board/xfilter/${xfilter_id}/`);
+        setXfilter(response.data);
+        setIsLoading(false);
+      } else {
+        setIsLoading(false);
+        // You might consider setting the xfilter to null or handling it differently
+      }
     } catch (error) {
       console.error('Error fetching xfilter:', error);
       setIsLoading(false);
@@ -82,10 +90,10 @@ const DetailBoard = ({ xfilter_id }) => {
   const handleeditComment = async (event) => {
     event.preventDefault();
     const updatedContent = event.target.content.value;
-    // Extract the commentId from the form or state
-    const commentId = 29;
+    // You can handle commentId from the form or state
+    const updatedCommentId = 29; // Example ID, replace with your logic to get the correct comment ID
     try {
-      const response = await editComment(commentId, updatedContent);
+      const response = await editComment(updatedCommentId, updatedContent);
       console.log(response);
     } catch (error) {
       console.error('댓글 수정 오류:', error);
