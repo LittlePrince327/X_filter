@@ -35,12 +35,11 @@ def xfilter_detail(request, xfilter_id):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def comment_list(request):
-    kw = request.GET.get('kw', '')  
-    comment_list = Comment.objects.order_by('-create_date')
-    if kw:
-        comment_list = comment_list.filter(
-            content__icontains=kw
-        )
+    xfilter_id = request.GET.get('xfilter_id')  
+    comment_list = Comment.objects.all()
+    
+    if xfilter_id:
+        comment_list = comment_list.filter(xfilter_id=xfilter_id)
 
     serializer = CommentSerializer(comment_list, many=True)
     return Response(serializer.data)

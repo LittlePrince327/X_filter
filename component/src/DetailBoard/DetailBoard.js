@@ -89,14 +89,13 @@ const DetailBoard = () => {
     const content = event.target.content.value;
     const author = localStorage.getItem('author');
     const create_date = new Date().toISOString();
-    const xfilter_id = xfilter.id;
-
+  
     try {
-      const data = await postComment(content, author, create_date, xfilter_id, token);
+      const data = await postComment(content, author, create_date, xfilter.id, token); // Use xfilter.id directly here
       console.log('댓글 작성 완료:', data);
       event.target.content.value = '';
       setIsCommenting(false);
-      updateComments(); 
+      updateComments(xfilter.id); // Update comments specifically for this xfilter.id
     } catch (error) {
       console.error('댓글 작성 오류:', error);
     }
