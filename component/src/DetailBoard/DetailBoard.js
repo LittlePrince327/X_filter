@@ -93,14 +93,15 @@ const DetailBoard = () => {
     const create_date = new Date().toISOString();
 
     try {
-      const data = await postComment(content, author, create_date, xfilter_id, token); // Use xfilter.id directly here
+      const data = await postComment(content, author, create_date, xfilter_id, token); 
       console.log('댓글 작성 완료:', data);
       event.target.content.value = '';
       setIsCommenting(false);
-      updateComments(xfilter.id); // Update comments specifically for this xfilter.id
+      updateComments(xfilter.id); 
     } catch (error) {
       console.error('댓글 작성 오류:', error);
     }
+    navigate('/board');
   };
 
   const updateComments = async () => {
