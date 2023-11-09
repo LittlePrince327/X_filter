@@ -23,6 +23,7 @@ const DetailBoard = () => {
   const [showCommentTextarea, setShowCommentTextarea] = useState(false);
   const [isCommenting, setIsCommenting] = useState(false);
   const [comments, setComments] = useState([]);
+  const [commentUpdated, setCommentUpdated] = useState(false);
 
   const fetchXfilter = async () => {
     if (token) {
@@ -49,7 +50,11 @@ const DetailBoard = () => {
   useEffect(() => {
     fetchXfilter();
     fetchComments();
-  }, [xfilter_id, token]);
+    if (commentUpdated) {
+      // 댓글이 작성되면 페이지를 새로고침합니다
+      window.location.reload();
+    }
+  }, [xfilter_id, token, commentUpdated]);
 
 
   const fetchComments = async () => {
@@ -97,11 +102,11 @@ const DetailBoard = () => {
       console.log('댓글 작성 완료:', data);
       event.target.content.value = '';
       setIsCommenting(false);
+      setCommentUpdated(true);
       updateComments(xfilter.id); 
     } catch (error) {
       console.error('댓글 작성 오류:', error);
     }
-    navigate('/board');
   };
 
   const updateComments = async () => {
