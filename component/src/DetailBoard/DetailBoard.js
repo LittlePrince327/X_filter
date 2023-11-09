@@ -49,18 +49,6 @@ const DetailBoard = () => {
     fetchXfilter();
   }, [xfilter_id, token]);
 
-  const handleeditBoard = async (event) => {
-    event.preventDefault();
-    try {
-      const updatedContent = event.target.content.value;
-      const postId = xfilter.id; // Assuming xfilter has an 'id'
-      const response = await editBoard(postId, updatedContent);
-      console.log(response);
-    } catch (error) {
-      console.error('게시글 수정 오류:', error);
-    }
-  };
-
   const handledeleteBoard = async () => {
     try {
       const postId = xfilter.id; // Assuming xfilter has an 'id'
@@ -95,19 +83,6 @@ const DetailBoard = () => {
     }
   }
 
-  const handleeditComment = async (event) => {
-    event.preventDefault();
-    const updatedContent = event.target.content.value;
-    // You can handle commentId from the form or state
-    const updatedCommentId = 29; // Example ID, replace with your logic to get the correct comment ID
-    try {
-      const response = await editComment(updatedCommentId, updatedContent);
-      console.log(response);
-    } catch (error) {
-      console.error('댓글 수정 오류:', error);
-    }
-  };
-
   const handledeleteComment = async (commentId) => {
     try {
       const response = await deleteComment(commentId);
@@ -135,23 +110,17 @@ const DetailBoard = () => {
   }
 
   return (
-    <div className="container my-3" style={{ backgroundColor: 'white' }}>
+    <div className="container my-3" style={{ backgroundColor: 'white', color: 'black' }}>
       <div className="top section">
-        <form onSubmit={handlepostComment}>
-          <div>
-            <label htmlFor="content" className="form-label">게시글</label>
-            <textarea className="form-control" name="content" id="content" rows={10}></textarea>
-          </div>
-          <button type="submit" className="btn btn-primary my-2">게시하기</button>
-        </form>
+        <div>
+          <label htmlFor="content" className="form-label">제목</label>
+          <p>{xfilter.title}</p>
+        </div>
         <button onClick={handlerecommendBoard} className="btn btn-outline-success mx-2">
           추천하기
         </button>
 
         <div className={styles.actionButtons}>
-          <button onClick={handleeditBoard} className="btn btn-outline-secondary mx-2">
-            수정
-          </button>
           <button onClick={handledeleteBoard} className="btn btn-outline-danger">
             삭제
           </button>
@@ -159,24 +128,17 @@ const DetailBoard = () => {
       </div>
 
       <div className="bottom-section">
-        <form onSubmit={handlepostComment}>
-          <div>
-            <label htmlFor="content" className="form-label">댓글</label>
-            <textarea className="form-control" name="content" id="content" rows={10}></textarea>
-          </div>
-          <button type="submit" className="btn btn-primary my-2">댓글달기</button>
-        </form>
-        <button onClick={() => handlerecommendComment(commentId)} className="btn btn-outline-success mx-2">
-          추천하기
-        </button>
-
-        <div className={styles.actionButtons}>
-          <button onClick={handleeditComment} className="btn btn-outline-secondary mx-2">
-            수정
-          </button>
-          <button onClick={() => handledeleteComment(commentId)} className="btn btn-outline-danger">
-            삭제
-          </button>
+        <div>
+          <label htmlFor="content" className="form-label">작성자</label>
+          <p>{xfilter.author}</p>
+        </div>
+        <div>
+          <label htmlFor="content" className="form-label">작성일시</label>
+          <p>{xfilter.create_date}</p>
+        </div>
+        <div>
+          <label htmlFor="content" className="form-label">내용</label>
+          <p>{xfilter.content}</p>
         </div>
       </div>
     </div>
