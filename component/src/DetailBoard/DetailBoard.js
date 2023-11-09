@@ -21,8 +21,8 @@ const DetailBoard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const token = localStorage.getItem('token');
   const [showCommentTextarea, setShowCommentTextarea] = useState(false);
-  const [isCommenting, setIsCommenting] = useState(false); // New state to toggle comment section visibility
-  const [comments, setComments] = useState([]); // State to hold comments
+  const [isCommenting, setIsCommenting] = useState(false); 
+  const [comments, setComments] = useState([]); 
 
   const fetchXfilter = async () => {
     if (token) {
@@ -96,7 +96,7 @@ const DetailBoard = () => {
       console.log('댓글 작성 완료:', data);
       event.target.content.value = '';
       setIsCommenting(false);
-      updateComments(); // 댓글이 추가될 때마다 DB에서 최신 데이터를 불러옴
+      updateComments(); 
     } catch (error) {
       console.error('댓글 작성 오류:', error);
     }

@@ -11,7 +11,6 @@ urlpatterns = [
     path('get-csrf-token/', csrf_exempt(get_token), name='get-csrf-token'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('board/', include('board.urls')),
-    path('common/', include('common.urls')),
     path('idpassword/', include('idpassword.urls')),
 ]
 
