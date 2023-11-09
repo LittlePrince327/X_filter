@@ -37,9 +37,8 @@ def xfilter_detail(request, xfilter_id):
 def comment_list(request):
     xfilter_id = request.GET.get('xfilter_id')  
     comment_list = Comment.objects.all()
-    
+    comment_list = Comment.objects.order_by('-create_date')
     if xfilter_id:
         comment_list = comment_list.filter(xfilter_id=xfilter_id)
-
     serializer = CommentSerializer(comment_list, many=True)
     return Response(serializer.data)
