@@ -41,6 +41,7 @@ async function postComment(content, author, create_date, xfilter_id, userToken) 
       content: content,
       author: author,
       create_date: create_date,
+      xfilter_id: xfilter_id
     };
 
     const headerOption = {

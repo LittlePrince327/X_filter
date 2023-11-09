@@ -11,8 +11,8 @@ class Xfilter(models.Model):
         return self.content
 
 class Comment(models.Model):
-    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='author_comment')
-    xfilter = models.ForeignKey(Xfilter, on_delete=models.CASCADE)
+    author = models.TextField(default=1)  
+    xfilter_id = models.IntegerField(null=True, default=0)  # Allowing null and specifying a default value
     content = models.TextField()
     create_date = models.DateTimeField() 
     # voter = models.ManyToManyField(CustomUser, related_name='voter_comment')

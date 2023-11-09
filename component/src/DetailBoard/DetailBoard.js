@@ -75,6 +75,7 @@ const DetailBoard = () => {
     const content = event.target.content.value;
     const author = localStorage.getItem('author');
     const create_date = new Date().toISOString();
+    const xfilter_id = xfilter.id; // xfilter_id 값으로 사용
 
     try {
       const data = await postComment(content, author, create_date, xfilter_id, token);

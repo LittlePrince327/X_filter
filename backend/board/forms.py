@@ -11,4 +11,4 @@ class XfilterForm(forms.ModelForm):
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-        fields = ['content', 'create_date','author']  
+        fields = ['content', 'create_date', 'author','xfilter_id'] 

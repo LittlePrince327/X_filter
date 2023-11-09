@@ -9,7 +9,6 @@ import json
 
 CustomUser = get_user_model()
 
-# XFilter 생성 API 엔드포인트
 @csrf_exempt
 def xfilter_create_api(request):
     if request.method == "POST":
@@ -24,22 +23,6 @@ def xfilter_create_api(request):
             print(e)
             return JsonResponse({'message': 'Invalid form data', 'details': form.errors}, status=400)
     return JsonResponse({'message': 'Only POST requests allowed'}, status=405)
-
-# XFilter 수정 API 엔드포인트
-@csrf_exempt
-def xfilter_modify_api(request, xfilter_id):
-    xfilter = get_object_or_404(Xfilter, pk=xfilter_id)
-    if not request.user.has_perm('board.change_xfilter', xfilter):
-        return JsonResponse({'error': 'Permission denied'}, status=403)
-
-    if request.method == "POST":
-        form = XfilterForm(request.POST, instance=xfilter)
-        if form.is_valid():
-            xfilter = form.save(commit=False)
-            xfilter.save()
-            return JsonResponse({'success': 'XFilter modified'})
-        return JsonResponse({'error': 'Invalid form data', 'details': form.errors}, status=400)
-    return JsonResponse({'error': 'Only POST requests allowed'}, status=405)
 
 # XFilter 삭제 API 엔드포인트
 @csrf_exempt
