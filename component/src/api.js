@@ -35,21 +35,28 @@ async function postBoard(content, author, create_date, userToken) {
   return data;
 }
 
-async function postComment(content, postId, userToken){
-  const body = {
-    content: content,
-    postId: postId
-  };
-  const headerOption = {
-    headers: {
-      Authorization: `Bearer ${userToken}`
-    }
-  };
+async function postComment(content, author, create_date, xfilter_id, userToken) {
+  try {
+    const body = {
+      content: content,
+      author: author,
+      create_date: create_date,
+    };
 
-  const response = await axios.post(`${BASE_URL}/comment/create/<int:xfilter_id>/`, body, headerOption);
-  const data = await response.data;
-  return data;
-};
+    const headerOption = {
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+      },
+    };
+
+    const response = await axios.post(`${BASE_URL}/board/comment/create/${xfilter_id}/`, body, headerOption);
+    const data = response.data;
+    return data;
+  } catch (error) {
+    console.error('Error posting comment:', error);
+    throw error; 
+  }
+}
 
 
 async function deleteBoard(postId, userToken) {

@@ -73,24 +73,19 @@ const DetailBoard = () => {
   const handlePostComment = async (event) => {
     event.preventDefault();
     const content = event.target.content.value;
+    const author = localStorage.getItem('author');
+    const create_date = new Date().toISOString();
 
     try {
-      const response = await axios.post(`/board/comment/create/${xfilter.id}/`, { content }, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      console.log('Comment posted:', response.data); // Handle the response as required
-
-      // Optionally, reset the state for commenting section after posting
+      const data = await postComment(content, author, create_date, xfilter_id, token);
+      console.log('Comment posted:', data);
       event.target.content.value = '';
       setIsCommenting(false);
     } catch (error) {
       console.error('Error posting comment:', error);
-      // Handle any errors if needed
     }
   };
+
 
   const handledeleteComment = async (commentId) => {
     try {
@@ -149,6 +144,7 @@ const DetailBoard = () => {
             <p>{formatDate(xfilter.create_date)}</p>
           </div>
         </div>
+        <br />
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
           <div className={styles.actionButtons}>
             <button onClick={handledeleteBoard} className="btn btn-outline-danger">
@@ -162,10 +158,10 @@ const DetailBoard = () => {
             </button>
           </div>
         </div>
+        <br />
         {isCommenting && (
           <form onSubmit={handlePostComment}>
             <div>
-              <label htmlFor="content" className="form-label">게시글</label>
               <textarea className="form-control" name="content" id="content" rows={10}></textarea>
             </div>
             <button type="submit" className="btn btn-primary my-2">
