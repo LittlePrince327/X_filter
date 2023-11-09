@@ -8,7 +8,6 @@ from django.http import JsonResponse
 
 CustomUser = get_user_model()
 
-# Create API endpoint for creating a comment
 def comment_create_api(request, xfilter_id):
     if request.method == "POST":
         form = CommentForm(request.POST)
@@ -16,13 +15,13 @@ def comment_create_api(request, xfilter_id):
             comment = form.save(commit=False)
             comment.author = CustomUser.objects.get(id=request.user.id)
             comment.create_date = timezone.now()
-            comment.xfilter_id = xfilter_id  # Assuming xfilter_id is the foreign key
+            comment.xfilter_id = xfilter_id  
             comment.save()
             return JsonResponse({'comment_id': comment.id, 'xfilter_id': xfilter_id})
         return JsonResponse({'error': 'Invalid form data'}, status=400)
     return JsonResponse({'error': 'Only POST requests allowed'}, status=405)
 
-# Create API endpoint for modifying a comment
+
 def comment_modify_api(request, comment_id):
     comment = get_object_or_404(Comment, pk=comment_id)
     if request.user != comment.author:
@@ -32,7 +31,6 @@ def comment_modify_api(request, comment_id):
         form = CommentForm(request.POST, instance=comment)
         if form.is_valid():
             comment = form.save(commit=False)
-            comment.modify_date = timezone.now()
             comment.save()
             return JsonResponse({'success': 'Comment modified'})
         return JsonResponse({'error': 'Invalid form data'}, status=400)

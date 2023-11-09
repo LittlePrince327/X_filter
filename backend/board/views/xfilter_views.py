@@ -17,7 +17,6 @@ def xfilter_create_api(request):
             data = json.loads(request.body)
             form = XfilterForm(data)
             if form.is_valid():
-                print(data)
                 form.save()
                 return JsonResponse({'message': 'XFilter created'}, status=200)
             return JsonResponse({'message': 'Internal Server Error', 'details': form.errors}, status=500)
@@ -37,7 +36,6 @@ def xfilter_modify_api(request, xfilter_id):
         form = XfilterForm(request.POST, instance=xfilter)
         if form.is_valid():
             xfilter = form.save(commit=False)
-            xfilter.modify_date = timezone.now()
             xfilter.save()
             return JsonResponse({'success': 'XFilter modified'})
         return JsonResponse({'error': 'Invalid form data', 'details': form.errors}, status=400)

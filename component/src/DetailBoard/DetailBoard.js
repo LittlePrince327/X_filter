@@ -4,10 +4,8 @@ import styles from './DetailBoard.module.css';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   postComment,
-  editBoard,
   deleteBoard,
   recommendBoard,
-  editComment,
   deleteComment,
   recommendComment
 } from '../api';
@@ -22,6 +20,8 @@ const DetailBoard = () => {
   const [commentId, setCommentId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const token = localStorage.getItem('token');
+  const [showCommentTextarea, setShowCommentTextarea] = useState(false);
+  const [isCommenting, setIsCommenting] = useState(false); // New state to toggle comment section visibility
 
   const fetchXfilter = async () => {
     if (token) {
@@ -51,7 +51,7 @@ const DetailBoard = () => {
 
   const handledeleteBoard = async () => {
     try {
-      const postId = xfilter.id; // Assuming xfilter has an 'id'
+      const postId = xfilter.id;
       const response = await deleteBoard(postId);
       console.log(response);
     } catch (error) {
@@ -62,7 +62,7 @@ const DetailBoard = () => {
   const handlerecommendBoard = async () => {
     const type = 'post';
     try {
-      const postId = xfilter.id; // Assuming xfilter has an 'id'
+      const postId = xfilter.id;
       const response = await recommendBoard(type, postId);
       console.log(response);
     } catch (error) {
@@ -70,18 +70,27 @@ const DetailBoard = () => {
     }
   };
 
-  const handlepostComment = async (event) => {
+  const handlePostComment = async (event) => {
     event.preventDefault();
     const content = event.target.content.value;
 
     try {
-      const postId = xfilter.id; // Assuming xfilter has an 'id'
-      const response = await postComment(content, postId);
-      console.log(response);
+      const response = await axios.post(`/board/comment/create/${xfilter.id}/`, { content }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log('Comment posted:', response.data); // Handle the response as required
+
+      // Optionally, reset the state for commenting section after posting
+      event.target.content.value = '';
+      setIsCommenting(false);
     } catch (error) {
-      console.error('댓글 제출 오류:', error);
+      console.error('Error posting comment:', error);
+      // Handle any errors if needed
     }
-  }
+  };
 
   const handledeleteComment = async (commentId) => {
     try {
@@ -101,10 +110,18 @@ const DetailBoard = () => {
     }
   };
 
+  const handleShowCommentTextarea = () => {
+    setShowCommentTextarea(true);
+  };
+
+  const handleCommentButton = () => {
+    setIsCommenting(!isCommenting);
+  };
+
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
     return new Date(dateString).toLocaleString('ko-KR', options);
-};
+  };
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -140,8 +157,22 @@ const DetailBoard = () => {
             <button onClick={handlerecommendBoard} className="btn btn-outline-success mx-2">
               추천하기
             </button>
+            <button onClick={handleCommentButton} className="btn btn-primary mx-2">
+              댓글 달기
+            </button>
           </div>
         </div>
+        {isCommenting && (
+          <form onSubmit={handlePostComment}>
+            <div>
+              <label htmlFor="content" className="form-label">게시글</label>
+              <textarea className="form-control" name="content" id="content" rows={10}></textarea>
+            </div>
+            <button type="submit" className="btn btn-primary my-2">
+              댓글 등록
+            </button>
+          </form>
+        )}
       </div>
     </div>
   );

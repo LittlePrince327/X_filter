@@ -51,25 +51,6 @@ async function postComment(content, postId, userToken){
   return data;
 };
 
-async function editBoard(postId, updatedContent, userToken) {
-  try {
-    const body = {
-      postId: postId,
-      content: updatedContent
-    };
-    const headerOption = {
-      headers: {
-        Authorization: `Bearer ${userToken}`
-      }
-    };
-
-    const response = await axios.put(`${BASE_URL}/xfilter/modify/<int:xfilter_id>/`, body, headerOption);
-    const data = response.data;
-    return data;
-  } catch (error) {
-    throw error;
-  }
-}
 
 async function deleteBoard(postId, userToken) {
   try {
@@ -93,26 +74,6 @@ async function deleteBoard(postId, userToken) {
 async function recommendBoard(type, id, userToken) {
   try {
     const response = await axios.post(`${BASE_URL}/xfilter/vote/<int:xfilter_id>/`);
-    const data = response.data;
-    return data;
-  } catch (error) {
-    throw error;
-  }
-}
-
-async function editComment(commentId, updatedContent, userToken) {
-  try {
-    const body = {
-      commentId: commentId,
-      content: updatedContent
-    };
-    const headerOption = {
-      headers: {
-        Authorization: `Bearer ${userToken}`
-      }
-    };
-
-    const response = await axios.put(`${BASE_URL}/comment/modify/<int:comment_id>/`, body, headerOption);
     const data = response.data;
     return data;
   } catch (error) {
@@ -154,11 +115,9 @@ async function recommendComment(commentId, userToken) {
 export { 
   get_user_info,
   postBoard, 
-  postComment,
-  editBoard, 
+  postComment, 
   deleteBoard, 
   recommendBoard,
-  editComment,
   deleteComment,
   recommendComment
 };
