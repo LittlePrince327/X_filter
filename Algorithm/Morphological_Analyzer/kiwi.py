@@ -1,7 +1,6 @@
 from kiwipiepy import Kiwi
 kiwi= Kiwi(num_workers=0, model_path=None, load_default_dict=True, integrate_allomorph=False)
-
-# kiwi.tokenize(sentence, normalize_coda=True)
+kiwi.tokenize(개쓰레기, normalize_coda=True)
 # kiwi.add_user_word(" ", tag=' ', score=0.0)
 
 # NNG - 일반 명사
