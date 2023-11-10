@@ -51,7 +51,6 @@ const DetailBoard = () => {
     fetchXfilter();
     fetchComments();
     if (commentUpdated) {
-      // 댓글이 작성되면 페이지를 새로고침합니다
       window.location.reload();
     }
   }, [xfilter_id, token, commentUpdated]);

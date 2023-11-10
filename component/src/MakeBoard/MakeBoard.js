@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom'; 
 import styles from './MakeBoard.module.css';
-import { get_user_info, postBoard } from '../api';
+import { postBoard } from '../api';
 
 const MakeBoard = () => {
   const postId = 123;
   const commentId = 456;
   const [userToken, setUserToken] = useState('');
   const [userData, setUserData] = useState(null);
-  const navigate = useNavigate(); // Define navigate here
+  const navigate = useNavigate(); 
 
   useEffect(() => {
-    // Your existing useEffect code
+ 
   }, []);
 
-  // 게시글 작성
+
   const handlepostBoard = async (event) => {
     event.preventDefault();
     const content = event.target.content.value;
@@ -24,7 +24,7 @@ const MakeBoard = () => {
     try {
       const response = await postBoard(content, author, create_date, userToken);
       console.log(response);
-      navigate('/board'); // Navigate after posting the board
+      navigate('/board'); 
     } catch (error) {
       console.error('게시물 제출 오류:', error);
     }

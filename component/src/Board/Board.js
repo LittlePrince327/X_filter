@@ -72,7 +72,7 @@ const Board = () => {
 
     useEffect(() => {
         fetchXfilterList();
-        fetchUserInfoAndSaveToLocalStorage(); // 사용자 정보 가져와서 author를 로컬 스토리지에 저장
+        fetchUserInfoAndSaveToLocalStorage(); 
     }, []);
 
     return (

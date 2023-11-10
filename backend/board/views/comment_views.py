@@ -12,21 +12,22 @@ CustomUser = get_user_model()
 
 # comment 생성 API 엔드포인트
 @csrf_exempt
-def comment_create_api(request, xfilter_id):
+def comment_create_api(request):
     if request.method == "POST":
         try:
             data = json.loads(request.body)
             form = CommentForm(data)
             if form.is_valid():
+                print('안녕')
                 comment = form.save(commit=False)
-                comment.xfilter_id = xfilter_id  
                 comment.save()
-                return JsonResponse({'message': 'Comment created'}, status=200)  
+                return JsonResponse({'message': 'Comment created'}, status=200)
             return JsonResponse({'message': 'Invalid form data', 'details': form.errors}, status=400)
         except Exception as e:
             print(e)
             return JsonResponse({'message': 'Internal Server Error'}, status=500)
     return JsonResponse({'message': 'Only POST requests allowed'}, status=405)
+
 
 # comment 삭제 API 엔드포인트
 def comment_delete_api(request, comment_id):
