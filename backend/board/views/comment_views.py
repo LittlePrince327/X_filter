@@ -12,13 +12,12 @@ CustomUser = get_user_model()
 
 # comment 생성 API 엔드포인트
 @csrf_exempt
-def comment_create_api(request):
+def comment_create_api(request, xfilter_id):
     if request.method == "POST":
         try:
             data = json.loads(request.body)
             form = CommentForm(data)
             if form.is_valid():
-                print('안녕')
                 comment = form.save(commit=False)
                 comment.save()
                 return JsonResponse({'message': 'Comment created'}, status=200)
