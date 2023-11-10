@@ -62,19 +62,14 @@ async function postComment(content, author, create_date, xfilter_id, userToken) 
 
 async function deleteBoard(postId, userToken) {
   try {
-    const body = {
-      postId: postId
-    }
-    const headerOption = {
+    const response = await axios.delete(`${BASE_URL}board/xfilter/delete/${postId}/`, {
       headers: {
         Authorization: `Bearer ${userToken}`
       }
-    };
-
-    const response = await axios.delete(`${BASE_URL}/xfilter/delete/<int:xfilter_id>/`, headerOption);
-    const data = response.data;
-    return data;
+    });
+    return response.data; // 삭제 후 성공적인 응답 데이터 반환
   } catch (error) {
+    console.error('게시글 삭제 오류:', error);
     throw error;
   }
 }

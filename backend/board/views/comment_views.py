@@ -29,7 +29,8 @@ def comment_create_api(request, xfilter_id):
 
 
 # comment 삭제 API 엔드포인트
-def comment_delete_api(request, comment_id):
+@csrf_exempt
+def comment_delete_api(request, comment_id):  # 인자를 comment_id로 수정
     comment = get_object_or_404(Comment, pk=comment_id)
     if request.user != comment.author:
         return JsonResponse({'error': 'Permission denied'}, status=403)

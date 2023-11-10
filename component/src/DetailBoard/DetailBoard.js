@@ -71,11 +71,23 @@ const DetailBoard = () => {
 
   const handledeleteBoard = async () => {
     try {
-      const postId = xfilter.id;
-      const response = await deleteBoard(postId);
-      console.log(response);
+      if (xfilter) {
+        const postId = xfilter.id;
+
+        // 현재 사용자가 작성자인지 확인
+        if (xfilter.author === localStorage.getItem('author')) {
+          const response = await deleteBoard(postId, token);
+          console.log('게시글 삭제 완료:', response);
+          // 성공적인 삭제 후 필요한 경우 추가 로직을 추가할 수 있습니다. 예를 들어 다른 페이지로의 리디렉션 또는 UI 업데이트 등.
+        } else {
+          console.error('현재 사용자는 이 게시글을 삭제할 권한이 없습니다.');
+        }
+      } else {
+        console.error('게시글이 존재하지 않습니다.');
+      }
     } catch (error) {
       console.error('게시글 삭제 오류:', error);
+      // 에러를 처리하거나 사용자에게 에러 메시지를 표시할 수 있습니다.
     }
   };
 
@@ -97,12 +109,12 @@ const DetailBoard = () => {
     const create_date = new Date().toISOString();
 
     try {
-      const data = await postComment(content, author, create_date, xfilter_id, token); 
+      const data = await postComment(content, author, create_date, xfilter_id, token);
       console.log('댓글 작성 완료:', data);
       event.target.content.value = '';
       setIsCommenting(false);
       setCommentUpdated(true);
-      updateComments(xfilter.id); 
+      updateComments(xfilter.id);
     } catch (error) {
       console.error('댓글 작성 오류:', error);
     }
@@ -184,9 +196,11 @@ const DetailBoard = () => {
         <br />
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
           <div className={styles.actionButtons}>
-            <button onClick={handledeleteBoard} className="btn btn-outline-danger">
-              삭제하기
-            </button>
+            {localStorage.getItem('author') === xfilter.author && (
+              <button onClick={handledeleteBoard} className="btn btn-outline-danger">
+                삭제하기
+              </button>
+            )}
             <button onClick={handlerecommendBoard} className="btn btn-outline-success mx-2">
               추천하기
             </button>
