@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import styles from './Board.module.css';
+import { get_user_info } from '../api';
 
 const BASE_URL = 'http://localhost:8000/';
 
@@ -54,13 +55,9 @@ const Board = () => {
         try {
             const token = localStorage.getItem('token');
             if (token) {
-                const response = await axios.get(`${BASE_URL}api/get_user_info/`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
+                const userData = await get_user_info(token); 
 
-                const fullName = response.data.full_name;
+                const fullName = userData.full_name;
 
                 if (fullName) {
                     localStorage.setItem('author', fullName);

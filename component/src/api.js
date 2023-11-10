@@ -14,7 +14,7 @@ async function get_user_info(userToken) {
     return userData;
   } catch (error) {
     console.error('사용자 정보 가져오는 중 오류:', error);
-    throw error; // 오류 처리나 예외 처리를 위해 오류를 다시 throw하는 것이 유용합니다.
+    throw error;
   }
 }
 
