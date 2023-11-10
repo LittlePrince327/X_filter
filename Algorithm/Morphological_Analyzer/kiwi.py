@@ -1,3 +1,12 @@
+import subprocess
+
+# kiwi 모듈을 설치하는 명령어
+command = 'pip install kiwi'
+
+# subprocess 모듈을 사용하여 명령어 실행
+subprocess.run(command, shell=True)
+
+
 from kiwipiepy import Kiwi
 kiwi= Kiwi(num_workers=0, model_path=None, load_default_dict=True, integrate_allomorph=False)
 
