@@ -50,8 +50,32 @@ const Board = () => {
         return new Date(dateString).toLocaleString('ko-KR', options);
     };
 
+    const fetchUserInfoAndSaveToLocalStorage = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            if (token) {
+                const response = await axios.get(`${BASE_URL}api/get_user_info/`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
+                const fullName = response.data.full_name;
+
+                if (fullName) {
+                    localStorage.setItem('author', fullName);
+                }
+            } else {
+                console.error('토큰이 존재하지 않습니다.');
+            }
+        } catch (error) {
+            console.error('사용자 정보를 가져오는 데 문제가 발생했습니다:', error);
+        }
+    };
+
     useEffect(() => {
         fetchXfilterList();
+        fetchUserInfoAndSaveToLocalStorage(); // 사용자 정보 가져와서 author를 로컬 스토리지에 저장
     }, []);
 
     return (
