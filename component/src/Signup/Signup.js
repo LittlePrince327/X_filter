@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-
-import styles from './Signup.module.css';
+import styles from './Signup.css';
 
 function Signup() {
   const navigate = useNavigate();
@@ -12,8 +11,7 @@ function Signup() {
     email: '',
     password: '',
     confirmPassword: '',
-    full_name: '',                
-    gender: '',              
+    full_name: '',                           
   });
 
   const [passwordMismatch, setPasswordMismatch] = useState(false);
@@ -140,18 +138,6 @@ function Signup() {
               onChange={handleInputChange}
               placeholder="Name"
             />
-          </div>
-          <div>                 
-            <select
-              className={`joinInput mt-20 ${styles.input}`}
-              name="gender"
-              value={formData.gender}
-              onChange={handleInputChange}
-            >
-              <option value="">Select Gender</option>
-              <option value="male">남성</option>
-              <option value="female">여성</option>
-            </select>
           </div>
           {usernameError && <p className={styles.errorMessage}>이메일 형식의 닉네임은 사용할 수 없습니다.</p>}
           {passwordMismatch && <p className={styles.errorMessage}>비밀번호가 일치하지 않습니다.</p>}

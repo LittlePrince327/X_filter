@@ -1,24 +1,25 @@
 from login.models import CustomUser
 from django.db import models
 
-
 class Xfilter(models.Model):
-    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='author_xfilter')
-    subject = models.CharField(max_length=200)
+    author = models.TextField(default=1)  
     content = models.TextField()
-    create_date = models.DateTimeField()
-    modify_date = models.DateTimeField(null=True, blank=True)
-    voter = models.ManyToManyField(CustomUser, related_name='voter_xfilter')
+    create_date = models.DateTimeField()  
+    # voter = models.ManyToManyField(CustomUser, related_name='voter_xfilter')
 
     def __str__(self):
-        return self.subject
-
+        return self.content
 
 class Comment(models.Model):
-    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='author_comment')
-    xfilter = models.ForeignKey(Xfilter, on_delete=models.CASCADE)
+    author = models.TextField(default=1)  
+    xfilter_id = models.ForeignKey(
+        Xfilter, 
+        on_delete=models.CASCADE, 
+        db_column='xfilter_id'
+    )  # Allowing null and specifying a default value
     content = models.TextField()
-    create_date = models.DateTimeField()
-    modify_date = models.DateTimeField(null=True, blank=True)
-    voter = models.ManyToManyField(CustomUser, related_name='voter_comment')
+    create_date = models.DateTimeField() 
+    # voter = models.ManyToManyField(CustomUser, related_name='voter_comment')
 
+    def __str__(self):
+        return self.content[:50]  

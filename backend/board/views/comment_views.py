@@ -1,65 +1,48 @@
-from django.contrib import messages
-from django.http import HttpResponseNotAllowed
-from django.shortcuts import render, get_object_or_404, redirect, resolve_url
+
+from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from board.forms import CommentForm
-from board.models import Xfilter, Comment
+from board.models import Comment
 from django.contrib.auth import get_user_model
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+import json
 
 CustomUser = get_user_model()
 
-def comment_create(request, xfilter_id):
-    xfilter = get_object_or_404(Xfilter, pk=xfilter_id)
+# comment 생성 API 엔드포인트
+@csrf_exempt
+def comment_create_api(request, xfilter_id):
     if request.method == "POST":
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.author = CustomUser.objects.get(id=request.user.id) 
-            comment.create_date = timezone.now()
-            comment.xfilter = xfilter
-            comment.save()
-            return redirect('{}#comment_{}'.format(
-                resolve_url('board:detail', xfilter_id=xfilter.id), comment.id))
-    else:
-        return HttpResponseNotAllowed('Only POST is possible.')
-    context = {'xfilter': xfilter, 'form': form}
-    return render(request, 'board/xfilter_detail.html', context)
+        try:
+            data = json.loads(request.body)
+            form = CommentForm(data)
+            if form.is_valid():
+                comment = form.save(commit=False)
+                comment.save()
+                return JsonResponse({'message': 'Comment created'}, status=200)
+            return JsonResponse({'message': 'Invalid form data', 'details': form.errors}, status=400)
+        except Exception as e:
+            print(e)
+            return JsonResponse({'message': 'Internal Server Error'}, status=500)
+    return JsonResponse({'message': 'Only POST requests allowed'}, status=405)
 
 
-def comment_modify(request, comment_id):
+# comment 삭제 API 엔드포인트
+@csrf_exempt
+def comment_delete_api(request, comment_id):  # 인자를 comment_id로 수정
     comment = get_object_or_404(Comment, pk=comment_id)
     if request.user != comment.author:
-        messages.error(request, '수정권한이 없습니다')
-        return redirect('board:detail', xfilter_id=comment.xfilter.id)
-    if request.method == "POST":
-        form = CommentForm(request.POST, instance=comment)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.modify_date = timezone.now()
-            comment.save()
-            return redirect('{}#comment_{}'.format(
-                resolve_url('board:detail', xfilter_id=comment.xfilter.id), comment.id))
-    else:
-        form = CommentForm(instance=comment)
-    context = {'comment': comment, 'form': form}
-    return render(request, 'board/comment_form.html', context)
+        return JsonResponse({'error': 'Permission denied'}, status=403)
 
+    comment.delete()
+    return JsonResponse({'success': 'Comment deleted'})
 
-def comment_delete(request, comment_id):
-    comment = get_object_or_404(Comment, pk=comment_id)
-    if request.user != comment.author:
-        messages.error(request, '삭제권한이 없습니다')
-        return redirect('board:detail', xfilter_id=comment.xfilter.id)
-    else:
-        comment.delete()
-    return redirect('board:detail', xfilter_id=comment.xfilter.id)
-
-
-def comment_vote(request, comment_id):
+# comment 추천 API 엔드포인트
+def comment_vote_api(request, comment_id):
     comment = get_object_or_404(Comment, pk=comment_id)
     if request.user == comment.author:
-        messages.error(request, '본인이 작성한 글은 추천할 수 없습니다')
-    else:
-        comment.voter.add(request.user)
-    return redirect('{}#comment_{}'.format(
-                resolve_url('board:detail', xfilter_id=comment.xfilter.id), comment.id))
+        return JsonResponse({'error': 'Cannot vote for your own comment'}, status=400)
+
+    comment.voter.add(request.user)
+    return JsonResponse({'success': 'Voted for the comment'})
