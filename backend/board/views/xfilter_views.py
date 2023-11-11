@@ -6,6 +6,8 @@ from django.contrib.auth import get_user_model
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, permission_classes
 
 CustomUser = get_user_model()
 
@@ -27,13 +29,18 @@ def xfilter_create_api(request):
 
 # XFilter 삭제 API 엔드포인트
 @csrf_exempt
-def xfilter_delete_api(request, xfilter_id):
-    xfilter = get_object_or_404(Xfilter, pk=xfilter_id)
-    if not request.user.has_perm('board.delete_xfilter', xfilter):
-        return JsonResponse({'error': 'Permission denied'}, status=403)
-
-    xfilter.delete()
-    return JsonResponse({'success': 'XFilter deleted'})
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def xfilter_delete_api(request, xfilter_id):  # 'post_id'를 'xfilter_id'로 변경
+    try:
+        post = get_object_or_404(Xfilter, id=xfilter_id)
+        post.delete()
+        return JsonResponse({'message': '게시물이 성공적으로 삭제되었습니다.'})
+    except Xfilter.DoesNotExist:
+        return JsonResponse({'message': '게시물을 찾을 수 없습니다.'}, status=404)
+    except Exception as e:
+        return JsonResponse({'message': str(e)}, status=500)
+    
 
 # XFilter 추천 API 엔드포인트
 @csrf_exempt

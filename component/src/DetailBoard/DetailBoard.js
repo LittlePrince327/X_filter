@@ -70,26 +70,24 @@ const DetailBoard = () => {
   };
 
   const handledeleteBoard = async () => {
-    try {
-      if (xfilter) {
-        const postId = xfilter.id;
-
-        // 현재 사용자가 작성자인지 확인
-        if (xfilter.author === localStorage.getItem('author')) {
-          const response = await deleteBoard(postId, token);
-          console.log('게시글 삭제 완료:', response);
-          // 성공적인 삭제 후 필요한 경우 추가 로직을 추가할 수 있습니다. 예를 들어 다른 페이지로의 리디렉션 또는 UI 업데이트 등.
-        } else {
-          console.error('현재 사용자는 이 게시글을 삭제할 권한이 없습니다.');
-        }
-      } else {
-        console.error('게시글이 존재하지 않습니다.');
+  const userToken = localStorage.getItem('token');
+  const postId = xfilter.id;
+  try {
+    const response = await axios.delete(
+      `${BASE_URL}board/xfilter/delete/${postId}/`,
+      {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
       }
-    } catch (error) {
-      console.error('게시글 삭제 오류:', error);
-      // 에러를 처리하거나 사용자에게 에러 메시지를 표시할 수 있습니다.
-    }
-  };
+    );
+    console.log(response.data); 
+    return response.data;
+  } catch (error) {
+    console.error('게시물 삭제 중 오류:', error.response ? error.response.data : error.message);
+    throw error.response ? error.response.data : error.message;
+  }
+};
 
   const handlerecommendBoard = async () => {
     const type = 'post';
