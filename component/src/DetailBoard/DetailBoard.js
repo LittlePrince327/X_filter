@@ -70,24 +70,13 @@ const DetailBoard = () => {
   };
 
   const handledeleteBoard = async () => {
+    const userToken = localStorage.getItem('token');
+    const postId = xfilter.id;
     try {
-      if (xfilter) {
-        const postId = xfilter.id;
-
-        // 현재 사용자가 작성자인지 확인
-        if (xfilter.author === localStorage.getItem('author')) {
-          const response = await deleteBoard(postId, token);
-          console.log('게시글 삭제 완료:', response);
-          // 성공적인 삭제 후 필요한 경우 추가 로직을 추가할 수 있습니다. 예를 들어 다른 페이지로의 리디렉션 또는 UI 업데이트 등.
-        } else {
-          console.error('현재 사용자는 이 게시글을 삭제할 권한이 없습니다.');
-        }
-      } else {
-        console.error('게시글이 존재하지 않습니다.');
-      }
+      const response = await deleteBoard(postId, userToken);
+      console.log(response.data);
     } catch (error) {
-      console.error('게시글 삭제 오류:', error);
-      // 에러를 처리하거나 사용자에게 에러 메시지를 표시할 수 있습니다.
+      console.error('게시물 삭제 중 오류:', error.response ? error.response.data : error.message);
     }
   };
 
@@ -134,12 +123,11 @@ const DetailBoard = () => {
     }
   };
 
-
-
   const handledeleteComment = async (commentId) => {
     try {
-      const response = await deleteComment(commentId);
-      console.log(response);
+      const response = await deleteComment(commentId, token);
+      console.log(response.data); 
+      updateComments();
     } catch (error) {
       console.error('댓글 삭제 오류:', error);
     }
@@ -238,6 +226,11 @@ const DetailBoard = () => {
                   <strong>작성일시: </strong>{formatDate(comment.create_date)}
                 </p>
               </div>
+              {localStorage.getItem('author') === comment.author && (
+                <button onClick={() => handledeleteComment(comment.id)} className="btn btn-outline-danger">
+                  댓글 삭제
+                </button>
+              )}
             </div>
           ))}
         </div>

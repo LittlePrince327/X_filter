@@ -35,6 +35,20 @@ async function postBoard(content, author, create_date, userToken) {
   return data;
 }
 
+async function deleteBoard(postId, userToken) {
+  try {
+    const response = await axios.delete(`${BASE_URL}board/xfilter/delete/${postId}/`, {
+      headers: {
+        Authorization: `Bearer ${userToken}`
+      }
+    });
+    return response.data; // 삭제 후 성공적인 응답 데이터 반환
+  } catch (error) {
+    console.error('게시글 삭제 오류:', error);
+    throw error;
+  }
+}
+
 async function postComment(content, author, create_date, xfilter_id, userToken) {
   try {
     const body = {
@@ -59,21 +73,6 @@ async function postComment(content, author, create_date, xfilter_id, userToken) 
   }
 }
 
-
-async function deleteBoard(postId, userToken) {
-  try {
-    const response = await axios.delete(`${BASE_URL}board/xfilter/delete/${postId}/`, {
-      headers: {
-        Authorization: `Bearer ${userToken}`
-      }
-    });
-    return response.data; // 삭제 후 성공적인 응답 데이터 반환
-  } catch (error) {
-    console.error('게시글 삭제 오류:', error);
-    throw error;
-  }
-}
-
 async function recommendBoard(type, id, userToken) {
   try {
     const response = await axios.post(`${BASE_URL}/xfilter/vote/<int:xfilter_id>/`);
@@ -86,18 +85,12 @@ async function recommendBoard(type, id, userToken) {
 
 async function deleteComment(commentId, userToken) {
   try {
-    const body = {
-      commentId: commentId
-    };
-    const headerOption = {
+    const response = await axios.delete(`${BASE_URL}board/comment/delete/${commentId}/`, {
       headers: {
         Authorization: `Bearer ${userToken}`
       }
-    };
-
-    const response = await axios.delete(`${BASE_URL}/comment/delete/<int:comment_id>/`, headerOption);
-    const data = response.data;
-    return data;
+    });
+    return response.data;
   } catch (error) {
     throw error;
   }
