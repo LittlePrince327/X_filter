@@ -123,12 +123,11 @@ const DetailBoard = () => {
     }
   };
 
-
-
   const handledeleteComment = async (commentId) => {
     try {
-      const response = await deleteComment(commentId);
-      console.log(response);
+      const response = await deleteComment(commentId, token);
+      console.log(response.data); 
+      updateComments();
     } catch (error) {
       console.error('댓글 삭제 오류:', error);
     }

@@ -9,6 +9,7 @@ import json
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 
+
 CustomUser = get_user_model()
 
 # XFilter 생성 API 엔드포인트

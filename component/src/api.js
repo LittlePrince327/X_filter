@@ -85,18 +85,12 @@ async function recommendBoard(type, id, userToken) {
 
 async function deleteComment(commentId, userToken) {
   try {
-    const body = {
-      commentId: commentId
-    };
-    const headerOption = {
+    const response = await axios.delete(`${BASE_URL}board/comment/delete/${commentId}/`, {
       headers: {
         Authorization: `Bearer ${userToken}`
       }
-    };
-
-    const response = await axios.delete(`${BASE_URL}/comment/delete/<int:comment_id>/`, headerOption);
-    const data = response.data;
-    return data;
+    });
+    return response.data;
   } catch (error) {
     throw error;
   }
