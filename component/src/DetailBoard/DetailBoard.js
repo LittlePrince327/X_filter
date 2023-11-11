@@ -227,6 +227,11 @@ const DetailBoard = () => {
                   <strong>작성일시: </strong>{formatDate(comment.create_date)}
                 </p>
               </div>
+              {localStorage.getItem('author') === comment.author && (
+                <button onClick={() => handledeleteComment(comment.id)} className="btn btn-outline-danger">
+                  댓글 삭제
+                </button>
+              )}
             </div>
           ))}
         </div>
