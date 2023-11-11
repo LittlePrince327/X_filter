@@ -70,24 +70,15 @@ const DetailBoard = () => {
   };
 
   const handledeleteBoard = async () => {
-  const userToken = localStorage.getItem('token');
-  const postId = xfilter.id;
-  try {
-    const response = await axios.delete(
-      `${BASE_URL}board/xfilter/delete/${postId}/`,
-      {
-        headers: {
-          Authorization: `Bearer ${userToken}`,
-        },
-      }
-    );
-    console.log(response.data); 
-    return response.data;
-  } catch (error) {
-    console.error('게시물 삭제 중 오류:', error.response ? error.response.data : error.message);
-    throw error.response ? error.response.data : error.message;
-  }
-};
+    const userToken = localStorage.getItem('token');
+    const postId = xfilter.id;
+    try {
+      const response = await deleteBoard(postId, userToken);
+      console.log(response.data);
+    } catch (error) {
+      console.error('게시물 삭제 중 오류:', error.response ? error.response.data : error.message);
+    }
+  };
 
   const handlerecommendBoard = async () => {
     const type = 'post';
