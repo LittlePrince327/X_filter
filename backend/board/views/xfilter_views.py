@@ -48,10 +48,6 @@ def xfilter_delete_api(request, xfilter_id):  # 'post_id'를 'xfilter_id'로 변
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def xfilter_vote_api(request, xfilter_id):
-    try:
-        data = json.loads(request.body)
-    except json.JSONDecodeError:
-        return JsonResponse({'error': 'Invalid JSON format'}, status=400)
 
     xfilter = get_object_or_404(Xfilter, pk=xfilter_id)
 
@@ -59,6 +55,6 @@ def xfilter_vote_api(request, xfilter_id):
         return JsonResponse({'error': '이미 이 XFilter에 대해 투표했습니다.'}, status=400)
 
     xfilter.voter.add(request.user)
-    xfilter.save()  # 변경된 상태를 데이터베이스에 저장
+    xfilter.save() 
 
     return JsonResponse({'success': 'XFilter에 투표했습니다.'}, status=200)

@@ -137,13 +137,14 @@ const DetailBoard = () => {
   const handlerecommendComment = async (commentId) => {
     try {
       const author = localStorage.getItem('author'); // localStorage에서 author 값 가져오기
-      const response = await recommendComment(commentId, token, author);
+      const response = await recommendComment(commentId, author, token);
       console.log(response);
       // 컴포넌트 상태를 업데이트하세요.
     } catch (error) {
       console.error('댓글 추천 오류:', error);
     }
   };
+  
 
   const handleShowCommentTextarea = () => {
     setShowCommentTextarea(true);

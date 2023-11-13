@@ -107,22 +107,30 @@ async function deleteComment(commentId, userToken) {
 
 async function recommendComment(commentId, author, userToken) {
   try {
+    // Extract the actual ID from the commentId object
+    const actualCommentId = commentId.id;
+
     const body = {
-      commentIdId: commentId,
-      author: author
-    }
+      commentId: actualCommentId, // Use the extracted ID
+      author: author,
+    };
     const headerOption = {
       headers: {
         Authorization: `Bearer ${userToken}`,
       },
     };
-    const response = await axios.post(`${BASE_URL}board/comment/vote/${commentId}/`, body,headerOption);
+    const response = await axios.post(
+      `${BASE_URL}board/comment/vote/${actualCommentId}/`, // Use the extracted ID in the URL
+      body,
+      headerOption
+    );
     const data = response.data;
     return data;
   } catch (error) {
     throw error;
   }
 }
+
 
 
 

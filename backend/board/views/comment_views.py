@@ -47,19 +47,15 @@ def comment_delete_api(request, comment_id):
 
 # comment 추천 API 엔드포인트
 @csrf_exempt
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def comment_vote_api(request, comment_id):
     comment = get_object_or_404(Comment, pk=comment_id)
-    
-    author = request.POST.get('author')  # 프론트엔드에서 전달한 author 값 가져오기
-
-    if request.user == comment.author:
-        return JsonResponse({'error': '자신의 댓글에 대해 투표할 수 없습니다.'}, status=400)
-
-    if author != comment.author:
-        return JsonResponse({'error': '유효하지 않은 사용자입니다.'}, status=400)
 
     if request.user in comment.voter.all():
-        return JsonResponse({'error': '이미 이 댓글에 대해 투표했습니다.'}, status=400)
+        return JsonResponse({'error': '이미 이 Comment에 대해 투표했습니다.'}, status=400)
 
     comment.voter.add(request.user)
-    return JsonResponse({'success': '댓글에 투표했습니다.'})
+    comment.save() 
+
+    return JsonResponse({'success': 'Comment에 투표했습니다.'}, status=200)
