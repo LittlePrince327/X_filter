@@ -99,6 +99,8 @@ const DetailBoard = () => {
           Authorization: `Bearer ${token}`
         }
       });
+  
+      // 좋아요 개수 초기화를 제거합니다.
       setComments(commentsResponse.data);
     } catch (error) {
       console.error('댓글 불러오기 오류:', error);
@@ -119,10 +121,14 @@ const DetailBoard = () => {
   const handlerecommendBoard = async () => {
     try {
       const postId = xfilter.id;
-      const author = localStorage.getItem('author'); // localStorage에서 author 값 가져오기
-      const response = await recommendBoard(postId, token, author); // postId가 전달되도록 수정
+      const author = localStorage.getItem('author');
+      const response = await recommendBoard(postId, token, author);
+  
+      // 게시물 추천 후 즉시 xfilterLikesCount 상태를 업데이트합니다.
+      setXfilterLikesCount((prevCount) => prevCount + 1);
+  
       console.log(response);
-      // 컴포넌트 상태를 업데이트하세요.
+      // 다른 관련 상태 또는 UI 요소를 업데이트할 수 있습니다.
     } catch (error) {
       console.error('게시글 추천 오류:', error);
     }
@@ -175,14 +181,21 @@ const DetailBoard = () => {
       const author = localStorage.getItem('author');
       const response = await recommendComment(commentId, author, token);
   
-      // Update the commentLikesCounts state after recommending the comment
+      // 서버로부터 좋아요 개수를 다시 가져와 업데이트합니다.
+      const updatedCommentLikesResponse = await axios.get(`${BASE_URL}board/comment/like/${commentId}/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      // Update the commentLikesCounts state with the new likes count
       setCommentLikesCounts((prevCounts) => ({
         ...prevCounts,
-        [commentId]: (prevCounts[commentId] || 0) + 1,
+        [commentId]: updatedCommentLikesResponse.data.likes_count,
       }));
   
       console.log(response);
-      // You might want to update other relevant states or UI elements here
+      // 다른 관련 상태 또는 UI 요소를 업데이트할 수 있습니다.
     } catch (error) {
       console.error('댓글 추천 오류:', error);
     }
