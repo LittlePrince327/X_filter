@@ -120,7 +120,7 @@ async function recommendComment(commentId, author, userToken) {
       },
     };
     const response = await axios.post(
-      `${BASE_URL}board/comment/vote/${actualCommentId}/`, // Use the extracted ID in the URL
+      `${BASE_URL}board/comment/vote/${commentId}/`, // Use the extracted ID in the URL
       body,
       headerOption
     );
