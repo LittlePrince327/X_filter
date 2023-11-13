@@ -13,7 +13,10 @@ packages_to_install = [
     "matplotlib==3.7.3",
     "wordcloud==1.9.2",
     "JPype1==1.4.1",
-    "rhinoMorph==4.0.1.12"
+    "rhinoMorph==4.0.1.12",
+    "kiwipiepy==0.16.1",
+    "Konlpy==0.6.0",
+    "nltk==3.8.1"
 ]
 
 for package in packages_to_install:
@@ -38,7 +41,10 @@ packages_to_show = [
     "matplotlib",
     "wordcloud",
     "JPype1",
-    "rhinoMorph==4.0.1.12"
+    "rhinoMorph",
+    "kiwipiepy==0.16.1",
+    "Konlpy",
+    "nltk"
 ]
 
 for package in packages_to_show:
