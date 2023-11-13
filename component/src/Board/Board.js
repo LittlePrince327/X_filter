@@ -1,12 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { FloatButton } from 'antd';
 import styles from './Board.module.css';
 import { get_user_info } from '../api';
 
 const BASE_URL = 'http://localhost:8000/';
 
 const Board = () => {
+    
+    const handleFloatButtonClick = () => {
+        // 예: 새 게시물 작성 페이지로 이동
+        navigate('/makeboard');
+    };
+
     const [xfilterList, setXfilterList] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const navigate = useNavigate();
@@ -78,15 +85,11 @@ const Board = () => {
     return (
         <div className={styles.container}>
             <div className={styles.row}>
-                <div className="col-6">
-                    <button
-                        className={`${styles.customBtn} btn btn-primary`}
-                        type="button"
-                        onClick={() => navigate('/makeboard')}
-                    >
-                        게시글 작성하기
-                    </button>
-                </div>
+            <FloatButton style={{
+            marginRight:40,
+          width: 60,
+          height: 60,
+        }}type="primary" onClick={handleFloatButtonClick} tooltip={<div>새 게시물 작성</div>} />
                 <div className="col-6">
                     <div className={styles.searchContainer}>
                         <input
