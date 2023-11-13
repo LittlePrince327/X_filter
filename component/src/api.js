@@ -73,9 +73,18 @@ async function postComment(content, author, create_date, xfilter_id, userToken) 
   }
 }
 
-async function recommendBoard(type, id, userToken) {
+async function recommendBoard(postId, userToken, author) {
   try {
-    const response = await axios.post(`${BASE_URL}/xfilter/vote/<int:xfilter_id>/`);
+    const body = {
+      postId: postId,
+      author: author
+    }
+    const headerOption = {
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+      },
+    };
+    const response = await axios.post(`${BASE_URL}board/xfilter/vote/${postId}/`,body, headerOption);
     const data = response.data;
     return data;
   } catch (error) {
@@ -96,15 +105,32 @@ async function deleteComment(commentId, userToken) {
   }
 }
 
-async function recommendComment(commentId, userToken) {
+async function recommendComment(commentId, author, userToken) {
   try {
-    const response = await axios.post(`${BASE_URL}/comment/vote/<int:comment_id>/`);
+    // Extract the actual ID from the commentId object
+    const actualCommentId = commentId.id;
+
+    const body = {
+      commentId: actualCommentId, // Use the extracted ID
+      author: author,
+    };
+    const headerOption = {
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+      },
+    };
+    const response = await axios.post(
+      `${BASE_URL}board/comment/vote/${commentId}/`, // Use the extracted ID in the URL
+      body,
+      headerOption
+    );
     const data = response.data;
     return data;
   } catch (error) {
     throw error;
   }
 }
+
 
 
 

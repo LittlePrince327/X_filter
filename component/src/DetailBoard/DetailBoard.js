@@ -24,6 +24,8 @@ const DetailBoard = () => {
   const [isCommenting, setIsCommenting] = useState(false);
   const [comments, setComments] = useState([]);
   const [commentUpdated, setCommentUpdated] = useState(false);
+  const [xfilterLikesCount, setXfilterLikesCount] = useState(0);
+  const [commentLikesCounts, setCommentLikesCounts] = useState({});
 
   const fetchXfilter = async () => {
     if (token) {
@@ -50,10 +52,54 @@ const DetailBoard = () => {
   useEffect(() => {
     fetchXfilter();
     fetchComments();
+    fetchLikesCount();
     if (commentUpdated) {
       window.location.reload();
     }
   }, [xfilter_id, token, commentUpdated]);
+
+  useEffect(() => {
+    fetchLikesCount();
+  }, [xfilter_id, token]);
+
+  useEffect(() => {
+    if (xfilter && comments.length > 0) {
+      fetchLikesCount();
+    }
+  }, [xfilter, comments, token]);
+
+  const fetchLikesCount = async () => {
+    try {
+      const xfilterLikesResponse = await axios.get(`${BASE_URL}board/xfilter/like/${xfilter_id}/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setXfilterLikesCount(xfilterLikesResponse.data.likes_count);
+
+      // 이전 코드에서는 'comment.id'를 참조하고 있었는데 해당 변수가 정의되지 않았습니다.
+      // 대신에 'xfilter.id'를 사용하여 해당 게시물에 대한 댓글 좋아요 수를 가져오도록 수정합니다.
+      // 또한, comments 배열을 사용하여 각 댓글에 대한 좋아요 수를 가져오도록 수정합니다.
+      const commentLikesPromises = comments.map(async (comment) => {
+        const commentLikesResponse = await axios.get(`${BASE_URL}board/comment/like/${comment.id}/`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        return { commentId: comment.id, likesCount: commentLikesResponse.data.likes_count };
+      });
+
+      const commentLikes = await Promise.all(commentLikesPromises);
+      const commentLikesCountMap = {};
+      commentLikes.forEach((item) => {
+        commentLikesCountMap[item.commentId] = item.likesCount;
+      });
+      setCommentLikesCounts(commentLikesCountMap);
+    } catch (error) {
+      console.error('Likes count fetching error:', error);
+    }
+  };
+
 
 
   const fetchComments = async () => {
@@ -81,11 +127,16 @@ const DetailBoard = () => {
   };
 
   const handlerecommendBoard = async () => {
-    const type = 'post';
     try {
       const postId = xfilter.id;
-      const response = await recommendBoard(type, postId);
+      const author = localStorage.getItem('author');
+      const response = await recommendBoard(postId, token, author);
+  
+      // 게시물 추천 후 즉시 xfilterLikesCount 상태를 업데이트합니다.
+      setXfilterLikesCount((prevCount) => prevCount + 1);
+  
       console.log(response);
+      // 다른 관련 상태 또는 UI 요소를 업데이트할 수 있습니다.
     } catch (error) {
       console.error('게시글 추천 오류:', error);
     }
@@ -126,7 +177,7 @@ const DetailBoard = () => {
   const handledeleteComment = async (commentId) => {
     try {
       const response = await deleteComment(commentId, token);
-      console.log(response.data); 
+      console.log(response.data);
       updateComments();
     } catch (error) {
       console.error('댓글 삭제 오류:', error);
@@ -135,12 +186,30 @@ const DetailBoard = () => {
 
   const handlerecommendComment = async (commentId) => {
     try {
-      const response = await recommendComment(commentId);
+      const author = localStorage.getItem('author');
+      const response = await recommendComment(commentId, author, token);
+  
+      // 서버로부터 좋아요 개수를 다시 가져와 업데이트합니다.
+      const updatedCommentLikesResponse = await axios.get(`${BASE_URL}board/comment/like/${commentId}/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      // Update the commentLikesCounts state with the new likes count
+      setCommentLikesCounts((prevCounts) => ({
+        ...prevCounts,
+        [commentId]: updatedCommentLikesResponse.data.likes_count,
+      }));
+  
       console.log(response);
+      // 다른 관련 상태 또는 UI 요소를 업데이트할 수 있습니다.
     } catch (error) {
       console.error('댓글 추천 오류:', error);
     }
   };
+  
+
 
   const handleShowCommentTextarea = () => {
     setShowCommentTextarea(true);
@@ -189,8 +258,11 @@ const DetailBoard = () => {
                 삭제하기
               </button>
             )}
-            <button onClick={handlerecommendBoard} className="btn btn-outline-success mx-2">
-              추천하기
+            <button
+              onClick={handlerecommendBoard}
+              className="btn btn-outline-success mx-2"
+            >
+              추천하기 ({xfilterLikesCount})
             </button>
             <button onClick={handleCommentButton} className="btn btn-primary mx-2">
               댓글 달기
@@ -231,6 +303,12 @@ const DetailBoard = () => {
                   댓글 삭제
                 </button>
               )}
+              <button
+                onClick={() => handlerecommendComment(comment.id)}
+                className="btn btn-outline-success mx-2"
+              >
+                추천하기 ({commentLikesCounts[comment.id] || 0})
+              </button>
             </div>
           ))}
         </div>
