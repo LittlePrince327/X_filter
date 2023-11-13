@@ -24,6 +24,8 @@ const DetailBoard = () => {
   const [isCommenting, setIsCommenting] = useState(false);
   const [comments, setComments] = useState([]);
   const [commentUpdated, setCommentUpdated] = useState(false);
+  const [xfilterLikesCount, setXfilterLikesCount] = useState(0);
+  const [commentLikesCounts, setCommentLikesCounts] = useState({});
 
   const fetchXfilter = async () => {
     if (token) {
@@ -50,10 +52,44 @@ const DetailBoard = () => {
   useEffect(() => {
     fetchXfilter();
     fetchComments();
+    fetchLikesCount();
     if (commentUpdated) {
       window.location.reload();
     }
   }, [xfilter_id, token, commentUpdated]);
+
+  useEffect(() => {
+    fetchLikesCount();
+  }, [xfilter_id, token]);
+
+  const fetchLikesCount = async () => {
+    try {
+      const xfilterLikesResponse = await axios.get(`${BASE_URL}board/xfilter/like/${xfilter_id}/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setXfilterLikesCount(xfilterLikesResponse.data.likes_count);
+
+      const commentLikesPromises = comments.map(async (comment) => {
+        const commentLikesResponse = await axios.get(`${BASE_URL}board/comment/like/${comment.id}/`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        return { commentId: comment.id, likesCount: commentLikesResponse.data.likes_count };
+      });
+
+      const commentLikes = await Promise.all(commentLikesPromises);
+      const commentLikesCountMap = {};
+      commentLikes.forEach((item) => {
+        commentLikesCountMap[item.commentId] = item.likesCount;
+      });
+      setCommentLikesCounts(commentLikesCountMap);
+    } catch (error) {
+      console.error('Likes count fetching error:', error);
+    }
+  };
 
 
   const fetchComments = async () => {
@@ -136,15 +172,23 @@ const DetailBoard = () => {
 
   const handlerecommendComment = async (commentId) => {
     try {
-      const author = localStorage.getItem('author'); // localStorage에서 author 값 가져오기
+      const author = localStorage.getItem('author');
       const response = await recommendComment(commentId, author, token);
+  
+      // Update the commentLikesCounts state after recommending the comment
+      setCommentLikesCounts((prevCounts) => ({
+        ...prevCounts,
+        [commentId]: (prevCounts[commentId] || 0) + 1,
+      }));
+  
       console.log(response);
-      // 컴포넌트 상태를 업데이트하세요.
+      // You might want to update other relevant states or UI elements here
     } catch (error) {
       console.error('댓글 추천 오류:', error);
     }
   };
   
+
 
   const handleShowCommentTextarea = () => {
     setShowCommentTextarea(true);
@@ -196,12 +240,8 @@ const DetailBoard = () => {
             <button
               onClick={handlerecommendBoard}
               className="btn btn-outline-success mx-2"
-              style={{
-                display:
-                  localStorage.getItem('author') === xfilter.author ? 'none' : 'block',
-              }}
             >
-              추천하기
+              추천하기 ({xfilterLikesCount})
             </button>
             <button onClick={handleCommentButton} className="btn btn-primary mx-2">
               댓글 달기
@@ -242,14 +282,12 @@ const DetailBoard = () => {
                   댓글 삭제
                 </button>
               )}
-              {localStorage.getItem('author') !== comment.author && (
-                <button
-                  onClick={() => handlerecommendComment(comment)}
-                  className="btn btn-outline-success mx-2"
-                >
-                  추천하기
-                </button>
-              )}
+              <button
+                onClick={() => handlerecommendComment(comment.id)}
+                className="btn btn-outline-success mx-2"
+              >
+                추천하기 ({commentLikesCounts[comment.id] || 0})
+              </button>
             </div>
           ))}
         </div>

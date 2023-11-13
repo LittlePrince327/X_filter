@@ -14,9 +14,11 @@ urlpatterns = [
     path('xfilter/create', xfilter_views.xfilter_create_api, name='xfilter_create'),
     path('xfilter/delete/<int:xfilter_id>/', xfilter_views.xfilter_delete_api, name='xfilter_delete'),
     path('xfilter/vote/<int:xfilter_id>/', xfilter_views.xfilter_vote_api, name='xfilter_vote'),
+    path('xfilter/like/<int:xfilter_id>/', xfilter_views.xfilter_likes_count_api, name='xfilter_like'),
 
     # comment
     path('comment/create/<int:xfilter_id>/', comment_views.comment_create_api, name='comment_create'),
     path('comment/delete/<int:comment_id>/', comment_views.comment_delete_api, name='comment_delete'),
     path('comment/vote/<int:comment_id>/', comment_views.comment_vote_api, name='comment_vote'),
+    path('comment/like/<int:comment_id>/', comment_views.comment_likes_count_api, name='comment_vote'),
 ]

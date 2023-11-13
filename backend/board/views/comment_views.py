@@ -52,6 +52,16 @@ def comment_delete_api(request, comment_id):
 def comment_vote_api(request, comment_id):
     comment = get_object_or_404(Comment, pk=comment_id)
 
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON data in the request body.'}, status=400)
+
+    author_from_request = data.get('author')
+
+    if comment.author == author_from_request:
+        return JsonResponse({'error': '본인의 글에는 좋아요 표시를 할 수 없습니다.'}, status=400)
+
     if request.user in comment.voter.all():
         return JsonResponse({'error': '이미 이 Comment에 대해 투표했습니다.'}, status=400)
 
@@ -59,3 +69,12 @@ def comment_vote_api(request, comment_id):
     comment.save() 
 
     return JsonResponse({'success': 'Comment에 투표했습니다.'}, status=200)
+
+
+@csrf_exempt
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def comment_likes_count_api(request, comment_id):
+    comment = get_object_or_404(Comment, pk=comment_id)
+    likes_count = comment.voter.count()
+    return JsonResponse({'likes_count': likes_count}, status=200)
