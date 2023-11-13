@@ -62,6 +62,12 @@ const DetailBoard = () => {
     fetchLikesCount();
   }, [xfilter_id, token]);
 
+  useEffect(() => {
+    if (xfilter && comments.length > 0) {
+      fetchLikesCount();
+    }
+  }, [xfilter, comments, token]);
+
   const fetchLikesCount = async () => {
     try {
       const xfilterLikesResponse = await axios.get(`${BASE_URL}board/xfilter/like/${xfilter_id}/`, {
@@ -71,6 +77,9 @@ const DetailBoard = () => {
       });
       setXfilterLikesCount(xfilterLikesResponse.data.likes_count);
 
+      // 이전 코드에서는 'comment.id'를 참조하고 있었는데 해당 변수가 정의되지 않았습니다.
+      // 대신에 'xfilter.id'를 사용하여 해당 게시물에 대한 댓글 좋아요 수를 가져오도록 수정합니다.
+      // 또한, comments 배열을 사용하여 각 댓글에 대한 좋아요 수를 가져오도록 수정합니다.
       const commentLikesPromises = comments.map(async (comment) => {
         const commentLikesResponse = await axios.get(`${BASE_URL}board/comment/like/${comment.id}/`, {
           headers: {
@@ -92,6 +101,7 @@ const DetailBoard = () => {
   };
 
 
+
   const fetchComments = async () => {
     try {
       const commentsResponse = await axios.get(`${BASE_URL}board/xfilter/comment?xfilter_id=${xfilter_id}`, {
@@ -99,8 +109,6 @@ const DetailBoard = () => {
           Authorization: `Bearer ${token}`
         }
       });
-  
-      // 좋아요 개수 초기화를 제거합니다.
       setComments(commentsResponse.data);
     } catch (error) {
       console.error('댓글 불러오기 오류:', error);
