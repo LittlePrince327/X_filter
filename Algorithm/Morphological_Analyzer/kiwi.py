@@ -50,6 +50,8 @@ def start():
     kiwi.add_user_word("패밀리룩", tag='NNG', score=0.0)
     kiwi.add_user_word("헤드램프", tag='NNG', score=0.0)
 
+start()
+
 # NNG - 일반 명사
 # NNP - 고유 명사
 # NNB - 의존 명사
