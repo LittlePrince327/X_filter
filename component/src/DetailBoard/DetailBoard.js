@@ -81,11 +81,12 @@ const DetailBoard = () => {
   };
 
   const handlerecommendBoard = async () => {
-    const type = 'post';
     try {
       const postId = xfilter.id;
-      const response = await recommendBoard(type, postId);
+      const author = localStorage.getItem('author'); // localStorage에서 author 값 가져오기
+      const response = await recommendBoard(postId, token, author); // postId가 전달되도록 수정
       console.log(response);
+      // 컴포넌트 상태를 업데이트하세요.
     } catch (error) {
       console.error('게시글 추천 오류:', error);
     }
@@ -126,7 +127,7 @@ const DetailBoard = () => {
   const handledeleteComment = async (commentId) => {
     try {
       const response = await deleteComment(commentId, token);
-      console.log(response.data); 
+      console.log(response.data);
       updateComments();
     } catch (error) {
       console.error('댓글 삭제 오류:', error);
@@ -135,8 +136,10 @@ const DetailBoard = () => {
 
   const handlerecommendComment = async (commentId) => {
     try {
-      const response = await recommendComment(commentId);
+      const author = localStorage.getItem('author'); // localStorage에서 author 값 가져오기
+      const response = await recommendComment(commentId, token, author);
       console.log(response);
+      // 컴포넌트 상태를 업데이트하세요.
     } catch (error) {
       console.error('댓글 추천 오류:', error);
     }
@@ -189,7 +192,14 @@ const DetailBoard = () => {
                 삭제하기
               </button>
             )}
-            <button onClick={handlerecommendBoard} className="btn btn-outline-success mx-2">
+            <button
+              onClick={handlerecommendBoard}
+              className="btn btn-outline-success mx-2"
+              style={{
+                display:
+                  localStorage.getItem('author') === xfilter.author ? 'none' : 'block',
+              }}
+            >
               추천하기
             </button>
             <button onClick={handleCommentButton} className="btn btn-primary mx-2">
@@ -229,6 +239,14 @@ const DetailBoard = () => {
               {localStorage.getItem('author') === comment.author && (
                 <button onClick={() => handledeleteComment(comment.id)} className="btn btn-outline-danger">
                   댓글 삭제
+                </button>
+              )}
+              {localStorage.getItem('author') !== comment.author && (
+                <button
+                  onClick={() => handlerecommendComment(comment)}
+                  className="btn btn-outline-success mx-2"
+                >
+                  추천하기
                 </button>
               )}
             </div>

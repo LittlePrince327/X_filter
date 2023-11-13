@@ -46,12 +46,24 @@ def xfilter_delete_api(request, xfilter_id):  # 'post_id'를 'xfilter_id'로 변
 # XFilter 추천 API 엔드포인트
 @csrf_exempt
 def xfilter_vote_api(request, xfilter_id):
+    print(xfilter_id)
     xfilter = get_object_or_404(Xfilter, pk=xfilter_id)
+    
+    try:
+        data = json.loads(request.body)
+        author = data.get('author')  # JSON 데이터에서 author 값을 추출
+        print(author)
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON format'}, status=400)
+
     if request.user == xfilter.author:
-        return JsonResponse({'error': 'Cannot vote for your own XFilter'}, status=400)
+        return JsonResponse({'error': '자신의 XFilter에 대해 투표할 수 없습니다.'}, status=400)
+
+    if author != xfilter.author:
+        return JsonResponse({'error': '유효하지 않은 사용자입니다.'}, status=400)
 
     if request.user in xfilter.voter.all():
-        return JsonResponse({'error': 'Already voted for this XFilter'}, status=400)
+        return JsonResponse({'error': '이미 이 XFilter에 대해 투표했습니다.'}, status=400)
 
     xfilter.voter.add(request.user)
-    return JsonResponse({'success': 'Voted for the XFilter'})
+    return JsonResponse({'success': 'XFilter에 투표했습니다.'})
