@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import styles from './Board.module.css';
 import { get_user_info } from '../api';
+import { FloatButton } from 'antd';
 
 const BASE_URL = 'http://localhost:8000/';
 
@@ -10,6 +11,12 @@ const Board = () => {
     const [xfilterList, setXfilterList] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const navigate = useNavigate();
+
+    const handleFloatButtonClick = () => {
+        // 예: 새 게시물 작성 페이지로 이동
+        navigate('/makeboard');
+    };
+
 
     const fetchXfilterList = async () => {
         try {
@@ -55,7 +62,7 @@ const Board = () => {
         try {
             const token = localStorage.getItem('token');
             if (token) {
-                const userData = await get_user_info(token); 
+                const userData = await get_user_info(token);
 
                 const fullName = userData.full_name;
 
@@ -72,21 +79,17 @@ const Board = () => {
 
     useEffect(() => {
         fetchXfilterList();
-        fetchUserInfoAndSaveToLocalStorage(); 
+        fetchUserInfoAndSaveToLocalStorage();
     }, []);
 
     return (
         <div className={styles.container}>
             <div className={styles.row}>
-                <div className="col-6">
-                    <button
-                        className={`${styles.customBtn} btn btn-primary`}
-                        type="button"
-                        onClick={() => navigate('/makeboard')}
-                    >
-                        게시글 작성하기
-                    </button>
-                </div>
+                <FloatButton style={{
+                    marginRight: 40,
+                    width: 60,
+                    height: 60,
+                }} type="primary" onClick={handleFloatButtonClick} tooltip={<div>새 게시물 작성</div>} />
                 <div className="col-6">
                     <div className={styles.searchContainer}>
                         <input
@@ -119,8 +122,8 @@ const Board = () => {
                     {xfilterList.map((xfilter) => (
                         <tr
                             className="text-center"
-                            key={xfilter.id} 
-                            onClick={() => navigate(`/detail/${xfilter.id}`)} 
+                            key={xfilter.id}
+                            onClick={() => navigate(`/detail/${xfilter.id}`)}
                         >
                             <td>{xfilter.id}</td>
                             <td className="text-start">
