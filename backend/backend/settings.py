@@ -23,6 +23,8 @@ INSTALLED_APPS = [                                                              
     'rest_framework',                  # Django REST framework를 사용하여 RESTful API를 개발하는 데 필요한 기능을 제공하는 앱 // API 개발 및 관리를 지원
     'rest_framework.authtoken',        # Django REST framework의 인증 토큰을 구현하는 데 사용 //  API 사용자의 인증 및 권한 관리를 지원
     'idpassword',
+    'board',
+
     'userprofile',
 
 ]
@@ -106,15 +108,21 @@ AUTH_PASSWORD_VALIDATORS = [                                                    
 
 LANGUAGE_CODE = 'ko-kr'                                                                # 기본 언어 코드
 
-TIME_ZONE = 'UTC'                                                                      # 시간대 설정
+TIME_ZONE = 'Asia/Seoul'                                                               # 시간대 설정
 
 USE_I18N = True                                                                        # "Internationalization"의 약자로, 다국어 및 지역화 기능을 활성화하거나 비활성화하는 설정
 
 USE_TZ = True                                                                          # "Time Zone"의 약자로, 시간대 관련 설정을 활성화하거나 비활성화하는 설정
 
-STATIC_URL = '/disabled_static/'                                                       # 정적 파일의 URL 경로
+STATIC_URL = '/static/'                                                                # 정적 파일의 URL 경로
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 
 LOGIN_REDIRECT_URL = '/'                                                               # 로그인 후 리디렉션할 URL
+
+LOGIN_URL = 'http://localhost:3000'
 
 LOGOUT_REDIRECT_URL = '/'                                                              # 로그아웃 후 리디렉션할 URL
 
@@ -134,23 +142,16 @@ MEDIA_URL = '/media/'
 
 AUTH_USER_MODEL = 'login.CustomUser' 
 
-
-
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# 메일을 호스트하는 서버
+
 EMAIL_HOST = 'smtp.gmail.com'
 
-# gmail과의 통신하는 포트
 EMAIL_PORT = '587'
 
-# 발신할 이메일
 EMAIL_HOST_USER = 'iamdoxoak@gmail.com'
 
-
-# 발신할 메일의 비밀번호
 EMAIL_HOST_PASSWORD = 'ajrp ytxx mmvk sxmi'
-# TLS 보안 방법
+
 EMAIL_USE_TLS = True
 
-# 사이트와 관련한 자동응답을 받을 이메일 주소
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
