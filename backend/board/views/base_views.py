@@ -11,7 +11,13 @@ from rest_framework.permissions import IsAuthenticated
 @permission_classes([IsAuthenticated])
 def xfilter_list(request):  
     kw = request.GET.get('kw', '')  
+    category = request.GET.get('category', '') 
     xfilter_list = Xfilter.objects.order_by('-create_date')
+    print(xfilter_list)
+
+    if category:
+        xfilter_list = xfilter_list.filter(category=category)
+
     if kw:
         xfilter_list = xfilter_list.filter(
             Q(content__icontains=kw) |

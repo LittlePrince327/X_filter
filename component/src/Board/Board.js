@@ -11,6 +11,7 @@ const Board = () => {
     const [xfilterList, setXfilterList] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const navigate = useNavigate();
+    const [selectedCategory, setSelectedCategory] = useState('All'); // Initial category is 'All'
 
     const handleFloatButtonClick = () => {
         // 예: 새 게시물 작성 페이지로 이동
@@ -52,6 +53,32 @@ const Board = () => {
             console.error('Error fetching filtered xfilters:', error);
         }
     };
+
+    const handleCategoryChange = async (category) => {
+        try {
+            const token = localStorage.getItem('token');
+            let response;
+    
+            if (category === 'All') {
+                response = await axios.get(`${BASE_URL}board/xfilter/`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+            } else {
+                response = await axios.get(`${BASE_URL}board/xfilter/?category=${category}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+            }
+            setXfilterList(response.data);
+            setSelectedCategory(category);
+        } catch (error) {
+            console.error(`${category} 카테고리 xfilters를 가져오는 중 오류 발생:`, error);
+        }
+    };
+    
 
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
@@ -107,6 +134,17 @@ const Board = () => {
                             검색
                         </button>
                     </div>
+                </div>
+                <div className={styles.categoryButtons}>
+                    {['All', 'Daily', 'Sports', 'Politics'].map((category) => (
+                        <button
+                            key={category}
+                            className={`btn ${selectedCategory === category ? 'btn-primary' : 'btn-secondary'}`}
+                            onClick={() => handleCategoryChange(category)}
+                        >
+                            {category}
+                        </button>
+                    ))}
                 </div>
             </div>
             <table className={`table ${styles.table}`}>
