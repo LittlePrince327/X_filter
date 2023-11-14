@@ -4,9 +4,8 @@ import styles from './MakeBoard.module.css';
 import { postBoard } from '../api';
 import { Space, Tag } from 'antd';
 
-
 const { CheckableTag } = Tag;
-const tagsData = ['All','Daily','Politics', 'Sports'];
+const tagsData = ['All', 'Daily', 'Politics', 'Sports'];
 
 const MakeBoard = () => {
   const postId = 123;
@@ -16,7 +15,6 @@ const MakeBoard = () => {
   const navigate = useNavigate(); 
   const [selectedTags, setSelectedTags] = useState([]);
 
-  
   const handleChange = (tag, checked) => {
     const nextSelectedTags = checked
       ? [...selectedTags, tag]
@@ -24,10 +22,16 @@ const MakeBoard = () => {
     console.log('You are interested in: ', nextSelectedTags);
     setSelectedTags(nextSelectedTags);
   };
-  useEffect(() => {
- 
-  }, []);
 
+  useEffect(() => {
+    // Fetch user token and data from local storage
+    const token = localStorage.getItem('token');
+    setUserToken(token);
+
+    // You can fetch other user data if needed
+    // const user = localStorage.getItem('author');
+    // setUserData(user);
+  }, []);
 
   const handlepostBoard = async (event) => {
     event.preventDefault();
@@ -35,9 +39,10 @@ const MakeBoard = () => {
     const author = localStorage.getItem('author');
     const create_date = new Date().toISOString();
     const category = selectedTags[0] || '전체';
+    const userId = localStorage.getItem('userId'); // Add this line to get the user id
 
     try {
-      const response = await postBoard(content, author, create_date, category, userToken);
+      const response = await postBoard(content, author, create_date, category, userToken, userId); // Pass the userId to the API call
       console.log(response);
       navigate('/board'); 
     } catch (error) {
@@ -47,9 +52,7 @@ const MakeBoard = () => {
 
   return (
     <div className="container my-3" style={{ backgroundColor: 'white' }}>
-       <span
-      >
-      </span>
+      <span></span>
       <Space size={[0, 8]} wrap>
         {tagsData.map((tag) => (
           <CheckableTag

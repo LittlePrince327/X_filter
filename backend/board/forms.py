@@ -4,7 +4,7 @@ from board.models import Xfilter, Comment
 class XfilterForm(forms.ModelForm):
     class Meta:
         model = Xfilter  
-        fields = ['content', 'create_date', 'author', 'category']  
+        fields = ['id','content', 'create_date', 'author', 'category', 'member_number']
 
 
 class CommentForm(forms.ModelForm):

@@ -1,4 +1,6 @@
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 from .views import xfilter_views, comment_views, base_views
 
 app_name = 'board'
@@ -8,7 +10,6 @@ urlpatterns = [
     path('xfilter/', base_views.xfilter_list, name='xfilter-list'),
     path('xfilter/<int:xfilter_id>/', base_views.xfilter_detail, name='xfilter-detail'),
     path('xfilter/comment/', base_views.comment_list, name='comment-list'),
-
 
     # xfilter
     path('xfilter/create', xfilter_views.xfilter_create_api, name='xfilter_create'),
@@ -21,4 +22,4 @@ urlpatterns = [
     path('comment/delete/<int:comment_id>/', comment_views.comment_delete_api, name='comment_delete'),
     path('comment/vote/<int:comment_id>/', comment_views.comment_vote_api, name='comment_vote'),
     path('comment/like/<int:comment_id>/', comment_views.comment_likes_count_api, name='comment_vote'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

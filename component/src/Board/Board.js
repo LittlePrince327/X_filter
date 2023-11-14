@@ -58,7 +58,7 @@ const Board = () => {
         try {
             const token = localStorage.getItem('token');
             let response;
-    
+
             if (category === 'All') {
                 response = await axios.get(`${BASE_URL}board/xfilter/`, {
                     headers: {
@@ -78,7 +78,7 @@ const Board = () => {
             console.error(`${category} 카테고리 xfilters를 가져오는 중 오류 발생:`, error);
         }
     };
-    
+
 
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
@@ -153,6 +153,7 @@ const Board = () => {
                         <th>게시글 번호</th>
                         <th style={{ width: '50%' }}>제목</th>
                         <th>작성자</th>
+                        <th>프로필 사진</th>
                         <th>작성일시</th>
                     </tr>
                 </thead>
@@ -168,11 +169,21 @@ const Board = () => {
                                 {xfilter.content.length > 20 ? `${xfilter.content.substring(0, 40)}...` : xfilter.content}
                             </td>
                             <td>{xfilter.author}</td>
+                            <td>
+                                {xfilter.member_number.profile_picture && (
+                                    <img
+                                        src={`${BASE_URL}${encodeURI(xfilter.member_number.profile_picture)}`}
+                                        alt="Profile"
+                                        className={styles.profilePicture}
+                                        onError={(e) => console.error("Error loading image:", e)}
+                                    />
+
+                                )}
+                            </td>
                             <td>{formatDate(xfilter.create_date)}</td>
                         </tr>
                     ))}
                 </tbody>
-
             </table>
         </div>
     );
