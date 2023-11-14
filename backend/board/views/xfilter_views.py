@@ -18,6 +18,7 @@ def xfilter_create_api(request):
     if request.method == "POST":
         try:
             data = json.loads(request.body)
+            print(data)
             form = XfilterForm(data)
             if form.is_valid():
                 form.save()

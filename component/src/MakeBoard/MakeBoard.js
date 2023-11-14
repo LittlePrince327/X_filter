@@ -14,7 +14,9 @@ const MakeBoard = () => {
   const [userToken, setUserToken] = useState('');
   const [userData, setUserData] = useState(null);
   const navigate = useNavigate(); 
-  const [selectedTags, setSelectedTags] = useState(['Books']);
+  const [selectedTags, setSelectedTags] = useState([]);
+
+  
   const handleChange = (tag, checked) => {
     const nextSelectedTags = checked
       ? [...selectedTags, tag]
@@ -32,9 +34,10 @@ const MakeBoard = () => {
     const content = event.target.content.value;
     const author = localStorage.getItem('author');
     const create_date = new Date().toISOString();
+    const category = selectedTags[0] || '전체';
 
     try {
-      const response = await postBoard(content, author, create_date, userToken);
+      const response = await postBoard(content, author, create_date, category, userToken);
       console.log(response);
       navigate('/board'); 
     } catch (error) {
