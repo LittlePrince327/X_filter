@@ -22,10 +22,15 @@ class UserSignup(APIView):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
+            profile_picture = request.data.get('profile_picture', None)
+            if profile_picture:
+                user.profile_picture = profile_picture
+                user.save()
+
             token = self.create_tokens(user)
             return Response(token, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     def create_tokens(self, user):
         refresh = RefreshToken.for_user(user)
         token = {

@@ -30,6 +30,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
     full_name = models.CharField(max_length=50, blank=True)
+    profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
 
     groups = models.ManyToManyField(Group, blank=True, related_name='custom_users', related_query_name='custom_user')
     user_permissions = models.ManyToManyField(Permission, blank=True, related_name='custom_users', related_query_name='custom_user')

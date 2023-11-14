@@ -55,15 +55,32 @@ function Signup() {
       setPasswordMismatch(true);
       return;
     }
-
+  
     if (emailError || usernameError) {
       return;
     }
-
+  
+    const formDataToSend = new FormData();
+  
+    // Append other form data
+    formDataToSend.append('username', formData.username);
+    formDataToSend.append('email', formData.email);
+    formDataToSend.append('password', formData.password);
+    formDataToSend.append('confirmPassword', formData.confirmPassword);
+    formDataToSend.append('full_name', formData.full_name);
+  
+    // Append profile picture
+    formDataToSend.append('profile_picture', formData.profile_picture);
+  
     try {
-      const response = await axios.post('http://localhost:8000/api/user-signup/', formData);
+      const response = await axios.post('http://localhost:8000/api/user-signup/', formDataToSend, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+  
       console.log('API response:', response);
-
+  
       if (response.status === 201) {
         console.log('Sign up successful!', response.data);
         navigate('/');
@@ -73,6 +90,14 @@ function Signup() {
     } catch (error) {
       console.error('Sign up failed:', error);
     }
+  };
+  
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setFormData({
+      ...formData,
+      profile_picture: file,
+    });
   };
 
   useEffect(() => {
@@ -137,6 +162,15 @@ function Signup() {
               value={formData.name}
               onChange={handleInputChange}
               placeholder="Name"
+            />
+          </div>
+          <div>
+            <input
+              className={`joinInput mt-20 ${styles.input}`}
+              type="file"
+              name="profile_picture"
+              onChange={handleFileChange}
+              accept="image/*"
             />
           </div>
           {usernameError && <p className={styles.errorMessage}>이메일 형식의 닉네임은 사용할 수 없습니다.</p>}

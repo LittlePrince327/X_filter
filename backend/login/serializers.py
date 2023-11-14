@@ -16,6 +16,8 @@ class UserSerializer(serializers.ModelSerializer):
                 password=validated_data['password'],
                 full_name=validated_data['full_name'],
             )
+            user.profile_picture = self.validated_data.get('profile_picture', None)
+            user.save()
             return user
         except IntegrityError as e:
             raise serializers.ValidationError("Username or email already exists.")
