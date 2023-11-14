@@ -172,12 +172,11 @@ const Board = () => {
                             <td>
                                 {xfilter.member_number.profile_picture && (
                                     <img
-                                        src={`${BASE_URL}${encodeURI(xfilter.member_number.profile_picture)}`}
+                                        src={`${BASE_URL}board/xfilter/${xfilter.member_number.profile_picture}`}
                                         alt="Profile"
                                         className={styles.profilePicture}
                                         onError={(e) => console.error("Error loading image:", e)}
                                     />
-
                                 )}
                             </td>
                             <td>{formatDate(xfilter.create_date)}</td>

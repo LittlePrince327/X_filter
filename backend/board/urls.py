@@ -22,4 +22,7 @@ urlpatterns = [
     path('comment/delete/<int:comment_id>/', comment_views.comment_delete_api, name='comment_delete'),
     path('comment/vote/<int:comment_id>/', comment_views.comment_vote_api, name='comment_vote'),
     path('comment/like/<int:comment_id>/', comment_views.comment_likes_count_api, name='comment_vote'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] 
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
