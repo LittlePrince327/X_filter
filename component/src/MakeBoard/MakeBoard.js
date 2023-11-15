@@ -42,9 +42,9 @@ const MakeBoard = () => {
   };
 
   return (
-    <div className="container my-3" style={{ backgroundColor: 'white' }}>
-       <span
-      >
+    <div className={styles.container} style={{ backgroundColor: 'white' }}>
+       <span>
+
       </span>
       <Space size={[0, 8]} wrap>
         {tagsData.map((tag) => (
@@ -57,10 +57,10 @@ const MakeBoard = () => {
           </CheckableTag>
         ))}
       </Space>
-      <div className="top section">
+      <div className={styles.top_section}>
         <form onSubmit={handlepostBoard}>
           <div>
-            <label htmlFor="content" className="form-label">게시글</label>
+            <label htmlFor="content" className={styles.form_label}>게시글</label>
             <textarea className="form-control" name="content" id="content" rows={10}></textarea>
           </div>
           <button type="submit" className="btn btn-primary my-2">게시하기</button>

@@ -47,23 +47,23 @@
 .searchInput {
     flex: 1;
     border-radius: 5px;
-    border: 1px solid #007bff;
+    border: 1px solid #102a46;
     width:auto;
     height:30px;
 }
 .bord_btn{
-  background-color: #007bff;
+  background-color: #102a46;
   color: #fff;
   border-radius: 5px;
-  border: 1px solid #007bff;
+  border: 1px solid #102a46;
   left: -20px;
   width: 60px;
   height: 30px;
 }
 .bord_btn:hover {
   border-radius: 5px;
-  border: 1px solid #007bff;
-  background-color: #2465d6; /* 마우스 오버 시의 배경색 */
+  border: 1px solid #0f1a2e;
+  background-color: #0f1a2e; /* 마우스 오버 시의 배경색 */
   color: white; /* 마우스 오버 시의 글자색 */
 }
 
