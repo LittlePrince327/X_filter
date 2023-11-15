@@ -1,5 +1,5 @@
-from login.models import CustomUser
 from django.db import models
+from login.models import CustomUser
 
 class Xfilter(models.Model):
     ALL = 'All'

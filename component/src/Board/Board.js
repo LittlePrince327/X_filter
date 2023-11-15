@@ -11,13 +11,11 @@ const Board = () => {
     const [xfilterList, setXfilterList] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const navigate = useNavigate();
-    const [selectedCategory, setSelectedCategory] = useState('All'); // Initial category is 'All'
+    const [selectedCategory, setSelectedCategory] = useState('All'); 
 
     const handleFloatButtonClick = () => {
-        // 예: 새 게시물 작성 페이지로 이동
         navigate('/makeboard');
     };
-
 
     const fetchXfilterList = async () => {
         try {
