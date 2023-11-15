@@ -17,13 +17,12 @@ INSTALLED_APPS = [                                                              
     'django.contrib.contenttypes',     # 콘텐츠 유형과 관련된 모델을 정의하고 관리 // 제네릭 관계와 관련된 작업을 지원하는 데 사용
     'django.contrib.sessions',         # 세션을 처리하는 데 사용되는 앱 // 사용자의 상태 및 로그인 정보를 유지하고 관리
     'django.contrib.messages',         # 사용자에게 메시지를 표시하는 데 사용 // 예를 들어, 성공 메시지 또는 오류 메시지를 사용자에게 표시할 때 유용
-    'django.contrib.staticfiles',      # 정적 파일 (CSS, JavaScript, 이미지 등)을 관리하고 제공하는 데 사용 // 웹 페이지의 디자인 및 스타일링과 관련된 파일을 처리
     'login.apps.LoginConfig',          # 사용자 인증 및 로그인과 관련된 사용자 정의 앱 // 프로젝트에서 정의한 사용자 관리를 위한 앱
     'corsheaders',                     # Cross-Origin Resource Sharing (CORS)를 구현하는 데 사용 // 다른 도메인 또는 출처에서 웹 애플리케이션 리소스에 접근하는 권한을 설정
     'rest_framework',                  # Django REST framework를 사용하여 RESTful API를 개발하는 데 필요한 기능을 제공하는 앱 // API 개발 및 관리를 지원
     'rest_framework.authtoken',        # Django REST framework의 인증 토큰을 구현하는 데 사용 //  API 사용자의 인증 및 권한 관리를 지원
-    'idpassword',
-    'board',
+    'idpassword',                      # 아이디 및 비밀번호 찾기 앱
+    'board',                           # 게시글 앱
 
 
 ]
@@ -113,12 +112,6 @@ USE_I18N = True                                                                 
 
 USE_TZ = True                                                                          # "Time Zone"의 약자로, 시간대 관련 설정을 활성화하거나 비활성화하는 설정
 
-STATIC_URL = '/static/'                                                                # 정적 파일의 URL 경로
-
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
-
 LOGIN_REDIRECT_URL = '/'                                                               # 로그인 후 리디렉션할 URL
 
 LOGIN_URL = 'http://localhost:3000'
@@ -134,23 +127,24 @@ CORS_ALLOWED_ORIGINS = [                                                        
 
 CORS_ALLOW_CREDENTIALS = True                                                          # CORS 요청에서 인증 정보를 전송할지 여부를 나타냄
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = True                                                          # CORS 설정: 모든 원본에서의 요청을 허용
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')                                           # 미디어 파일을 저장할 디렉토리 경로를 설정
 
-AUTH_USER_MODEL = 'login.CustomUser' 
+MEDIA_URL = '/media/'                                                                  # 미디어 파일의 URL 경로를 설정
+ 
+AUTH_USER_MODEL = 'login.CustomUser'                                                   # 커스텀 사용자 모델을 지정
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'                          # 이메일 백엔드를 SMTP로 설정
 
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = 'smtp.gmail.com'                                                          # 이메일 호스트를 Gmail SMTP 서버로 설정
 
-EMAIL_PORT = '587'
+EMAIL_PORT = '587'                                                                     # 이메일 포트를 587로 설정
 
-EMAIL_HOST_USER = 'iamdoxoak@gmail.com'
+EMAIL_HOST_USER = 'iamdoxoak@gmail.com'                                                # 이메일 호스트 유저 계정 정보를 설정
 
-EMAIL_HOST_PASSWORD = 'ajrp ytxx mmvk sxmi'
+EMAIL_HOST_PASSWORD = 'ajrp ytxx mmvk sxmi'                                            # 이메일 호스트 유저 계정의 앱 비밀번호를 설정
 
-EMAIL_USE_TLS = True
+EMAIL_USE_TLS = True                                                                   # TLS(Transport Layer Security) 사용을 설정
 
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER                                                   # 기본 이메일 발신자 주소를 설정
