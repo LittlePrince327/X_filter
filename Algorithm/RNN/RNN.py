@@ -16,11 +16,11 @@ sentences = df['sentence'].tolist()
 rnn_tokenizer = Tokenizer()
 rnn_tokenizer.fit_on_texts(sentences)
 
-vocab_size = len(rnn_tokenizer.word_index) + 1                              # 어휘 사전에 크기 계산 
+vocab_size = len(rnn_tokenizer.word_index) + 1                          # 어휘 사전에 크기 계산 
 
 sequences = list()                                                      # 각 문장을 단어 시퀀스로 변환하고, 문장의 부분 시퀀스를 생성하여 리스트에 추가
 for line in sentences:
-    encoded = rnn_tokenizer.texts_to_sequences([line])[0]                   # 현재 문장을 정수로 시퀀스로 변수
+    encoded = rnn_tokenizer.texts_to_sequences([line])[0]               # 현재 문장을 정수로 시퀀스로 변수
     for i in range(1, len(encoded)):                                    # 문장의 부분 시퀀스를 생성하고 리스트에 추가
         sequence = encoded[: i+1]
         sequences.append(sequence)
@@ -53,7 +53,7 @@ def sentence_generation(current_word, n, temperature=1.0, model=RNN_model, token
     sentence = ''
 
     for _ in range(n):                                                  # n개 단어 만큼 문자 생성
-        encoded = rnn_tokenizer.texts_to_sequences([current_word])[0]       # 현재 단어를 토크나이저를 사용하여 정수 시퀀스로 변환 
+        encoded = rnn_tokenizer.texts_to_sequences([current_word])[0]   # 현재 단어를 토크나이저를 사용하여 정수 시퀀스로 변환 
                                                                         # ex) "Hello, how are you?" => "Hello"가 1, "how"가 2, "are"가 3, "you"가 4라고 할 때 => [1, 2, 3, 4]
         encoded = pad_sequences([encoded], maxlen=5, padding='pre')     # 시퀀스가 5로 설정하고, 부족하면 앞쪽에 0을 채워넣고 부족하면 앞부분을 자른다.
                                                                         # 만약 뒤쪽으로 바꾸고싶으면 padding='post를 주면 된다.
