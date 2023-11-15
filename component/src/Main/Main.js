@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Axios from "axios";
 import "./Main.css"; // Main.css 파일 임포트
 import { Card } from "antd";
-import logo from './xnslogo.png';
+import logo from './logo100.png';
 
 
 const Main = () => {
@@ -28,7 +28,7 @@ const Main = () => {
           console.log(response.data.access);
           if (response.status === 200) {
             localStorage.setItem("token", response.data.access);
-            navigate("/board");
+            navigate("/newboard");
           } else {
             return Promise.reject(response.data);
           }
@@ -52,14 +52,15 @@ const Main = () => {
   return (
     <div className="maincontainer">
         <header className="main_header">
+          <Link to ="/">
           <img src={logo} alt="Logo" className="main_header_logo" />
+          </Link>
         </header>
       <div className="main_text">
-        <p>비속어로 열받는 당신을 위해</p>
+        <p>비속어로 지친 당신을 위해</p>
         <tr />
-        <p>단 하나뿐인 비속어 없는 </p>
+        <p> 비속어 없는 소셜네트워크서비스 </p>
         <tr />
-        <p>소셜 네트워크 서비스 </p>
       </div>
       <Card
        className="main_card"

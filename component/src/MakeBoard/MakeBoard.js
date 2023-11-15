@@ -35,7 +35,7 @@ const MakeBoard = () => {
     try {
       const response = await postBoard(content, author, create_date, userToken);
       console.log(response);
-      navigate('/board'); 
+      navigate('/newbord'); 
     } catch (error) {
       console.error('게시물 제출 오류:', error);
     }

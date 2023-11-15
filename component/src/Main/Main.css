@@ -3,7 +3,7 @@
     justify-content: center; /* 수평 중앙 정렬 */
     align-items: center; /* 수직 중앙 정렬 */
     height: 100vh;
-    background-image: url('./bg2.png');
+    background-image: url('./bg3.png');
 }
 
 .main_card{
@@ -12,7 +12,8 @@
 
 .main_text{
     font-family: 'HSBombaram21-Regular';
-    writing-mode: vertical-lr;
+    word-spacing:9px;
+    /* writing-mode: vertical-lr; */
     font-size: 35px;
     position: relative;
     left: -15%; /* 중앙에서 왼쪽으로 이동 */
@@ -20,8 +21,8 @@
 }
 
 .main_footer{
-    background-color: #41414196; /* 푸터의 배경색 */
-    color: white;
+    background-color: rgba(255, 255, 255, 0.588); /* 푸터의 배경색 */
+    color: rgb(0, 0, 0);
     text-align: center; /* 텍스트 중앙 정렬 */
     position: absolute; /* 위치 설정 */
     bottom: 0; /* 하단에 고정 */
@@ -55,9 +56,9 @@
     display: flex; /* 플렉스 레이아웃 설정 */
     align-items: center; /* 수직 방향 중앙 정렬 */
     justify-content: flex-start; /* 왼쪽 정렬 */
-    background-color: #ffffff82; /* 해더의 배경색 */
+    background-color: #00000047; /* 해더의 배경색 */
     color: rgb(0, 0, 0); /* 해더 내 텍스트 색상 */
-    height: 70px; /* 세로 높이 */
+    height: 60px; /* 세로 높이 */
     width: 100%; /* 가로 너비 */
     position: fixed; /* 고정 위치 */
     top: 0; /* 상단에 위치 */
