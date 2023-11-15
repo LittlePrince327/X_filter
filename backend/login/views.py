@@ -22,15 +22,10 @@ class UserSignup(APIView):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
-            profile_picture = request.data.get('profile_picture', None)
-            if profile_picture:
-                user.profile_picture = profile_picture
-                user.save()
-
             token = self.create_tokens(user)
             return Response(token, status=status.HTTP_201_CREATED)
-
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     def create_tokens(self, user):
         refresh = RefreshToken.for_user(user)
         token = {
@@ -81,7 +76,6 @@ def get_user_info(request):
         user = CustomUser.objects.get(id=user_id)  # 해당 ID를 가진 사용자 레코드를 DB에서 가져옴
         # 사용자 정보를 시리얼라이즈하기 위한 작업(예시)
         serialized_user = {
-            'id': user.id,
             'username': user.username,
             'email': user.email,
             'full_name': user.full_name,

@@ -26,7 +26,6 @@ def xfilter_list(request):
     serializer = XfilterSerializer(xfilter_list, many=True)
     return Response(serializer.data)
 
-
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def xfilter_detail(request, xfilter_id):  

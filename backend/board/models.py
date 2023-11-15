@@ -1,5 +1,5 @@
-from django.db import models
 from login.models import CustomUser
+from django.db import models
 
 class Xfilter(models.Model):
     ALL = 'All'
@@ -13,7 +13,7 @@ class Xfilter(models.Model):
         (SPORTS, '스포츠'),
         (POLITICS, '정치'),
     ]
-    member_number = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+
     author = models.TextField(default=1)
     content = models.TextField()
     create_date = models.DateTimeField()

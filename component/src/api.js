@@ -18,13 +18,12 @@ async function get_user_info(userToken) {
   }
 }
 
-async function postBoard(content, author, create_date, category, userToken, member_number) {
+async function postBoard(content, author, create_date, category, userToken) {
   const body = {
     content: content,
     author: author,
     create_date: create_date,
-    category: category,
-    member_number: member_number, // Include the member_number information
+    category: category,  // Include the category information
   };
 
   const headerOption = {
@@ -37,7 +36,6 @@ async function postBoard(content, author, create_date, category, userToken, memb
   const data = response.data;
   return data;
 }
-
 
 async function deleteBoard(postId, userToken) {
   try {
