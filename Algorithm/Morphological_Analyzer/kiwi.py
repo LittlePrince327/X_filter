@@ -39,7 +39,7 @@ kiwi= Kiwi(num_workers=0, model_path=None, load_default_dict=True, integrate_all
 
 def start():
     kiwi.tokenize('개쓰레기', normalize_coda=True)
-    kiwi.add_user_word("코로나 19", tag='NNG', score=0.0)
+    kiwi.add_user_word("코로나19", tag='NNG', score=0.0)
     kiwi.add_user_word("18년", tag='NNG', score=0.0)
     kiwi.add_user_word("같은", tag='VA', score=0.0)
     kiwi.add_user_word("시발놈", tag='NNG', score=0.0)
@@ -51,6 +51,7 @@ def start():
     kiwi.add_user_word("헤드램프", tag='NNG', score=0.0)
 
 start()
+
 
 # NNG - 일반 명사
 # NNP - 고유 명사

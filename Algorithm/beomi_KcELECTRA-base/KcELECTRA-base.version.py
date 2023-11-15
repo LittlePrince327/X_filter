@@ -42,7 +42,7 @@ packages_to_show = [
     "wordcloud",
     "JPype1",
     "rhinoMorph",
-    "kiwipiepy==0.16.1",
+    "kiwipiepy",
     "Konlpy",
     "nltk"
 ]
