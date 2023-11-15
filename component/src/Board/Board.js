@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { FloatButton } from 'antd';
 import styles from './Board.module.css';
 import { get_user_info } from '../api';
-import { FloatButton } from 'antd';
 
 const BASE_URL = 'http://localhost:8000/';
 
 const Board = () => {
+    
+    const handleFloatButtonClick = () => {
+        // 예: 새 게시물 작성 페이지로 이동
+        navigate('/makeboard');
+    };
+
     const [xfilterList, setXfilterList] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const navigate = useNavigate();
-    const [selectedCategory, setSelectedCategory] = useState('All'); 
-
-    const handleFloatButtonClick = () => {
-        navigate('/makeboard');
-    };
 
     const fetchXfilterList = async () => {
         try {
@@ -52,32 +53,6 @@ const Board = () => {
         }
     };
 
-    const handleCategoryChange = async (category) => {
-        try {
-            const token = localStorage.getItem('token');
-            let response;
-    
-            if (category === 'All') {
-                response = await axios.get(`${BASE_URL}board/xfilter/`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-            } else {
-                response = await axios.get(`${BASE_URL}board/xfilter/?category=${category}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-            }
-            setXfilterList(response.data);
-            setSelectedCategory(category);
-        } catch (error) {
-            console.error(`${category} 카테고리 xfilters를 가져오는 중 오류 발생:`, error);
-        }
-    };
-    
-
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
         return new Date(dateString).toLocaleString('ko-KR', options);
@@ -87,7 +62,7 @@ const Board = () => {
         try {
             const token = localStorage.getItem('token');
             if (token) {
-                const userData = await get_user_info(token);
+                const userData = await get_user_info(token); 
 
                 const fullName = userData.full_name;
 
@@ -104,17 +79,17 @@ const Board = () => {
 
     useEffect(() => {
         fetchXfilterList();
-        fetchUserInfoAndSaveToLocalStorage();
+        fetchUserInfoAndSaveToLocalStorage(); 
     }, []);
 
     return (
         <div className={styles.container}>
             <div className={styles.row}>
-                <FloatButton style={{
-                    marginRight: 40,
-                    width: 60,
-                    height: 60,
-                }} type="primary" onClick={handleFloatButtonClick} tooltip={<div>새 게시물 작성</div>} />
+            <FloatButton style={{
+            marginRight:40,
+          width: 60,
+          height: 60,
+        }}type="primary" onClick={handleFloatButtonClick} tooltip={<div>새 게시물 작성</div>} />
                 <div className="col-6">
                     <div className={styles.searchContainer}>
                         <input
@@ -133,17 +108,6 @@ const Board = () => {
                         </button>
                     </div>
                 </div>
-                <div className={styles.categoryButtons}>
-                    {['All', 'Daily', 'Sports', 'Politics'].map((category) => (
-                        <button
-                            key={category}
-                            className={`btn ${selectedCategory === category ? 'btn-primary' : 'btn-secondary'}`}
-                            onClick={() => handleCategoryChange(category)}
-                        >
-                            {category}
-                        </button>
-                    ))}
-                </div>
             </div>
             <table className={`table ${styles.table}`}>
                 <thead>
@@ -158,8 +122,8 @@ const Board = () => {
                     {xfilterList.map((xfilter) => (
                         <tr
                             className="text-center"
-                            key={xfilter.id}
-                            onClick={() => navigate(`/detail/${xfilter.id}`)}
+                            key={xfilter.id} 
+                            onClick={() => navigate(`/detail/${xfilter.id}`)} 
                         >
                             <td>{xfilter.id}</td>
                             <td className="text-start">

@@ -7,13 +7,17 @@ import ResetPassword from './ResetPassword/ResetPassword';
 import Board from './Board/Board'; 
 import MakeBoard from './MakeBoard/MakeBoard'; 
 import DetailBoard from './DetailBoard/DetailBoard';
+import Main from './Main/Main';
+import Newboard from './Board/Newboard';
 
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Join />} />
+      <Route path="/" element={<Main />} />
+      <Route path="/newboard" element={<Newboard />}/>
+        <Route path="/join" element={<Join />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/findusername" element={<FindUsername />} />
         <Route path="/resetpassword" element={<ResetPassword />} />

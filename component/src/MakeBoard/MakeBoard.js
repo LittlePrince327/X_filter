@@ -4,9 +4,8 @@ import styles from './MakeBoard.module.css';
 import { postBoard } from '../api';
 import { Space, Tag } from 'antd';
 
-
 const { CheckableTag } = Tag;
-const tagsData = ['All','Daily','Politics', 'Sports'];
+const tagsData = ['Daily','Politics', 'Sports'];
 
 const MakeBoard = () => {
   const postId = 123;
@@ -14,9 +13,7 @@ const MakeBoard = () => {
   const [userToken, setUserToken] = useState('');
   const [userData, setUserData] = useState(null);
   const navigate = useNavigate(); 
-  const [selectedTags, setSelectedTags] = useState([]);
-
-  
+  const [selectedTags, setSelectedTags] = useState(['Books']);
   const handleChange = (tag, checked) => {
     const nextSelectedTags = checked
       ? [...selectedTags, tag]
@@ -34,12 +31,11 @@ const MakeBoard = () => {
     const content = event.target.content.value;
     const author = localStorage.getItem('author');
     const create_date = new Date().toISOString();
-    const category = selectedTags[0] || '전체';
 
     try {
-      const response = await postBoard(content, author, create_date, category, userToken);
+      const response = await postBoard(content, author, create_date, userToken);
       console.log(response);
-      navigate('/board'); 
+      navigate('/newbord'); 
     } catch (error) {
       console.error('게시물 제출 오류:', error);
     }
