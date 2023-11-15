@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import styles from './Signup.css';
+import { Link, useNavigate } from "react-router-dom";
+import styles from './Signup.module.css';
+import logo from './logo100.png';
 
 function Signup() {
   const navigate = useNavigate();
@@ -86,8 +87,13 @@ function Signup() {
 
   return (
     <div className={styles.outerContainer}>
+      <header className={styles.header}>
+        <Link to="/">
+          <img src={logo} alt="Logo" className="main_header_logo" />
+          </Link>
+        </header>
       <div className={styles.container}>
-        <h1 className={`heading ${styles.heading}`}>X_FILTER</h1>
+        <h1 className={`heading ${styles.heading}`}>XNS 회원가입</h1>
         <form className={styles.form}>
           <div>
             <input
@@ -150,6 +156,9 @@ function Signup() {
           </button>
         </form>
       </div>
+      <footer className={styles.footer}>
+        <p>저작권 © 2023 회사명. 모든 권리 보유.</p>
+      </footer>
     </div>
   );
 }

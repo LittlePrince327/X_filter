@@ -18,16 +18,18 @@ async function get_user_info(userToken) {
   }
 }
 
-async function postBoard(content, author, create_date, userToken) {
+async function postBoard(content, author, create_date, category, userToken) {
   const body = {
     content: content,
     author: author,
-    create_date: create_date
+    create_date: create_date,
+    category: category,  // Include the category information
   };
+
   const headerOption = {
     headers: {
-      Authorization: `Bearer ${userToken}`
-    }
+      Authorization: `Bearer ${userToken}`,
+    },
   };
 
   const response = await axios.post(`${BASE_URL}/board/xfilter/create`, body, headerOption);
