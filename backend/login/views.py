@@ -1,31 +1,34 @@
-
 from django.contrib.auth import get_user_model
+from login.models import CustomUser
 from .serializers import UserSerializer
-from rest_framework import status
-from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework import permissions
-from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer 
-from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from login.models import CustomUser  # 여기에는 사용자 모델을 넣어야 합니다
+from rest_framework.response import Response
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework import status, permissions
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-
+# 회원가입 API View
 class UserSignup(APIView):
+    # 모든 사용자에게 접근을 허용
     permission_classes = [permissions.AllowAny]
 
+    # POST 요청을 처리하는 메서드
     def post(self, request):
+        # 사용자 정보를 직렬화
         serializer = UserSerializer(data=request.data)
+        # 직렬화가 유효하다면 사용자를 저장하고 토큰을 생성하여 응답
         if serializer.is_valid():
             user = serializer.save()
             token = self.create_tokens(user)
             return Response(token, status=status.HTTP_201_CREATED)
+        # 직렬화가 유효하지 않다면 에러 메시지를 응답
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    # 사용자에 대한 토큰을 생성하는 메서드
     def create_tokens(self, user):
         refresh = RefreshToken.for_user(user)
         token = {
@@ -34,17 +37,21 @@ class UserSignup(APIView):
         }
         return token
 
+# 사용자 로그인 처리
 class UserLogin(ObtainAuthToken):
+    # POST 요청을 처리하는 메서드
     def post(self, request, *args, **kwargs):
+        # 토큰 시리얼라이저를 이용하여 사용자 정보와 토큰 획득
         serializer = self.serializer_class(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
         
-        # 인증 토큰을 얻기 위해 TokenObtainPairSerializer 사용
+        # TokenObtainPairSerializer를 사용하여 토큰 획득
         token_serializer = TokenObtainPairSerializer(data=request.data)
         token_serializer.is_valid(raise_exception=True)
         tokens = token_serializer.validated_data
 
+        # 얻은 정보를 응답
         return Response({
             'access': tokens['access'],
             'refresh': tokens['refresh'],
@@ -52,35 +59,23 @@ class UserLogin(ObtainAuthToken):
             'username': user.username,
         }, status=status.HTTP_200_OK)
 
-
-class CustomTokenObtainPairView(TokenObtainPairView):
-    def create_tokens(self, user):
-        response_data = super().create_tokens(user)
-        username = self.request.data.get('username')
-        user_data = get_user_model().objects.get(username=username)
-        response_data['email'] = user_data.email
-        return response_data
-
-    def post(self, request, *args, **kwargs):
-        response = super().post(request, *args, **kwargs)
-        if response.status_code == 200:
-            response.data = self.create_tokens(self.user)
-        return response
-
-
+# 사용자 정보를 제공하는 API View
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_user_info(request):
-    user_id = request.user.id  # 인증된 사용자의 ID 가져오기
+    # 현재 인증된 사용자의 ID를 가져와서
+    user_id = request.user.id  
     try:
-        user = CustomUser.objects.get(id=user_id)  # 해당 ID를 가진 사용자 레코드를 DB에서 가져옴
-        # 사용자 정보를 시리얼라이즈하기 위한 작업(예시)
+        # ID에 해당하는 사용자를 찾는다
+        user = CustomUser.objects.get(id=user_id)  
+        # 사용자 정보를 직렬화
         serialized_user = {
             'username': user.username,
             'email': user.email,
             'full_name': user.full_name,
-            # 다른 필드들을 추가할 수 있음
         }
+        # 직렬화한 정보를 응답
         return Response(serialized_user)
     except CustomUser.DoesNotExist:
+        # 사용자가 존재하지 않으면 에러 메시지를 응답
         return Response({'error': '사용자를 찾을 수 없습니다.'}, status=404)

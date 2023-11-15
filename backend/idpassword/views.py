@@ -1,94 +1,66 @@
-from django.http import JsonResponse, HttpRequest
-from django.contrib.auth import get_user_model
-from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_POST
 import json
+from django.http import HttpRequest, JsonResponse
+from django.shortcuts import render
+from django.urls import reverse
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
+from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import PasswordResetView
-from django.shortcuts import render
 from django.core.mail import send_mail
-from django.urls import reverse
-from django.utils.http import urlsafe_base64_encode
-from django.utils.encoding import force_bytes
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 
-
-    # 이메일을 통한 사용자 아이디 찾기
+# 이메일을 통해 사용자 ID 찾기
 @csrf_exempt
 @require_POST
 def get_username_by_email(request: HttpRequest):
     if request.method == 'POST':
         try:
+            # 요청 바디에서 JSON 데이터를 파싱
             data = json.loads(request.body)
             email = data.get('email', '')
             if email:
                 try:
+                    # 이메일을 이용하여 사용자를 찾고
                     user = get_user_model().objects.get(email=email)
+                    # 사용자의 아이디를 응답
                     return JsonResponse({'username': user.username}, status=200)
                 except get_user_model().DoesNotExist:
-                    return JsonResponse({'message': '사용자를 찾을 수 없습니다.'}, status=404)
+                    # 사용자를 찾을 수 없는 경우 404 응답을 반환.
+                    return JsonResponse({'message': 'User not found.'}, status=404)
             else:
-                return JsonResponse({'message': '이메일을 입력해주세요.'}, status=400)
+                # 이메일이 제공되지 않은 경우 400 응답을 반환
+                return JsonResponse({'message': 'Please enter your email.'}, status=400)
         except json.JSONDecodeError:
-            return JsonResponse({'message': '잘못된 JSON 요청입니다.'}, status=400)
+            # 요청 바디가 유효한 JSON이 아닌 경우 400 응답을 반환
+            return JsonResponse({'message': 'Invalid JSON request.'}, status=400)
     else:
-        return JsonResponse({'message': '잘못된 요청입니다.'}, status=400)
-    
-    # 아이디와 이메일을 통하여 회원정보를 조회
+        # 요청 메서드가 POST가 아닌 경우 400 응답을 반환
+        return JsonResponse({'message': 'Bad request.'}, status=400)
+
+
+# ID와 이메일을 통한 회원 정보 확인
 @csrf_exempt
 def reset_password(request):
     if request.method == "POST":
         try:
+            # 요청 바디에서 JSON 데이터를 파싱
             data = json.loads(request.body)
             username = data.get('username')
             email = data.get('email')
             User = get_user_model()
-
             try:
+                # 제공된 사용자 아이디와 이메일을 이용하여 사용자를 찾고
                 User = User.objects.get(email=email, username=username)
-                return JsonResponse({"message": "사용자를 찾았습니다. 비밀번호 재설정이 시작되었습니다."})  
+                # 성공 메시지를 반환
+                return JsonResponse({"message": "User found. Password reset has begun."})
             except User.DoesNotExist:
-                return JsonResponse({"error": "사용자를 찾을 수 없습니다."}, status=404)
+                # 사용자를 찾을 수 없는 경우 404 응답을 반환
+                return JsonResponse({"error": "User not found."}, status=404)
         except json.JSONDecodeError:
-            return JsonResponse({"error": "잘못된 JSON 형식입니다."}, status=400)
+            # 요청 바디가 유효한 JSON이 아닌 경우 400 응답을 반환
+            return JsonResponse({"error": "Invalid JSON format."}, status=400)
     else:
-        return JsonResponse({"error": "POST 요청만 허용됩니다."}, status=405)
-
-
-class UserPasswordResetView(PasswordResetView):
-    template_name = 'registration/password_reset_email.html'
-
-    def form_valid(self, form):
-        email = self.request.POST.get("email")
-        user = self.get_user_by_email(email)
-        
-        if user:
-            opts = {
-                'use_https': self.request.is_secure(),
-                'token_generator': default_token_generator,
-                'from_email': None,  
-                'email_template_name': self.email_template_name,
-                'subject_template_name': self.subject_template_name,
-                'request': self.request,
-                'html_email_template_name': self.html_email_template_name,
-                'extra_email_context': self.extra_email_context,
-            }
-            form.save(**opts)
-            
-            uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
-            token = default_token_generator.make_token(user)
-            reset_url = reverse('password_reset_confirm', kwargs={'uidb64': uidb64, 'token': token})
-            
-            email_subject = '비밀번호 재설정을 위한 안내'
-            email_body = f'비밀번호 재설정을 위한 링크: {reset_url}'
-            send_mail(email_subject, email_body, 'iamdoxoak@gmail.com', [user.email])
-
-            return super().form_valid(form)
-        else:
-            return render(self.request, 'registration/password_reset_done_fail.html')
-
-    def get_user_by_email(self, email):
-        try:
-            user = get_user_model().objects.get(email=email)
-            return user
-        except get_user_model().DoesNotExist:
-            return None
+        # 요청 메서드가 POST가 아닌 경우 405 응답을 반환
+        return JsonResponse({"error": "Only POST requests are allowed."}, status=405)

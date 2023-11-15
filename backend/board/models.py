@@ -1,10 +1,23 @@
-from login.models import CustomUser
 from django.db import models
+from login.models import CustomUser
 
 class Xfilter(models.Model):
-    author = models.TextField(default=1)  
+    ALL = 'All'
+    DAILY = 'Daily'
+    SPORTS = 'Sports'
+    POLITICS = 'Politics'
+
+    CATEGORY_CHOICES = [
+        (ALL, '전체'),
+        (DAILY, '일상'),
+        (SPORTS, '스포츠'),
+        (POLITICS, '정치'),
+    ]
+
+    author = models.TextField(default=1)
     content = models.TextField()
-    create_date = models.DateTimeField()  
+    create_date = models.DateTimeField()
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default=ALL)
     voter = models.ManyToManyField(CustomUser, related_name='voter_xfilter')
 
     def __str__(self):
