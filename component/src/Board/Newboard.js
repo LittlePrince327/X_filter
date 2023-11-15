@@ -34,14 +34,16 @@ const suffix = (
   />
 );
 const { Header, Content, Footer, Sider } = Layout;
+
 function getItem(label, key, icon, children) {
   return {
     key,
     icon,
-    children,    
+    children,
     label,
   };
 }
+
 const items = [
   getItem("All", "1", <HeartOutlined />),
   getItem("Daily", "2", <UserOutlined />),
@@ -54,6 +56,8 @@ const Newboard = () => {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+  const navigate = useNavigate();
+
   const handleFloatButtonClick = () => {
     // 예: 새 게시물 작성 페이지로 이동
     navigate("/makeboard");
@@ -61,7 +65,7 @@ const Newboard = () => {
 
   const [xfilterList, setXfilterList] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const navigate = useNavigate();
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
   const fetchXfilterList = async () => {
     try {
@@ -98,16 +102,32 @@ const Newboard = () => {
     }
   };
 
-  const formatDate = (dateString) => {
-    const options = {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-    };
-    return new Date(dateString).toLocaleString("ko-KR", options);
+  const handleCategoryChange = async (category) => {
+    try {
+      const token = localStorage.getItem("token");
+      let response;
+
+      if (category === "All") {
+        response = await axios.get(`${BASE_URL}board/xfilter/`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      } else {
+        response = await axios.get(
+          `${BASE_URL}board/xfilter/?category=${category}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      }
+      setXfilterList(response.data);
+      setSelectedCategory(category);
+    } catch (error) {
+      console.error(`${category} 카테고리 xfilters를 가져오는 중 오류 발생:`, error);
+    }
   };
 
   const fetchUserInfoAndSaveToLocalStorage = async () => {
@@ -154,8 +174,8 @@ const Newboard = () => {
         collapsible
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
-        width={200} // 펼쳐졌을 때의 너비
-        collapsedWidth={80} // 접혔을 때의 너비
+        width={200}
+        collapsedWidth={80}
         style={{
           height: "100vh",
           position: "fixed",
@@ -169,14 +189,23 @@ const Newboard = () => {
           theme="dark"
           defaultSelectedKeys={["1"]}
           mode="inline"
-          items={items}
-        />
+          selectedKeys={[selectedCategory]}
+        >
+          {items.map((item) => (
+            <Menu.Item
+              key={item.key}
+              icon={item.icon}
+              onClick={() => handleCategoryChange(item.label)}
+            >
+              {item.label}
+            </Menu.Item>
+          ))}
+        </Menu>
       </Sider>
       <Layout style={{ marginLeft: collapsed ? 80 : 200, height: "100vh" }}>
         <Header
           style={{
-            backgroundColor:'#ffff',
-            // zIndex: 1,
+            backgroundColor: "#ffff",
             width: "100%",
             top: 0,
           }}
@@ -196,10 +225,9 @@ const Newboard = () => {
         </Header>
         <Content
           style={{
-            // marginBottom: 10, // Header 아래에 위치하도록 marginTop 조정
             overflow: "auto",
-            height: "calc(100vh - 64px)", // 전체 높이에서 Header 높이만큼 제외
-            paddingTop: 20, // 내용과 Header 사이의 간격
+            height: "calc(100vh - 64px)",
+            paddingTop: 20,
           }}
         >
           <Breadcrumb
@@ -209,16 +237,16 @@ const Newboard = () => {
           ></Breadcrumb>
           {xfilterList.map((xfilter) => (
             <Card
-            onClick={() => navigate(`/detail/${xfilter.id}`)}
-            title={xfilter.author}
-            className={styles.cardHoverEffect} // Add this line
-            style={{
-              // boxShadow: '1px 2px 9px #BDBDBD',
-              marginLeft: '30%',
-              marginTop: 20,
-              width: 700,
-              height: 400,
-            }}
+              key={xfilter.id}
+              onClick={() => navigate(`/detail/${xfilter.id}`)}
+              title={xfilter.author}
+              className={styles.cardHoverEffect}
+              style={{
+                marginLeft: "30%",
+                marginTop: 20,
+                width: 700,
+                height: 400,
+              }}
             >
               {xfilter.content.length > 20
                 ? `${xfilter.content.substring(0, 40)}...`
@@ -237,4 +265,5 @@ const Newboard = () => {
     </Layout>
   );
 };
+
 export default Newboard;
