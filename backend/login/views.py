@@ -1,4 +1,3 @@
-from django.contrib.auth import get_user_model
 from login.models import CustomUser
 from .serializers import UserSerializer
 from rest_framework.views import APIView
@@ -7,35 +6,23 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework import status, permissions
-from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 # 회원가입 API View
 class UserSignup(APIView):
     # 모든 사용자에게 접근을 허용
     permission_classes = [permissions.AllowAny]
-
     # POST 요청을 처리하는 메서드
     def post(self, request):
         # 사용자 정보를 직렬화
         serializer = UserSerializer(data=request.data)
-        # 직렬화가 유효하다면 사용자를 저장하고 토큰을 생성하여 응답
+        # 직렬화가 유효하다면 사용자를 저장
         if serializer.is_valid():
-            user = serializer.save()
-            token = self.create_tokens(user)
-            return Response(token, status=status.HTTP_201_CREATED)
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         # 직렬화가 유효하지 않다면 에러 메시지를 응답
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    # 사용자에 대한 토큰을 생성하는 메서드
-    def create_tokens(self, user):
-        refresh = RefreshToken.for_user(user)
-        token = {
-            'refresh': str(refresh),
-            'access': str(refresh.access_token),
-        }
-        return token
 
 # 사용자 로그인 처리
 class UserLogin(ObtainAuthToken):
