@@ -16,7 +16,8 @@ packages_to_install = [
     "rhinoMorph==4.0.1.12",
     "kiwipiepy==0.16.1",
     "Konlpy==0.6.0",
-    "nltk==3.8.1"
+    "nltk==3.8.1",
+    "seaborn==0.13.0"
 ]
 
 for package in packages_to_install:
@@ -44,7 +45,8 @@ packages_to_show = [
     "rhinoMorph",
     "kiwipiepy",
     "Konlpy",
-    "nltk"
+    "nltk",
+    "seaborn"
 ]
 
 for package in packages_to_show:
