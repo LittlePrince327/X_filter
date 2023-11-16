@@ -46,7 +46,7 @@ RNN_model.add(SimpleRNN(hidden_units))                                  # 지정
 RNN_model.add(Dense(vocab_size, activation='softmax'))                  # 출력 레이어 추가 : 어휘 사전의 크길르 가진 Dense 레이어를 사용하며, 활성화 함수는 softmax
 RNN_model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
                                                                         # 모델 컴파일: 다중 클래스 분류 문제이므로 categorical_crossentropy 손실 함수와 Adam 옵티마이저 사용
-RNN_model.fit(X, y, epochs=20, verbose=2)                              # 모델 학습: 입력(X) 및 출력(y) 데이터를 사용하여 주어진 에폭 동안 모델을 학습
+RNN_model.fit(X, y, epochs=20, verbose=2)                               # 모델 학습: 입력(X) 및 출력(y) 데이터를 사용하여 주어진 에폭 동안 모델을 학습
 
 def sentence_generation(current_word, n, temperature=1.0, model=RNN_model, tokenizer=rnn_tokenizer):
     init_word = current_word                                            # 시작 단어와 문장을 저장할 빈 문자열 초기화
