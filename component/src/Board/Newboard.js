@@ -78,6 +78,7 @@ const Newboard = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [followStatus, setFollowStatus] = useState({});
   const [followingUsers, setFollowingUsers] = useState([]);
+  const [selectedUserId, setSelectedUserId] = useState(null);
 
   const fetchXfilterList = async () => {
     try {
@@ -165,12 +166,12 @@ const Newboard = () => {
     try {
       const token = localStorage.getItem("token");
       const follower_id = localStorage.getItem("author");
-  
+
       if (!token) {
         console.log("User not logged in");
         return;
       }
-  
+
       const response = await axios.post(
         `${BASE_URL}api/follow/`,
         { following_id: author, follower_id: follower_id },
@@ -180,15 +181,15 @@ const Newboard = () => {
           },
         }
       );
-  
+
       if (response.data.message === "Success") {
         const isFollowing = response.data.is_following;
-  
+
         setFollowStatus((prevStatus) => ({
           ...prevStatus,
           [author]: isFollowing,
         }));
-  
+
         fetchXfilterList();
         console.log(isFollowing ? "Followed" : "Unfollowed");
       } else {
@@ -228,6 +229,24 @@ const Newboard = () => {
       console.error("Error fetching following users:", error);
     }
   };
+
+  const fetchPostsFromUser = async (username, userId) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(`${BASE_URL}board/xfilter/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          author_name: username, 
+        },
+      });
+      setXfilterList(response.data);
+    } catch (error) {
+      console.error("Error fetching posts from user:", error);
+    }
+  };
+  
 
   return (
     <Layout
@@ -342,7 +361,17 @@ const Newboard = () => {
           <h3>Following</h3>
           <ul>
             {followingUsers.map((user) => (
-              <li key={user.id}>{user.full_name}</li>
+              <li key={user.id}>
+                <a
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    fetchPostsFromUser(user.full_name, user.id);
+                  }}
+                >
+                  {user.full_name}
+                </a>
+              </li>
             ))}
           </ul>
         </div>
