@@ -49,6 +49,16 @@ const items = [
   getItem("Daily", "2", <UserOutlined />),
   getItem("Politics", "3", <RadarChartOutlined />),
   getItem("Sports", "4", <FireOutlined />),
+  getItem("Technology", "5", <DesktopOutlined />),
+  getItem("Entertainment", "6", <DesktopOutlined />),
+  getItem("Science and Nature", "7", <DesktopOutlined />),
+  getItem("Gaming", "8", <DesktopOutlined />),
+  getItem("Books and Literature", "9", <DesktopOutlined />),
+  getItem("Health and Fitness", "10", <DesktopOutlined />),
+  getItem("Travel", "11", <DesktopOutlined />),
+  getItem("Food and Cooking", "12", <DesktopOutlined />),
+  getItem("Art and Creativity", "13", <DesktopOutlined />),
+  getItem("Technology Help/Support", "14", <DesktopOutlined />),
 ];
 
 const Newboard = () => {
