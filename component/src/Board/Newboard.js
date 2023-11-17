@@ -200,9 +200,6 @@ const Newboard = () => {
     }
   };
 
-
-
-
   useEffect(() => {
     fetchXfilterList();
     fetchUserInfoAndSaveToLocalStorage();
@@ -212,7 +209,6 @@ const Newboard = () => {
   }, []);
 
   useEffect(() => {
-    // Save follow status to local storage whenever it changes
     localStorage.setItem("followStatus", JSON.stringify(followStatus));
   }, [followStatus]);
 
@@ -225,6 +221,15 @@ const Newboard = () => {
         },
       });
       setFollowingUsers(response.data);
+
+      const updatedFollowStatus = response.data.reduce(
+        (status, user) => ({
+          ...status,
+          [user.full_name]: true,
+        }),
+        {}
+      );
+      setFollowStatus(updatedFollowStatus);
     } catch (error) {
       console.error("Error fetching following users:", error);
     }
