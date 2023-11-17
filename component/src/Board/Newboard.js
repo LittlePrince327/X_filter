@@ -351,7 +351,7 @@ const Newboard = () => {
             textAlign: "center",
           }}
         >
-          Ant Design ©2023 Created by Ant UED
+          경빈's Design ©2023 Created by SeHuuuui
         </Footer>
       </Layout>
     </Layout>
