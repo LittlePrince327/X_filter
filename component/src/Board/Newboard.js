@@ -69,7 +69,6 @@ const Newboard = () => {
   const navigate = useNavigate();
 
   const handleFloatButtonClick = () => {
-    // 예: 새 게시물 작성 페이지로 이동
     navigate("/makeboard");
   };
 
@@ -243,7 +242,7 @@ const Newboard = () => {
           Authorization: `Bearer ${token}`,
         },
         params: {
-          author_name: username, 
+          author_name: username,
         },
       });
       setXfilterList(response.data);
@@ -251,7 +250,7 @@ const Newboard = () => {
       console.error("Error fetching posts from user:", error);
     }
   };
-  
+
 
   return (
     <Layout
@@ -338,7 +337,6 @@ const Newboard = () => {
             <Card
               key={xfilter.id}
               onClick={() => navigate(`/detail/${xfilter.id}`)}
-              title={xfilter.author}
               className={styles.cardHoverEffect}
               style={{
                 marginLeft: "30%",
@@ -347,18 +345,27 @@ const Newboard = () => {
                 height: 400,
               }}
             >
-              {xfilter.content.length > 20
-                ? `${xfilter.content.substring(0, 40)}...`
-                : xfilter.content}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleFollow(xfilter.author);
-                }}
-                className={styles.followButton}
-              >
-                {followStatus[xfilter.author] ? "Following" : "Follow"}
-              </button>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <div>
+                  <h3>{xfilter.author}</h3>
+                  {xfilter.content.length > 20 ? (
+                    <p>{`${xfilter.content.substring(0, 40)}...`}</p>
+                  ) : (
+                    <p>{xfilter.content}</p>
+                  )}
+                </div>
+                <div>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleFollow(xfilter.author);
+                    }}
+                    className={styles.followButton}
+                  >
+                    {followStatus[xfilter.author] ? "Following" : "Follow"}
+                  </button>
+                </div>
+              </div>
             </Card>
           ))}
         </Content>
