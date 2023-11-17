@@ -17,11 +17,14 @@ import {
   Input,
   Space,
   Card,
+  Row,
+  Col,
 } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./Newboard.module.css";
 import { get_user_info } from "../api";
 import logo from "./logo100.png";
+
 
 const { Search } = Input;
 const BASE_URL = "http://localhost:8000/";
@@ -43,13 +46,6 @@ function getItem(label, key, icon, children) {
     label,
   };
 }
-
-const items = [
-  getItem("All", "1", <HeartOutlined />),
-  getItem("Daily", "2", <UserOutlined />),
-  getItem("Politics", "3", <RadarChartOutlined />),
-  getItem("Sports", "4", <FireOutlined />),
-];
 
 const Newboard = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -126,7 +122,10 @@ const Newboard = () => {
       setXfilterList(response.data);
       setSelectedCategory(category);
     } catch (error) {
-      console.error(`${category} 카테고리 xfilters를 가져오는 중 오류 발생:`, error);
+      console.error(
+        `${category} 카테고리 xfilters를 가져오는 중 오류 발생:`,
+        error
+      );
     }
   };
 
@@ -148,7 +147,12 @@ const Newboard = () => {
       console.error("사용자 정보를 가져오는 데 문제가 발생했습니다:", error);
     }
   };
-
+  const items = [
+    getItem("All", "1", <HeartOutlined />),
+    getItem("Daily", "2", <UserOutlined />),
+    getItem("Politics", "3", <RadarChartOutlined />),
+    getItem("Sports", "4", <FireOutlined />),
+  ];
   useEffect(() => {
     fetchXfilterList();
     fetchUserInfoAndSaveToLocalStorage();
@@ -162,7 +166,8 @@ const Newboard = () => {
     >
       <FloatButton
         style={{
-          marginRight: 40,
+          marginBottom:40,
+          marginRight: 250,
           width: 60,
           height: 60,
         }}
@@ -170,18 +175,16 @@ const Newboard = () => {
         onClick={handleFloatButtonClick}
         tooltip={<div>새 게시물 작성</div>}
       />
-      <Sider
-        collapsible
-        collapsed={collapsed}
-        onCollapse={(value) => setCollapsed(value)}
-        width={200}
-        collapsedWidth={80}
+       <div
         style={{
+          width: collapsed ? "80px" : "200px",
           height: "100vh",
+          backgroundColor: "#001529",
           position: "fixed",
+          left: 0,
         }}
       >
-        <Link to="/">
+        <Link to="/newboard">
           <img src={logo} alt="Logo" className={styles.logo} />
         </Link>
         <Menu
@@ -201,67 +204,97 @@ const Newboard = () => {
             </Menu.Item>
           ))}
         </Menu>
-      </Sider>
-      <Layout style={{ marginLeft: collapsed ? 80 : 200, height: "100vh" }}>
+        </div>
+      <Layout style={{ marginLeft: collapsed ? 80 : 200, marginRight:200, height: "100vh" }}>
         <Header
           style={{
             backgroundColor: "#ffff",
             width: "100%",
-            top: 0,
           }}
         >
-          <div className={styles.searchContainer}>
-            <input
-              className={styles.searchInput}
-              type="text"
-              placeholder="제목,작성자 검색"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <button className={styles.bord_btn} onClick={handleSearch}>
-              Search
-            </button>
+          <div className={styles.headerContainer}>
+            <div className={styles.searchContainer}>
+              <input
+                className={styles.searchInput}
+                type="text"
+                placeholder="Title, Author Search"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <button className={styles.bord_btn} onClick={handleSearch}>
+                Search
+              </button>
+            </div>
+            <div>
+              <Link to="/">
+                <button className={styles.logout}>로그아웃</button>
+              </Link>
+            </div>
           </div>
         </Header>
+
         <Content
           style={{
             overflow: "auto",
+            width: "100%",
             height: "calc(100vh - 64px)",
             paddingTop: 20,
           }}
         >
-          <Breadcrumb
-            style={{
-              margin: "16px 0",
-            }}
-          ></Breadcrumb>
-          {xfilterList.map((xfilter) => (
-            <Card
-              key={xfilter.id}
-              onClick={() => navigate(`/detail/${xfilter.id}`)}
-              title={xfilter.author}
-              className={styles.cardHoverEffect}
-              style={{
-                marginLeft: "30%",
-                marginTop: 20,
-                width: 700,
-                height: 400,
-              }}
-            >
-              {xfilter.content.length > 20
-                ? `${xfilter.content.substring(0, 40)}...`
-                : xfilter.content}
-            </Card>
-          ))}
+          <Row >
+            {xfilterList.map((xfilter, index) => (
+              <Col
+                span={12}
+                key={xfilter.id}
+                style={{ display: "flex", justifyContent: "center", width:'auto' }}
+              >
+                <Card
+                  onClick={() => navigate(`/detail/${xfilter.id}`)}
+                  title={xfilter.author}
+                  className={`${styles.cardHoverEffect} ${
+                    styles[`category${xfilter.category || "Default"}`]
+                  }`}
+                  style={{
+                    marginBottom: 30,
+                    width: 600,
+                    height: 400,
+                  }}
+                >
+                  {xfilter.content.length > 20
+                    ? `${xfilter.content.substring(0, 40)}...`
+                    : xfilter.content}
+                </Card>
+              </Col>
+            ))}
+          </Row>
         </Content>
         <Footer
           style={{
+            width:"auto",
             textAlign: "center",
           }}
         >
           Ant Design ©2023 Created by Ant UED
         </Footer>
       </Layout>
+      <div
+        style={{
+          width: collapsed ? "80px" : "200px",
+          height: "100vh",
+          backgroundColor: "#001529",
+          position: "fixed",
+          right: 0,
+        }}
+      ><p className={styles.siderp}>팔로우목록</p></div>
+              <div
+        style={{
+          width: collapsed ? "80px" : "200px",
+          height: "100vh",
+          backgroundColor: "#001529",
+          position: "fixed",
+          right: 0,
+        }}
+      ><p className={styles.siderp}>팔로우목록</p></div>
     </Layout>
   );
 };
