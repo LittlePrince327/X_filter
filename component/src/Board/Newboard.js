@@ -163,37 +163,33 @@ const Newboard = () => {
   const handleFollow = async (author) => {
     try {
       const token = localStorage.getItem("token");
-      const follower_id = localStorage.getItem("author");  // Get the logged-in user's name
-
-      // Check if the user is logged in
+      const follower_id = localStorage.getItem("author");
+  
       if (!token) {
-        // Handle not logged in
         console.log("User not logged in");
         return;
       }
-
+  
       const response = await axios.post(
         `${BASE_URL}api/follow/`,
-        { following_id: author, follower_id: follower_id },  // Include both usernames in the request body
+        { following_id: author, follower_id: follower_id },
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-
+  
       if (response.data.message === "Success") {
-        // Update follow status
+        const isFollowing = response.data.is_following;
+  
         setFollowStatus((prevStatus) => ({
           ...prevStatus,
-          [author]: true,
+          [author]: isFollowing,
         }));
-
-        // Refresh xfilter list or post data
-        fetchXfilterList(); // Assuming fetchXfilterList fetches the post data
-
-        // You can also display a success message or perform other actions
-        console.log("Follow successful");
+  
+        fetchXfilterList();
+        console.log(isFollowing ? "Followed" : "Unfollowed");
       } else {
         console.error("Follow request failed");
       }

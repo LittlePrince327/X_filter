@@ -90,10 +90,13 @@ def follow_user(request):
 
         if follower.followings.filter(full_name=following_id).exists():
             follower.followings.remove(following)
-            return Response({'message': 'Unfollowed', 'follower_id': follower_id, 'following_id': following_id})
+            is_following = False
+        else:
+            follower.followings.add(following)
+            is_following = True
 
-        follower.followings.add(following)
-        return Response({'message': 'Followed', 'follower_id': follower_id, 'following_id': following_id})
+        response_data = {'message': 'Success', 'follower_id': follower_id, 'following_id': following_id, 'is_following': is_following}
+        return Response(response_data)
 
     except json.JSONDecodeError as e:
         return Response({'message': 'Error', 'error': 'Invalid JSON data'}, status=status.HTTP_400_BAD_REQUEST)
