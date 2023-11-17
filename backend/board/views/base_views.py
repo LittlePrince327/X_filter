@@ -12,10 +12,15 @@ from board.serializers import XfilterSerializer, CommentSerializer
 def xfilter_list(request):  
     kw = request.GET.get('kw', '')  # 검색어를 가져오고
     category = request.GET.get('category', '')  # 카테고리를 가져오고
+    author_name = request.GET.get('author_name', '')  # Get the author name
     xfilter_list = Xfilter.objects.order_by('-create_date')  # Xfilter 모델을 최신순으로 정렬
 
     if category:
         xfilter_list = xfilter_list.filter(category=category)  # 카테고리에 해당하는 게시글만 필터링
+
+    if author_name:
+        xfilter_list = xfilter_list.filter(author__iexact=author_name)  # Filter posts by exact author name match
+
 
     if kw:
         xfilter_list = xfilter_list.filter(

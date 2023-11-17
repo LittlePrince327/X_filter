@@ -69,13 +69,15 @@ const Newboard = () => {
   const navigate = useNavigate();
 
   const handleFloatButtonClick = () => {
-    // 예: 새 게시물 작성 페이지로 이동
     navigate("/makeboard");
   };
 
   const [xfilterList, setXfilterList] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [followStatus, setFollowStatus] = useState({});
+  const [followingUsers, setFollowingUsers] = useState([]);
+  const [selectedUserId, setSelectedUserId] = useState(null);
 
   const fetchXfilterList = async () => {
     try {
@@ -159,10 +161,96 @@ const Newboard = () => {
     }
   };
 
+  const handleFollow = async (author) => {
+    try {
+      const token = localStorage.getItem("token");
+      const follower_id = localStorage.getItem("author");
+
+      if (!token) {
+        console.log("User not logged in");
+        return;
+      }
+
+      const response = await axios.post(
+        `${BASE_URL}api/follow/`,
+        { following_id: author, follower_id: follower_id },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.data.message === "Success") {
+        const isFollowing = response.data.is_following;
+
+        setFollowStatus((prevStatus) => ({
+          ...prevStatus,
+          [author]: isFollowing,
+        }));
+
+        fetchXfilterList();
+        console.log(isFollowing ? "Followed" : "Unfollowed");
+      } else {
+        console.error("Follow request failed");
+      }
+    } catch (error) {
+      console.error("Error handling follow:", error);
+    }
+  };
+
   useEffect(() => {
     fetchXfilterList();
     fetchUserInfoAndSaveToLocalStorage();
+    fetchFollowingUsers();
+    const storedFollowStatus = JSON.parse(localStorage.getItem("followStatus")) || {};
+    setFollowStatus(storedFollowStatus);
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem("followStatus", JSON.stringify(followStatus));
+  }, [followStatus]);
+
+  const fetchFollowingUsers = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(`${BASE_URL}api/get_following_users/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setFollowingUsers(response.data);
+
+      const updatedFollowStatus = response.data.reduce(
+        (status, user) => ({
+          ...status,
+          [user.full_name]: true,
+        }),
+        {}
+      );
+      setFollowStatus(updatedFollowStatus);
+    } catch (error) {
+      console.error("Error fetching following users:", error);
+    }
+  };
+
+  const fetchPostsFromUser = async (username, userId) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(`${BASE_URL}board/xfilter/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          author_name: username,
+        },
+      });
+      setXfilterList(response.data);
+    } catch (error) {
+      console.error("Error fetching posts from user:", error);
+    }
+  };
+
 
   return (
     <Layout
@@ -249,7 +337,6 @@ const Newboard = () => {
             <Card
               key={xfilter.id}
               onClick={() => navigate(`/detail/${xfilter.id}`)}
-              title={xfilter.author}
               className={styles.cardHoverEffect}
               style={{
                 marginLeft: "30%",
@@ -258,18 +345,54 @@ const Newboard = () => {
                 height: 400,
               }}
             >
-              {xfilter.content.length > 20
-                ? `${xfilter.content.substring(0, 40)}...`
-                : xfilter.content}
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <div>
+                  <h3>{xfilter.author}</h3>
+                  {xfilter.content.length > 20 ? (
+                    <p>{`${xfilter.content.substring(0, 40)}...`}</p>
+                  ) : (
+                    <p>{xfilter.content}</p>
+                  )}
+                </div>
+                <div>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleFollow(xfilter.author);
+                    }}
+                    className={styles.followButton}
+                  >
+                    {followStatus[xfilter.author] ? "Following" : "Follow"}
+                  </button>
+                </div>
+              </div>
             </Card>
           ))}
         </Content>
+        <div className={styles.followingContainer}>
+          <h3>Following</h3>
+          <ul>
+            {followingUsers.map((user) => (
+              <li key={user.id}>
+                <a
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    fetchPostsFromUser(user.full_name, user.id);
+                  }}
+                >
+                  {user.full_name}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
         <Footer
           style={{
             textAlign: "center",
           }}
         >
-          Ant Design ©2023 Created by Ant UED
+          경빈's Design ©2023 Created by SeHuuuui
         </Footer>
       </Layout>
     </Layout>
