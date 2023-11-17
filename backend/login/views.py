@@ -74,30 +74,26 @@ def get_user_info(request):
 @permission_classes([IsAuthenticated])
 def follow_user(request):
     try:
-        # Retrieve the logged-in user's name from the request
         follower_id = request.user.full_name
-
-        # Convert the request body to JSON
         data = json.loads(request.body)
 
-        # Include the follower_id in the data
         data['follower_id'] = follower_id
+        following_id = data.get('following_id')  
 
-        # Use the serializer to validate the modified data
+        if follower_id == following_id:
+            raise serializers.ValidationError("Follower and following cannot be the same user.")
         serializer = FollowUserSerializer(data=data)
         serializer.is_valid(raise_exception=True)
 
-        # Access validated data using serializer.data
-        following_id = serializer.data['following_id']
-
-        # Get the CustomUser objects for the follower and following users
         follower = CustomUser.objects.get(full_name=follower_id)
         following = CustomUser.objects.get(full_name=following_id)
 
-        # Save the relationship in the followings field
-        follower.followings.add(following)
+        if follower.followings.filter(full_name=following_id).exists():
+            follower.followings.remove(following)
+            return Response({'message': 'Unfollowed', 'follower_id': follower_id, 'following_id': following_id})
 
-        return Response({'message': 'Success', 'follower_id': follower_id, 'following_id': following_id})
+        follower.followings.add(following)
+        return Response({'message': 'Followed', 'follower_id': follower_id, 'following_id': following_id})
 
     except json.JSONDecodeError as e:
         return Response({'message': 'Error', 'error': 'Invalid JSON data'}, status=status.HTTP_400_BAD_REQUEST)
