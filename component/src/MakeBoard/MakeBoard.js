@@ -5,14 +5,19 @@ import { postBoard } from '../api';
 import { Space, Tag } from 'antd';
 
 const { CheckableTag } = Tag;
-const tagsData = ['All','Daily','Politics', 'Sports'];
+const tagsData = [
+  'All', 'Daily', 'Politics', 'Sports',
+  'Technology', 'Entertainment', 'Science and Nature', 
+  'Gaming', 'Books and Literature', 'Health and Fitness',
+  'Travel', 'Food and Cooking', 'Art and Creativity', 
+  'Technology Help/Support'
+];
 
 const MakeBoard = () => {
   const [userToken, setUserToken] = useState('');
   const navigate = useNavigate(); 
   const [selectedTags, setSelectedTags] = useState([]);
 
-  
   const handleChange = (tag, checked) => {
     const nextSelectedTags = checked
       ? [...selectedTags, tag]
@@ -20,17 +25,17 @@ const MakeBoard = () => {
     console.log('You are interested in: ', nextSelectedTags);
     setSelectedTags(nextSelectedTags);
   };
-  useEffect(() => {
- 
-  }, []);
 
+  useEffect(() => {
+    // Any additional setup you want to perform on component mount
+  }, []);
 
   const handlepostBoard = async (event) => {
     event.preventDefault();
     const content = event.target.content.value;
     const author = localStorage.getItem('author');
     const create_date = new Date().toISOString();
-    const category = selectedTags[0] || '전체';
+    const category = selectedTags[0] || 'All'; // Default to 'All' if no category is selected
 
     try {
       const response = await postBoard(content, author, create_date, category, userToken);
@@ -43,9 +48,6 @@ const MakeBoard = () => {
 
   return (
     <div className="container my-3" style={{ backgroundColor: 'white' }}>
-       <span
-      >
-      </span>
       <Space size={[0, 8]} wrap>
         {tagsData.map((tag) => (
           <CheckableTag
