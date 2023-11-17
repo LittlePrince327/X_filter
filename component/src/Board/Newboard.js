@@ -76,6 +76,7 @@ const Newboard = () => {
   const [xfilterList, setXfilterList] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [followStatus, setFollowStatus] = useState({});
 
   const fetchXfilterList = async () => {
     try {
@@ -159,10 +160,64 @@ const Newboard = () => {
     }
   };
 
+  const handleFollow = async (author) => {
+    try {
+      const token = localStorage.getItem("token");
+      const follower_id = localStorage.getItem("author");  // Get the logged-in user's name
+
+      // Check if the user is logged in
+      if (!token) {
+        // Handle not logged in
+        console.log("User not logged in");
+        return;
+      }
+
+      const response = await axios.post(
+        `${BASE_URL}api/follow/`,
+        { following_id: author, follower_id: follower_id },  // Include both usernames in the request body
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.data.message === "Success") {
+        // Update follow status
+        setFollowStatus((prevStatus) => ({
+          ...prevStatus,
+          [author]: true,
+        }));
+
+        // Refresh xfilter list or post data
+        fetchXfilterList(); // Assuming fetchXfilterList fetches the post data
+
+        // You can also display a success message or perform other actions
+        console.log("Follow successful");
+      } else {
+        console.error("Follow request failed");
+      }
+    } catch (error) {
+      console.error("Error handling follow:", error);
+    }
+  };
+
+
+
+
   useEffect(() => {
     fetchXfilterList();
     fetchUserInfoAndSaveToLocalStorage();
+
+    // Initialize follow status based on local storage
+    const storedFollowStatus = JSON.parse(localStorage.getItem("followStatus")) || {};
+    setFollowStatus(storedFollowStatus);
   }, []);
+
+  useEffect(() => {
+    // Save follow status to local storage whenever it changes
+    localStorage.setItem("followStatus", JSON.stringify(followStatus));
+  }, [followStatus]);
 
   return (
     <Layout
@@ -261,6 +316,15 @@ const Newboard = () => {
               {xfilter.content.length > 20
                 ? `${xfilter.content.substring(0, 40)}...`
                 : xfilter.content}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleFollow(xfilter.author);
+                }}
+                className={styles.followButton}
+              >
+                {followStatus[xfilter.author] ? "Following" : "Follow"}
+              </button>
             </Card>
           ))}
         </Content>

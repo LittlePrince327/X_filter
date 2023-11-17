@@ -42,6 +42,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
+    followings = models.ManyToManyField('self', symmetrical=False, related_name='followers')
 
     # 사용자가 속한 그룹과 부여받은 권한을 나타내는 필드들을 정의
     groups = models.ManyToManyField(Group, blank=True, related_name='custom_users', related_query_name='custom_user')
