@@ -25,7 +25,6 @@ import styles from "./Newboard.module.css";
 import { get_user_info } from "../api";
 import logo from "./logo100.png";
 
-
 const { Search } = Input;
 const BASE_URL = "http://localhost:8000/";
 const suffix = (
@@ -38,17 +37,14 @@ const suffix = (
 );
 const { Header, Content, Footer, Sider } = Layout;
 
-function getItem(label, key, icon, children) {
+function getItem(label, key, icon) {
   return {
     key,
     icon,
-    children,
     label,
   };
 }
 
-<<<<<<< HEAD
-=======
 const items = [
   getItem("All", "1", <HeartOutlined />),
   getItem("Daily", "2", <UserOutlined />),
@@ -66,7 +62,6 @@ const items = [
   getItem("Technology Help/Support", "14", <DesktopOutlined />),
 ];
 
->>>>>>> main
 const Newboard = () => {
   const [collapsed, setCollapsed] = useState(false);
   const {
@@ -77,7 +72,6 @@ const Newboard = () => {
   const handleFloatButtonClick = () => {
     navigate("/makeboard");
   };
-
   const [xfilterList, setXfilterList] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -169,14 +163,6 @@ const Newboard = () => {
       console.error("사용자 정보를 가져오는 데 문제가 발생했습니다:", error);
     }
   };
-<<<<<<< HEAD
-  const items = [
-    getItem("All", "1", <HeartOutlined />),
-    getItem("Daily", "2", <UserOutlined />),
-    getItem("Politics", "3", <RadarChartOutlined />),
-    getItem("Sports", "4", <FireOutlined />),
-  ];
-=======
 
   const handleFollow = async (author) => {
     try {
@@ -216,12 +202,12 @@ const Newboard = () => {
     }
   };
 
->>>>>>> main
   useEffect(() => {
     fetchXfilterList();
     fetchUserInfoAndSaveToLocalStorage();
     fetchFollowingUsers();
-    const storedFollowStatus = JSON.parse(localStorage.getItem("followStatus")) || {};
+    const storedFollowStatus =
+      JSON.parse(localStorage.getItem("followStatus")) || {};
     setFollowStatus(storedFollowStatus);
   }, []);
 
@@ -237,6 +223,7 @@ const Newboard = () => {
           Authorization: `Bearer ${token}`,
         },
       });
+      console.log(response.data);
       setFollowingUsers(response.data);
 
       const updatedFollowStatus = response.data.reduce(
@@ -269,7 +256,6 @@ const Newboard = () => {
     }
   };
 
-
   return (
     <Layout
       style={{
@@ -278,7 +264,7 @@ const Newboard = () => {
     >
       <FloatButton
         style={{
-          marginBottom:40,
+          marginBottom: 40,
           marginRight: 250,
           width: 60,
           height: 60,
@@ -287,7 +273,7 @@ const Newboard = () => {
         onClick={handleFloatButtonClick}
         tooltip={<div>새 게시물 작성</div>}
       />
-       <div
+      <div
         style={{
           width: collapsed ? "80px" : "200px",
           height: "100vh",
@@ -316,8 +302,14 @@ const Newboard = () => {
             </Menu.Item>
           ))}
         </Menu>
-        </div>
-      <Layout style={{ marginLeft: collapsed ? 80 : 200, marginRight:200, height: "100vh" }}>
+      </div>
+      <Layout
+        style={{
+          marginLeft: collapsed ? 80 : 200,
+          marginRight: 200,
+          height: "100vh",
+        }}
+      >
         <Header
           style={{
             backgroundColor: "#ffff",
@@ -353,17 +345,40 @@ const Newboard = () => {
             paddingTop: 20,
           }}
         >
-<<<<<<< HEAD
-          <Row >
+          <Row>
             {xfilterList.map((xfilter, index) => (
               <Col
                 span={12}
                 key={xfilter.id}
-                style={{ display: "flex", justifyContent: "center", width:'auto' }}
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  width: "auto",
+                }}
               >
                 <Card
                   onClick={() => navigate(`/detail/${xfilter.id}`)}
-                  title={xfilter.author}
+                  title={
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        width: "100%",
+                      }}
+                    >
+                      <span>{xfilter.author}</span>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleFollow(xfilter.author);
+                        }}
+                        className={styles.followButton}
+                      >
+                        {followStatus[xfilter.author] ? "Following" : "Follow"}
+                      </button>
+                    </div>
+                  }
                   className={`${styles.cardHoverEffect} ${
                     styles[`category${xfilter.category || "Default"}`]
                   }`}
@@ -372,78 +387,14 @@ const Newboard = () => {
                     width: 600,
                     height: 400,
                   }}
-                >
-                  {xfilter.content.length > 20
-                    ? `${xfilter.content.substring(0, 40)}...`
-                    : xfilter.content}
-                </Card>
+                ></Card>
               </Col>
             ))}
           </Row>
-=======
-          <Breadcrumb
-            style={{
-              margin: "16px 0",
-            }}
-          ></Breadcrumb>
-          {xfilterList.map((xfilter) => (
-            <Card
-              key={xfilter.id}
-              onClick={() => navigate(`/detail/${xfilter.id}`)}
-              className={styles.cardHoverEffect}
-              style={{
-                marginLeft: "30%",
-                marginTop: 20,
-                width: 700,
-                height: 400,
-              }}
-            >
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <div>
-                  <h3>{xfilter.author}</h3>
-                  {xfilter.content.length > 20 ? (
-                    <p>{`${xfilter.content.substring(0, 40)}...`}</p>
-                  ) : (
-                    <p>{xfilter.content}</p>
-                  )}
-                </div>
-                <div>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleFollow(xfilter.author);
-                    }}
-                    className={styles.followButton}
-                  >
-                    {followStatus[xfilter.author] ? "Following" : "Follow"}
-                  </button>
-                </div>
-              </div>
-            </Card>
-          ))}
->>>>>>> main
         </Content>
-        <div className={styles.followingContainer}>
-          <h3>Following</h3>
-          <ul>
-            {followingUsers.map((user) => (
-              <li key={user.id}>
-                <a
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    fetchPostsFromUser(user.full_name, user.id);
-                  }}
-                >
-                  {user.full_name}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
         <Footer
           style={{
-            width:"auto",
+            width: "auto",
             textAlign: "center",
           }}
         >
@@ -458,16 +409,24 @@ const Newboard = () => {
           position: "fixed",
           right: 0,
         }}
-      ><p className={styles.siderp}>팔로우목록</p></div>
-              <div
-        style={{
-          width: collapsed ? "80px" : "200px",
-          height: "100vh",
-          backgroundColor: "#001529",
-          position: "fixed",
-          right: 0,
-        }}
-      ><p className={styles.siderp}>팔로우목록</p></div>
+      >
+        <p className={styles.siderp}>팔로우목록</p>
+        <ul>
+          {followingUsers.map((user) => (
+            <li key={user.id}>
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  fetchPostsFromUser(user.full_name, user.id);
+                }}
+              >
+                {user.full_name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
     </Layout>
   );
 };
