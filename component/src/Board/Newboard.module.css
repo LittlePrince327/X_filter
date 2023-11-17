@@ -156,6 +156,7 @@
     margin-left: 40px;
     height: 70px; /* 로고 이미지의 높이 */
 }
+<<<<<<< HEAD
 .siderp{
   margin-left: 50px;
   color:white;
@@ -177,3 +178,24 @@
   width: 100%;
 }
 
+=======
+
+.followingContainer {
+  padding: 16px;
+  background-color: #fff;
+  margin-top: 20px;
+}
+
+.followingContainer h3 {
+  margin-bottom: 10px;
+}
+
+.followingContainer ul {
+  list-style: none;
+  padding: 0;
+}
+
+.followingContainer li {
+  margin-bottom: 8px;
+}
+>>>>>>> main

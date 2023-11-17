@@ -28,3 +28,12 @@ class UserSerializer(serializers.ModelSerializer):
         except IntegrityError as e:
             # 중복된 정보가 있으면 에러 메시지 발생
             raise serializers.ValidationError("Username or email already exists.")
+        
+class FollowUserSerializer(serializers.Serializer):
+    follower_id = serializers.CharField()
+    following_id = serializers.CharField()
+
+class CustomUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'full_name']  
