@@ -1,6 +1,6 @@
 import json
 from login.models import CustomUser
-from .serializers import UserSerializer, FollowUserSerializer
+from .serializers import UserSerializer, FollowUserSerializer, CustomUserSerializer
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -107,5 +107,16 @@ def follow_user(request):
     except CustomUser.DoesNotExist:
         return Response({'message': 'Error', 'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
 
+    except Exception as e:
+        return Response({'message': 'Error', 'error': str(e)})
+    
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_following_users(request):
+    try:
+        user = request.user
+        following_users = user.followings.all()
+        serializer = CustomUserSerializer(following_users, many=True)
+        return Response(serializer.data)
     except Exception as e:
         return Response({'message': 'Error', 'error': str(e)})

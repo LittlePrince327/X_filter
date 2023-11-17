@@ -32,3 +32,8 @@ class UserSerializer(serializers.ModelSerializer):
 class FollowUserSerializer(serializers.Serializer):
     follower_id = serializers.CharField()
     following_id = serializers.CharField()
+
+class CustomUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'full_name']  

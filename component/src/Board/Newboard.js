@@ -77,6 +77,7 @@ const Newboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [followStatus, setFollowStatus] = useState({});
+  const [followingUsers, setFollowingUsers] = useState([]);
 
   const fetchXfilterList = async () => {
     try {
@@ -204,8 +205,7 @@ const Newboard = () => {
   useEffect(() => {
     fetchXfilterList();
     fetchUserInfoAndSaveToLocalStorage();
-
-    // Initialize follow status based on local storage
+    fetchFollowingUsers();
     const storedFollowStatus = JSON.parse(localStorage.getItem("followStatus")) || {};
     setFollowStatus(storedFollowStatus);
   }, []);
@@ -214,6 +214,20 @@ const Newboard = () => {
     // Save follow status to local storage whenever it changes
     localStorage.setItem("followStatus", JSON.stringify(followStatus));
   }, [followStatus]);
+
+  const fetchFollowingUsers = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(`${BASE_URL}api/get_following_users/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setFollowingUsers(response.data);
+    } catch (error) {
+      console.error("Error fetching following users:", error);
+    }
+  };
 
   return (
     <Layout
@@ -324,6 +338,14 @@ const Newboard = () => {
             </Card>
           ))}
         </Content>
+        <div className={styles.followingContainer}>
+          <h3>Following</h3>
+          <ul>
+            {followingUsers.map((user) => (
+              <li key={user.id}>{user.full_name}</li>
+            ))}
+          </ul>
+        </div>
         <Footer
           style={{
             textAlign: "center",

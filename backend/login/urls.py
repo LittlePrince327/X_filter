@@ -6,6 +6,7 @@ urlpatterns = [
     path('user-login/', views.UserLogin.as_view(), name='user-login'),                 # 로그인
     path('get_user_info/', views.get_user_info, name='get_user_info'),                 # 사용자 정보 조회     
     path('follow/', views.follow_user, name='follow_user'),                            # 팔로우
+    path('get_following_users/', views.get_following_users, name='get_following_users'), # 팔로우 유저 정보 조회
 ]
 
 
