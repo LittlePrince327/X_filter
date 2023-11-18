@@ -68,6 +68,19 @@
   color: white; /* 마우스 오버 시의 글자색 */
 }
 
+.followButton{
+  background-color: #8ebfff;
+  color: #fff;
+  border-radius: 5px;
+  border: 1px solid #8ebfff;
+}
+.followButton:hover {
+  border-radius: 5px;
+  border: 1px solid #356aa1;
+  background-color: #356aa1; /* 마우스 오버 시의 배경색 */
+  color: white; /* 마우스 오버 시의 글자색 */
+}
+
 .bord_btn{
   background-color: rgb(17, 46, 76);
   color: #fff;
@@ -195,4 +208,32 @@
 
 .followingContainer li {
   margin-bottom: 8px;
+}
+
+.followli {
+  display: grid;
+  grid-template-columns: 0 1fr;
+  grid-gap: 2.5em;
+  align-items: center;
+  font-size: 15px;
+
+
+  @if ($multicolumn == false) {
+    max-width: 25ch;
+  }
+}
+
+ul li::before {
+  content: attr(data-icon);
+  font-size: 1.25em;
+}
+
+.followa{
+  color: #fff;
+}
+.cardcate{
+  color: #a6a6a6;
+  font-size: 12px;
+  flex: auto;
+  margin-left: 20px;
 }

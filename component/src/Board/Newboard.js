@@ -4,9 +4,18 @@ import {
   DesktopOutlined,
   RadarChartOutlined,
   HeartOutlined,
-  FireOutlined,
+  ExperimentOutlined,
   UserOutlined,
   AudioOutlined,
+  LikeOutlined,
+  StarOutlined,
+  ReadOutlined,
+  MedicineBoxOutlined,
+  TrophyOutlined,
+  CarOutlined, 
+  CoffeeOutlined,
+  HighlightOutlined,
+  BugOutlined
 } from "@ant-design/icons";
 import {
   FloatButton,
@@ -49,17 +58,17 @@ const items = [
   getItem("All", "1", <HeartOutlined />),
   getItem("Daily", "2", <UserOutlined />),
   getItem("Politics", "3", <RadarChartOutlined />),
-  getItem("Sports", "4", <FireOutlined />),
+  getItem("Sports", "4", <TrophyOutlined />),
   getItem("Technology", "5", <DesktopOutlined />),
-  getItem("Entertainment", "6", <DesktopOutlined />),
-  getItem("Science and Nature", "7", <DesktopOutlined />),
-  getItem("Gaming", "8", <DesktopOutlined />),
-  getItem("Books and Literature", "9", <DesktopOutlined />),
-  getItem("Health and Fitness", "10", <DesktopOutlined />),
-  getItem("Travel", "11", <DesktopOutlined />),
-  getItem("Food and Cooking", "12", <DesktopOutlined />),
-  getItem("Art and Creativity", "13", <DesktopOutlined />),
-  getItem("Technology Help/Support", "14", <DesktopOutlined />),
+  getItem("Entertainment", "6", <StarOutlined />),
+  getItem("Science and Nature", "7", <ExperimentOutlined />),
+  getItem("Gaming", "8", <LikeOutlined />),
+  getItem("Books and Literature", "9", <ReadOutlined />),
+  getItem("Health and Fitness", "10", <MedicineBoxOutlined />),
+  getItem("Travel", "11", <CarOutlined />),
+  getItem("Food and Cooking", "12", <CoffeeOutlined />),
+  getItem("Art and Creativity", "13", <HighlightOutlined />),
+  getItem("Technology Help/Support", "14", <BugOutlined />),
 ];
 
 const Newboard = () => {
@@ -256,6 +265,24 @@ const Newboard = () => {
     }
   };
 
+
+  const categoryColors = {
+    "Daily": "#FEE7E4",
+    "Politics": "#E4FBEF",
+    "Sports": "#E0F3FB",
+    "Technology": "#FEF6E7",
+    "Entertainment": "#E9D9FF",
+    "Science and Nature": "#FFFCD9",
+    "Gaming": "#FFD9FD",
+    "Books and Literature":"#FEE7E0",
+    "Health and Fitness":"#E3F0D8",
+    "Travel":"#C7D0F1",
+    "Food and Cooking":"#F1E3C7",
+    "Art and Creativity":"#DDDDDD",
+    "Technology Help/Support":"#D2EEFF"
+    // ... add more categories and their corresponding colors
+  };
+
   return (
     <Layout
       style={{
@@ -345,49 +372,61 @@ const Newboard = () => {
             paddingTop: 20,
           }}
         >
-          <Row>
-            {xfilterList.map((xfilter, index) => (
-              <Col
-                span={12}
-                key={xfilter.id}
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  width: "auto",
-                }}
-              >
-                <Card
-                  onClick={() => navigate(`/detail/${xfilter.id}`)}
-                  title={
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        width: "100%",
-                      }}
-                    >
-                      <span>{xfilter.author}</span>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleFollow(xfilter.author);
-                        }}
-                        className={styles.followButton}
-                      >
-                        {followStatus[xfilter.author] ? "Following" : "Follow"}
-                      </button>
-                    </div>
-                  }
-                  className={`${styles.cardHoverEffect} ${
-                    styles[`category${xfilter.category || "Default"}`]
-                  }`}
-                  style={{
-                    marginBottom: 30,
-                    width: 600,
-                    height: 400,
-                  }}
-                ></Card>
+<Row>
+  {xfilterList.map((xfilter, index) => (
+    <Col
+      span={12}
+      key={xfilter.id}
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        width: "auto",
+      }}
+    >
+      <Card
+        className={styles.cardHoverEffect} // Apply the hover effect class here
+        onClick={() => navigate(`/detail/${xfilter.id}`)}
+        title={
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              width: "100%",
+            }}
+          > 
+            <span>{xfilter.author}</span>
+            <tr/>
+            <p
+            className={styles.cardcate}>{xfilter.category}</p>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleFollow(xfilter.author);
+              }}
+              className={styles.followButton}
+            >
+              {followStatus[xfilter.author] ? "Following" : "Follow"}
+            </button>
+          </div>
+        }
+        style={{
+          marginBottom: 30,
+          width: 600,
+          height: 400,
+          backgroundColor: categoryColors[xfilter.category] || "#ffffff",
+        }}
+      >
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <div>
+                  {xfilter.content.length > 20 ? (
+                    <p>{`${xfilter.content.substring(0, 40)}...`}</p>
+                  ) : (
+                    <p>{xfilter.content}</p>
+                  )}
+                </div>
+                </div>
+      </Card>
               </Col>
             ))}
           </Row>
@@ -413,8 +452,9 @@ const Newboard = () => {
         <p className={styles.siderp}>팔로우목록</p>
         <ul>
           {followingUsers.map((user) => (
-            <li key={user.id}>
+            <li key={user.id} className={styles.followli} data-icon="🤍">
               <a
+                className={styles.followa}
                 href="#"
                 onClick={(e) => {
                   e.preventDefault();
