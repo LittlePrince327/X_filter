@@ -237,3 +237,13 @@ ul li::before {
   flex: auto;
   margin-left: 20px;
 }
+
+.modal{
+  width: 1000px;
+  height: 800px;
+}
+
+.customModalContent {
+  max-height: 800px; /* Your desired height */
+  overflow-y: auto; /* Adds a scrollbar if content exceeds max-height */
+}

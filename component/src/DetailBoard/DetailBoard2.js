@@ -12,30 +12,25 @@ import {
   ReadOutlined,
   MedicineBoxOutlined,
   TrophyOutlined,
-  CarOutlined, 
+  CarOutlined,
   CoffeeOutlined,
   HighlightOutlined,
-  BugOutlined
+  BugOutlined,
 } from "@ant-design/icons";
+import { Card, Layout, Menu, theme, Input } from "antd";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import styles from "./DetailBoard.module.css";
 import {
-  FloatButton,
-  Breadcrumb,
-  Layout,
-  Menu,
-  theme,
-  Input,
-  Space,
-  Card,
-  Row,
-  Col,
-  Modal 
-} from "antd";
-import { Link, useNavigate } from "react-router-dom";
-import styles from "./Newboard.module.css";
-import { get_user_info } from "../api";
+  get_user_info,
+  postComment,
+  deleteBoard,
+  recommendBoard,
+  deleteComment,
+  recommendComment,
+} from "../api";
 import logo from "./logo100.png";
 
-const { Search } = Input;
+const { TextArea } = Input;
 const BASE_URL = "http://localhost:8000/";
 const suffix = (
   <AudioOutlined
@@ -72,8 +67,7 @@ const items = [
   getItem("Technology Help/Support", "14", <BugOutlined />),
 ];
 
-const Newboard = () => {
-  const [modal2Open, setModal2Open] = useState(false);
+const DetailBoard2 = () => {
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer },
@@ -89,6 +83,7 @@ const Newboard = () => {
   const [followStatus, setFollowStatus] = useState({});
   const [followingUsers, setFollowingUsers] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(null);
+  const [value, setValue] = useState('');
 
   const fetchXfilterList = async () => {
     try {
@@ -267,23 +262,258 @@ const Newboard = () => {
     }
   };
 
-
   const categoryColors = {
-    "Daily": "#FEE7E4",
-    "Politics": "#E4FBEF",
-    "Sports": "#E0F3FB",
-    "Technology": "#FEF6E7",
-    "Entertainment": "#E9D9FF",
+    Daily: "#FEE7E4",
+    Politics: "#E4FBEF",
+    Sports: "#E0F3FB",
+    Technology: "#FEF6E7",
+    Entertainment: "#E9D9FF",
     "Science and Nature": "#FFFCD9",
-    "Gaming": "#FFD9FD",
-    "Books and Literature":"#FEE7E0",
-    "Health and Fitness":"#E3F0D8",
-    "Travel":"#C7D0F1",
-    "Food and Cooking":"#F1E3C7",
-    "Art and Creativity":"#DDDDDD",
-    "Technology Help/Support":"#D2EEFF"
+    Gaming: "#FFD9FD",
+    "Books and Literature": "#FEE7E0",
+    "Health and Fitness": "#E3F0D8",
+    Travel: "#C7D0F1",
+    "Food and Cooking": "#F1E3C7",
+    "Art and Creativity": "#DDDDDD",
+    "Technology Help/Support": "#D2EEFF",
     // ... add more categories and their corresponding colors
   };
+
+  const { id: xfilter_id } = useParams();
+  const [xfilter, setXfilter] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const token = localStorage.getItem("token");
+  const [isCommenting, setIsCommenting] = useState(false);
+  const [comments, setComments] = useState([]);
+  const [commentUpdated, setCommentUpdated] = useState(false);
+  const [xfilterLikesCount, setXfilterLikesCount] = useState(0);
+  const [commentLikesCounts, setCommentLikesCounts] = useState({});
+
+  const fetchXfilter = async () => {
+    if (token) {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      try {
+        const response = await axios.get(
+          `${BASE_URL}board/xfilter/${xfilter_id}/`,
+          config
+        );
+        setXfilter(response.data);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching xfilter:", error);
+        setIsLoading(false);
+      }
+    } else {
+      console.error("Token not found in localStorage");
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchXfilter();
+    fetchComments();
+    fetchLikesCount();
+    if (commentUpdated) {
+      window.location.reload();
+    }
+  }, [xfilter_id, token, commentUpdated]);
+
+  useEffect(() => {
+    fetchLikesCount();
+  }, [xfilter_id, token]);
+
+  useEffect(() => {
+    if (xfilter && comments.length > 0) {
+      fetchLikesCount();
+    }
+  }, [xfilter, comments, token]);
+
+  const fetchLikesCount = async () => {
+    try {
+      const xfilterLikesResponse = await axios.get(
+        `${BASE_URL}board/xfilter/like/${xfilter_id}/`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setXfilterLikesCount(xfilterLikesResponse.data.likes_count);
+
+      const commentLikesPromises = comments.map(async (comment) => {
+        const commentLikesResponse = await axios.get(
+          `${BASE_URL}board/comment/like/${comment.id}/`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        return {
+          commentId: comment.id,
+          likesCount: commentLikesResponse.data.likes_count,
+        };
+      });
+
+      const commentLikes = await Promise.all(commentLikesPromises);
+      const commentLikesCountMap = {};
+      commentLikes.forEach((item) => {
+        commentLikesCountMap[item.commentId] = item.likesCount;
+      });
+      setCommentLikesCounts(commentLikesCountMap);
+    } catch (error) {
+      console.error("Likes count fetching error:", error);
+    }
+  };
+
+  const fetchComments = async () => {
+    try {
+      const commentsResponse = await axios.get(
+        `${BASE_URL}board/xfilter/comment?xfilter_id=${xfilter_id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setComments(commentsResponse.data);
+    } catch (error) {
+      console.error("댓글 불러오기 오류:", error);
+    }
+  };
+
+  const handledeleteBoard = async () => {
+    const userToken = localStorage.getItem("token");
+    const postId = xfilter.id;
+    try {
+      const response = await deleteBoard(postId, userToken);
+      console.log(response.data);
+    } catch (error) {
+      console.error(
+        "게시물 삭제 중 오류:",
+        error.response ? error.response.data : error.message
+      );
+    }
+  };
+
+  const handlerecommendBoard = async () => {
+    try {
+      const postId = xfilter.id;
+      const author = localStorage.getItem("author");
+      const response = await recommendBoard(postId, token, author);
+
+      setXfilterLikesCount((prevCount) => prevCount + 1);
+
+      console.log(response);
+    } catch (error) {
+      console.error("게시글 추천 오류:", error);
+    }
+  };
+
+  const handlePostComment = async (event) => {
+    event.preventDefault();
+    const content = event.target.content.value;
+    const author = localStorage.getItem("author");
+    const create_date = new Date().toISOString();
+
+    try {
+      const data = await postComment(
+        content,
+        author,
+        create_date,
+        xfilter_id,
+        token
+      );
+      console.log("댓글 작성 완료:", data);
+      event.target.content.value = "";
+      setIsCommenting(false);
+      setCommentUpdated(true);
+      updateComments(xfilter.id);
+    } catch (error) {
+      console.error("댓글 작성 오류:", error);
+    }
+  };
+
+  const updateComments = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const commentsResponse = await axios.get(
+        `${BASE_URL}board/xfilter/comment`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setComments(commentsResponse.data);
+    } catch (error) {
+      console.error("댓글 업데이트 오류:", error);
+    }
+  };
+
+  const handledeleteComment = async (commentId) => {
+    try {
+      const response = await deleteComment(commentId, token);
+      console.log(response.data);
+      updateComments();
+    } catch (error) {
+      console.error("댓글 삭제 오류:", error);
+    }
+  };
+
+  const handlerecommendComment = async (commentId) => {
+    try {
+      const author = localStorage.getItem("author");
+      const response = await recommendComment(commentId, author, token);
+
+      const updatedCommentLikesResponse = await axios.get(
+        `${BASE_URL}board/comment/like/${commentId}/`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setCommentLikesCounts((prevCounts) => ({
+        ...prevCounts,
+        [commentId]: updatedCommentLikesResponse.data.likes_count,
+      }));
+
+      console.log(response);
+    } catch (error) {
+      console.error("댓글 추천 오류:", error);
+    }
+  };
+
+  const handleCommentButton = () => {
+    setIsCommenting(!isCommenting);
+  };
+
+  const formatDate = (dateString) => {
+    const options = {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    };
+    return new Date(dateString).toLocaleString("ko-KR", options);
+  };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!xfilter) {
+    return <div>No data available</div>;
+  }
 
   return (
     <Layout
@@ -291,17 +521,6 @@ const Newboard = () => {
         minHeight: "100vh",
       }}
     >
-      <FloatButton
-        style={{
-          marginBottom: 40,
-          marginRight: 250,
-          width: 60,
-          height: 60,
-        }}
-        type="primary"
-        onClick={handleFloatButtonClick}
-        tooltip={<div>새 게시물 작성</div>}
-      />
       <div
         style={{
           width: collapsed ? "80px" : "200px",
@@ -320,17 +539,7 @@ const Newboard = () => {
           defaultSelectedKeys={["1"]}
           mode="inline"
           selectedKeys={[selectedCategory]}
-        >
-          {items.map((item) => (
-            <Menu.Item
-              key={item.key}
-              icon={item.icon}
-              onClick={() => handleCategoryChange(item.label)}
-            >
-              {item.label}
-            </Menu.Item>
-          ))}
-        </Menu>
+        ></Menu>
       </div>
       <Layout
         style={{
@@ -370,68 +579,62 @@ const Newboard = () => {
           style={{
             overflow: "auto",
             width: "100%",
-            height: "calc(100vh - 64px)",
-            paddingTop: 20,
+            paddingTop: 40,
+            display: "flex", // Added for flexbox layout
+            justifyContent: "center", // Centers the child horizontally
           }}
         >
-<Row>
-  {xfilterList.map((xfilter, index) => (
-    <Col
-      span={12}
-      key={xfilter.id}
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        width: "auto",
-      }}
-    >
-      <Card
-        className={styles.cardHoverEffect} // Apply the hover effect class here
-        onClick={() => navigate(`/detail/${xfilter.id}`)}
-        title={
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              width: "100%",
-            }}
-          > 
-            <span>{xfilter.author}</span>
-            <tr/>
-            <p
-            className={styles.cardcate}>{xfilter.category}</p>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                handleFollow(xfilter.author);
-              }}
-              className={styles.followButton}
-            >
-              {followStatus[xfilter.author] ? "Following" : "Follow"}
-            </button>
-          </div>
-        }
-        style={{
-          marginBottom: 30,
-          width: 600,
-          height: 400,
-          backgroundColor: categoryColors[xfilter.category] || "#ffffff",
-        }}
-      >
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <div>
-                  {xfilter.content.length > 20 ? (
-                    <p>{`${xfilter.content.substring(0, 40)}...`}</p>
-                  ) : (
-                    <p>{xfilter.content}</p>
+          <div style={{ maxWidth: "800px", width: "100%" }}>
+            <Card
+              title={
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    width: "100%",
+                  }}
+                  bordered={false}
+                >
+                  <span>{xfilter.author}</span>
+                  <tr />
+                  <p className={styles.cardcate}>{xfilter.category}</p>
+                  <p className={styles.date}>
+                    {formatDate(xfilter.create_date)}
+                  </p>
+                  {localStorage.getItem("author") === xfilter.author && (
+                    <button
+                      onClick={handledeleteBoard}
+                      className={styles.del}
+                    >
+                      삭제하기
+                    </button>
                   )}
                 </div>
+              }
+              bordered={false}
+              className={styles.boardcard}
+            >
+              <div className={styles.contentbox}>{xfilter.content}</div>
+              <div className={styles.likeContainer}>
+                <button onClick={handlerecommendBoard} className={styles.like}>
+                  좋아요❤️ {xfilterLikesCount}
+                </button>
+              </div>
+
+              <div className={styles.comment}>
+
+                    <TextArea
+                    value={value}
+                    onChange={(e) => setValue(e.target.value)}
+                    placeholder="Controlled autosize"
+                    autoSize={{ minRows: 3, maxRows: 5 }}
+                  />
+
                 </div>
-      </Card>
-              </Col>
-            ))}
-          </Row>
+              
+            </Card>
+          </div>
         </Content>
         <Footer
           style={{
@@ -473,4 +676,4 @@ const Newboard = () => {
   );
 };
 
-export default Newboard;
+export default DetailBoard2;
