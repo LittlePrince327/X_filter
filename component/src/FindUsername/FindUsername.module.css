@@ -104,3 +104,7 @@
     left: 0; /* 왼쪽에서 시작 */
     z-index: 1000; /* 다른 요소들 위에 레이어링 */
   }
+
+  .usernameParagraph {
+    color: black;
+  }
