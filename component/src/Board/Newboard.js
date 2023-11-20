@@ -22,6 +22,8 @@ import { Link, useNavigate } from "react-router-dom";
 import styles from "./Newboard.module.css";
 import { get_user_info } from "../api";
 import logo from "./logo100.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faComment } from "@fortawesome/free-solid-svg-icons";
 
 const { Search } = Input;
 const BASE_URL = "http://localhost:8000/";
@@ -277,7 +279,7 @@ const Newboard = () => {
   useEffect(() => {
     fetchCommentCounts();
   }, [xfilterList]);
-  
+
 
 
   return (
@@ -381,7 +383,19 @@ const Newboard = () => {
                   ) : (
                     <p>{xfilter.content}</p>
                   )}
-                  <p>{`댓글 수: ${commentCounts[xfilter.id] || 0}`}</p>
+                  <p>
+                    {commentCounts[xfilter.id] === 0 && "댓글이 없습니다"}
+                    {commentCounts[xfilter.id] === 1 && (
+                      <>
+                        <FontAwesomeIcon icon={faComment} /> 1 댓글
+                      </>
+                    )}
+                    {commentCounts[xfilter.id] > 1 && (
+                      <>
+                        <FontAwesomeIcon icon={faComment} /> {commentCounts[xfilter.id]} 댓글
+                      </>
+                    )}
+                  </p>
                 </div>
                 <div>
                   <button
