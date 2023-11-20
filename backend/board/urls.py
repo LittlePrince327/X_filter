@@ -14,6 +14,7 @@ urlpatterns = [
     path('xfilter/delete/<int:xfilter_id>/', xfilter_views.xfilter_delete_api, name='xfilter_delete'),                # 게시글 삭제
     path('xfilter/vote/<int:xfilter_id>/', xfilter_views.xfilter_vote_api, name='xfilter_vote'),                      # 게시글 좋아요
     path('xfilter/like/<int:xfilter_id>/', xfilter_views.xfilter_likes_count_api, name='xfilter_like_count'),         # 게시글 좋아요 수
+    path('xfilter/comments_count/<int:xfilter_id>/', xfilter_views.xfitler_comment_count_api, name='xfilter_comment'),# 게시글 댓글 수 
 
     # comment
     path('comment/create/<int:xfilter_id>/', comment_views.comment_create_api, name='comment_create'),                # 댓글 작성

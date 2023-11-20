@@ -77,7 +77,7 @@ const Newboard = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [followStatus, setFollowStatus] = useState({});
   const [followingUsers, setFollowingUsers] = useState([]);
-  const [selectedUserId, setSelectedUserId] = useState(null);
+  const [commentCounts, setCommentCounts] = useState({});
 
   const fetchXfilterList = async () => {
     try {
@@ -199,18 +199,6 @@ const Newboard = () => {
     }
   };
 
-  useEffect(() => {
-    fetchXfilterList();
-    fetchUserInfoAndSaveToLocalStorage();
-    fetchFollowingUsers();
-    const storedFollowStatus = JSON.parse(localStorage.getItem("followStatus")) || {};
-    setFollowStatus(storedFollowStatus);
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("followStatus", JSON.stringify(followStatus));
-  }, [followStatus]);
-
   const fetchFollowingUsers = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -250,6 +238,46 @@ const Newboard = () => {
       console.error("Error fetching posts from user:", error);
     }
   };
+
+  const fetchCommentCounts = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const counts = {};
+
+      for (const xfilter of xfilterList) {
+        const response = await axios.get(
+          `${BASE_URL}board/xfilter/comments_count/${xfilter.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        counts[xfilter.id] = response.data.comment_count;
+      }
+      setCommentCounts(counts);
+    } catch (error) {
+      console.error("Error fetching comment counts:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchXfilterList();
+    fetchUserInfoAndSaveToLocalStorage();
+    fetchFollowingUsers();
+    fetchCommentCounts();
+    const storedFollowStatus = JSON.parse(localStorage.getItem("followStatus")) || {};
+    setFollowStatus(storedFollowStatus);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("followStatus", JSON.stringify(followStatus));
+  }, [followStatus]);
+
+  useEffect(() => {
+    fetchCommentCounts();
+  }, [xfilterList]);
+  
 
 
   return (
@@ -353,6 +381,7 @@ const Newboard = () => {
                   ) : (
                     <p>{xfilter.content}</p>
                   )}
+                  <p>{`댓글 수: ${commentCounts[xfilter.id] || 0}`}</p>
                 </div>
                 <div>
                   <button
@@ -392,7 +421,7 @@ const Newboard = () => {
             textAlign: "center",
           }}
         >
-          경빈's Design ©2023 Created by SeHuuuui
+          XNS Design ©2023 Created by XNS Designer
         </Footer>
       </Layout>
     </Layout>

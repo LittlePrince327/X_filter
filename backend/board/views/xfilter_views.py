@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from board.forms import XfilterForm
-from board.models import Xfilter
+from board.models import Xfilter, Comment
 
 CustomUser = get_user_model()
 
@@ -95,3 +95,22 @@ def xfilter_likes_count_api(request, xfilter_id):
     likes_count = xfilter.voter.count()
     # 좋아요 수 응답
     return JsonResponse({'likes_count': likes_count}, status=200)
+
+# 게시글 댓글 수
+@csrf_exempt
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def xfitler_comment_count_api(request, xfilter_id):
+    try:
+        # 주어진 xfilter_id에 해당하는 Xfilter 객체 가져오기
+        xfilter = get_object_or_404(Xfilter, pk=xfilter_id)
+        # 댓글 수 계산
+        comment_count = Comment.objects.filter(xfilter_id=xfilter_id).count()
+        # 댓글 수 응답
+        return JsonResponse({'comment_count': comment_count}, status=200)
+    except Xfilter.DoesNotExist:
+        # Xfilter이 존재하지 않는 경우 에러 응답 반환
+        return JsonResponse({'message': '게시물을 찾을 수 없습니다.'}, status=404)
+    except Exception as e:
+        # 예외 발생 시 에러 응답 반환
+        return JsonResponse({'message': str(e)}, status=500)

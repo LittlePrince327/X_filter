@@ -94,3 +94,4 @@ def comment_likes_count_api(request, comment_id):
     likes_count = comment.voter.count()
     # 계산된 좋아요 수 응답
     return JsonResponse({'likes_count': likes_count}, status=200)
+
