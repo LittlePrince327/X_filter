@@ -8,20 +8,22 @@ import MakeBoard from './MakeBoard/MakeBoard';
 import DetailBoard from './DetailBoard/DetailBoard';
 import Main from './Main/Main';
 import Newboard from './Board/Newboard';
+import DetailBoard2 from './DetailBoard/DetailBoard2';
 
 
 function App() {
   return (
     <Router>
       <Routes>
-      <Route path="/" element={<Main />} />
-      <Route path="/newboard" element={<Newboard />}/>
+        <Route path="/" element={<Main />} />
+        <Route path="/detaliboard2" element={<DetailBoard2 />}/>
+        <Route path="/newboard" element={<Newboard />}/>
         <Route path="/join" element={<Join />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/findusername" element={<FindUsername />} />
         <Route path="/resetpassword" element={<ResetPassword />} />
         <Route path="/makeboard" element={<MakeBoard />} />
-        <Route path="/detail/:id" element={<DetailBoard />} />
+        <Route path="/detail/:id" element={<DetailBoard2 />} />
       </Routes>
     </Router>
   );

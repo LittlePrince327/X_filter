@@ -4,7 +4,7 @@ from rest_framework import serializers
 class XfilterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Xfilter
-        fields = ['id', 'content', 'create_date', 'author']  
+        fields = ['id', 'content', 'create_date', 'author','category']  
 
 
 class CommentSerializer(serializers.ModelSerializer):

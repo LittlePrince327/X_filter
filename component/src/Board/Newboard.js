@@ -4,9 +4,18 @@ import {
   DesktopOutlined,
   RadarChartOutlined,
   HeartOutlined,
-  FireOutlined,
+  ExperimentOutlined,
   UserOutlined,
   AudioOutlined,
+  LikeOutlined,
+  StarOutlined,
+  ReadOutlined,
+  MedicineBoxOutlined,
+  TrophyOutlined,
+  CarOutlined, 
+  CoffeeOutlined,
+  HighlightOutlined,
+  BugOutlined
 } from "@ant-design/icons";
 import {
   FloatButton,
@@ -17,6 +26,9 @@ import {
   Input,
   Space,
   Card,
+  Row,
+  Col,
+  Modal 
 } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./Newboard.module.css";
@@ -37,11 +49,10 @@ const suffix = (
 );
 const { Header, Content, Footer, Sider } = Layout;
 
-function getItem(label, key, icon, children) {
+function getItem(label, key, icon) {
   return {
     key,
     icon,
-    children,
     label,
   };
 }
@@ -50,20 +61,21 @@ const items = [
   getItem("All", "1", <HeartOutlined />),
   getItem("Daily", "2", <UserOutlined />),
   getItem("Politics", "3", <RadarChartOutlined />),
-  getItem("Sports", "4", <FireOutlined />),
+  getItem("Sports", "4", <TrophyOutlined />),
   getItem("Technology", "5", <DesktopOutlined />),
-  getItem("Entertainment", "6", <DesktopOutlined />),
-  getItem("Science and Nature", "7", <DesktopOutlined />),
-  getItem("Gaming", "8", <DesktopOutlined />),
-  getItem("Books and Literature", "9", <DesktopOutlined />),
-  getItem("Health and Fitness", "10", <DesktopOutlined />),
-  getItem("Travel", "11", <DesktopOutlined />),
-  getItem("Food and Cooking", "12", <DesktopOutlined />),
-  getItem("Art and Creativity", "13", <DesktopOutlined />),
-  getItem("Technology Help/Support", "14", <DesktopOutlined />),
+  getItem("Entertainment", "6", <StarOutlined />),
+  getItem("Science and Nature", "7", <ExperimentOutlined />),
+  getItem("Gaming", "8", <LikeOutlined />),
+  getItem("Books and Literature", "9", <ReadOutlined />),
+  getItem("Health and Fitness", "10", <MedicineBoxOutlined />),
+  getItem("Travel", "11", <CarOutlined />),
+  getItem("Food and Cooking", "12", <CoffeeOutlined />),
+  getItem("Art and Creativity", "13", <HighlightOutlined />),
+  getItem("Technology Help/Support", "14", <BugOutlined />),
 ];
 
 const Newboard = () => {
+  const [modal2Open, setModal2Open] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer },
@@ -73,7 +85,6 @@ const Newboard = () => {
   const handleFloatButtonClick = () => {
     navigate("/makeboard");
   };
-
   const [xfilterList, setXfilterList] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -140,7 +151,10 @@ const Newboard = () => {
       setXfilterList(response.data);
       setSelectedCategory(category);
     } catch (error) {
-      console.error(`${category} 카테고리 xfilters를 가져오는 중 오류 발생:`, error);
+      console.error(
+        `${category} 카테고리 xfilters를 가져오는 중 오류 발생:`,
+        error
+      );
     }
   };
 
@@ -209,6 +223,7 @@ const Newboard = () => {
           Authorization: `Bearer ${token}`,
         },
       });
+      console.log(response.data);
       setFollowingUsers(response.data);
 
       const updatedFollowStatus = response.data.reduce(
@@ -282,6 +297,23 @@ const Newboard = () => {
 
 
 
+  const categoryColors = {
+    "Daily": "#FEE7E4",
+    "Politics": "#E4FBEF",
+    "Sports": "#E0F3FB",
+    "Technology": "#FEF6E7",
+    "Entertainment": "#E9D9FF",
+    "Science and Nature": "#FFFCD9",
+    "Gaming": "#FFD9FD",
+    "Books and Literature":"#FEE7E0",
+    "Health and Fitness":"#E3F0D8",
+    "Travel":"#C7D0F1",
+    "Food and Cooking":"#F1E3C7",
+    "Art and Creativity":"#DDDDDD",
+    "Technology Help/Support":"#D2EEFF"
+    // ... add more categories and their corresponding colors
+  };
+
   return (
     <Layout
       style={{
@@ -290,7 +322,8 @@ const Newboard = () => {
     >
       <FloatButton
         style={{
-          marginRight: 40,
+          marginBottom: 40,
+          marginRight: 250,
           width: 60,
           height: 60,
         }}
@@ -298,18 +331,16 @@ const Newboard = () => {
         onClick={handleFloatButtonClick}
         tooltip={<div>새 게시물 작성</div>}
       />
-      <Sider
-        collapsible
-        collapsed={collapsed}
-        onCollapse={(value) => setCollapsed(value)}
-        width={200}
-        collapsedWidth={80}
+      <div
         style={{
+          width: collapsed ? "80px" : "200px",
           height: "100vh",
+          backgroundColor: "#001529",
           position: "fixed",
+          left: 0,
         }}
       >
-        <Link to="/">
+        <Link to="/newboard">
           <img src={logo} alt="Logo" className={styles.logo} />
         </Link>
         <Menu
@@ -329,55 +360,96 @@ const Newboard = () => {
             </Menu.Item>
           ))}
         </Menu>
-      </Sider>
-      <Layout style={{ marginLeft: collapsed ? 80 : 200, height: "100vh" }}>
+      </div>
+      <Layout
+        style={{
+          marginLeft: collapsed ? 80 : 200,
+          marginRight: 200,
+          height: "100vh",
+        }}
+      >
         <Header
           style={{
             backgroundColor: "#ffff",
             width: "100%",
-            top: 0,
           }}
         >
-          <div className={styles.searchContainer}>
-            <input
-              className={styles.searchInput}
-              type="text"
-              placeholder="제목,작성자 검색"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <button className={styles.bord_btn} onClick={handleSearch}>
-              Search
-            </button>
+          <div className={styles.headerContainer}>
+            <div className={styles.searchContainer}>
+              <input
+                className={styles.searchInput}
+                type="text"
+                placeholder="Title, Author Search"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <button className={styles.bord_btn} onClick={handleSearch}>
+                Search
+              </button>
+            </div>
+            <div>
+              <Link to="/">
+                <button className={styles.logout}>로그아웃</button>
+              </Link>
+            </div>
           </div>
         </Header>
+
         <Content
           style={{
             overflow: "auto",
+            width: "100%",
             height: "calc(100vh - 64px)",
             paddingTop: 20,
           }}
         >
-          <Breadcrumb
+<Row>
+  {xfilterList.map((xfilter, index) => (
+    <Col
+      span={12}
+      key={xfilter.id}
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        width: "auto",
+      }}
+    >
+      <Card
+        className={styles.cardHoverEffect} // Apply the hover effect class here
+        onClick={() => navigate(`/detail/${xfilter.id}`)}
+        title={
+          <div
             style={{
-              margin: "16px 0",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              width: "100%",
             }}
-          ></Breadcrumb>
-          {xfilterList.map((xfilter) => (
-            <Card
-              key={xfilter.id}
-              onClick={() => navigate(`/detail/${xfilter.id}`)}
-              className={styles.cardHoverEffect}
-              style={{
-                marginLeft: "30%",
-                marginTop: 20,
-                width: 700,
-                height: 400,
+          > 
+            <span>{xfilter.author}</span>
+            <tr/>
+            <p
+            className={styles.cardcate}>{xfilter.category}</p>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleFollow(xfilter.author);
               }}
+              className={styles.followButton}
             >
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
+              {followStatus[xfilter.author] ? "Following" : "Follow"}
+            </button>
+          </div>
+        }
+        style={{
+          marginBottom: 30,
+          width: 600,
+          height: 400,
+          backgroundColor: categoryColors[xfilter.category] || "#ffffff",
+        }}
+      >
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <div>
-                  <h3>{xfilter.author}</h3>
                   {xfilter.content.length > 20 ? (
                     <p>{`${xfilter.content.substring(0, 40)}...`}</p>
                   ) : (
@@ -397,47 +469,48 @@ const Newboard = () => {
                     )}
                   </p>
                 </div>
-                <div>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleFollow(xfilter.author);
-                    }}
-                    className={styles.followButton}
-                  >
-                    {followStatus[xfilter.author] ? "Following" : "Follow"}
-                  </button>
                 </div>
-              </div>
-            </Card>
-          ))}
-        </Content>
-        <div className={styles.followingContainer}>
-          <h3>Following</h3>
-          <ul>
-            {followingUsers.map((user) => (
-              <li key={user.id}>
-                <a
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    fetchPostsFromUser(user.full_name, user.id);
-                  }}
-                >
-                  {user.full_name}
-                </a>
-              </li>
+      </Card>
+              </Col>
             ))}
-          </ul>
-        </div>
+          </Row>
+        </Content>
         <Footer
           style={{
+            width: "auto",
             textAlign: "center",
           }}
         >
           XNS Design ©2023 Created by XNS Designer
         </Footer>
       </Layout>
+      <div
+        style={{
+          width: collapsed ? "80px" : "200px",
+          height: "100vh",
+          backgroundColor: "#001529",
+          position: "fixed",
+          right: 0,
+        }}
+      >
+        <p className={styles.siderp}>팔로우목록</p>
+        <ul>
+          {followingUsers.map((user) => (
+            <li key={user.id} className={styles.followli} data-icon="🤍">
+              <a
+                className={styles.followa}
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  fetchPostsFromUser(user.full_name, user.id);
+                }}
+              >
+                {user.full_name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
     </Layout>
   );
 };
