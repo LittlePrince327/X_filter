@@ -12,7 +12,7 @@ import {
   ReadOutlined,
   MedicineBoxOutlined,
   TrophyOutlined,
-  CarOutlined, 
+  CarOutlined,
   CoffeeOutlined,
   HighlightOutlined,
   BugOutlined
@@ -28,7 +28,7 @@ import {
   Card,
   Row,
   Col,
-  Modal 
+  Modal
 } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./Newboard.module.css";
@@ -36,6 +36,16 @@ import { get_user_info } from "../api";
 import logo from "./logo100.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComment } from "@fortawesome/free-solid-svg-icons";
+import image1 from "../images/image1.jpg";
+import image2 from "../images/image2.jpg";
+import image3 from "../images/image3.jpg";
+import image4 from "../images/image4.jpg";
+import image5 from "../images/image5.jpg";
+import image6 from "../images/image6.jpg";
+import image7 from "../images/image7.jpg";
+import image8 from "../images/image8.jpg";
+import image9 from "../images/image9.jpg";
+import image10 from "../images/image10.jpg";
 
 const { Search } = Input;
 const BASE_URL = "http://localhost:8000/";
@@ -56,6 +66,27 @@ function getItem(label, key, icon) {
     label,
   };
 }
+
+const authorImageMap = {};
+
+const renderImage = (author) => {
+  const storedImage = localStorage.getItem(`authorImage_${author}`);
+  if (storedImage) {
+    return storedImage;
+  } else {
+    if (!authorImageMap[author]) {
+      authorImageMap[author] = getRandomImage();
+    }
+    localStorage.setItem(`authorImage_${author}`, authorImageMap[author]);
+    return authorImageMap[author];
+  }
+};
+
+const getRandomImage = () => {
+  const images = [image1, image2, image3, image4, image5, image6, image7, image8, image9, image10];
+  const randomIndex = Math.floor(Math.random() * images.length);
+  return images[randomIndex];
+};
 
 const items = [
   getItem("All", "1", <HeartOutlined />),
@@ -305,13 +336,12 @@ const Newboard = () => {
     "Entertainment": "#E9D9FF",
     "Science and Nature": "#FFFCD9",
     "Gaming": "#FFD9FD",
-    "Books and Literature":"#FEE7E0",
-    "Health and Fitness":"#E3F0D8",
-    "Travel":"#C7D0F1",
-    "Food and Cooking":"#F1E3C7",
-    "Art and Creativity":"#DDDDDD",
-    "Technology Help/Support":"#D2EEFF"
-    // ... add more categories and their corresponding colors
+    "Books and Literature": "#FEE7E0",
+    "Health and Fitness": "#E3F0D8",
+    "Travel": "#C7D0F1",
+    "Food and Cooking": "#F1E3C7",
+    "Art and Creativity": "#DDDDDD",
+    "Technology Help/Support": "#D2EEFF"
   };
 
   return (
@@ -403,74 +433,80 @@ const Newboard = () => {
             paddingTop: 20,
           }}
         >
-<Row>
-  {xfilterList.map((xfilter, index) => (
-    <Col
-      span={12}
-      key={xfilter.id}
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        width: "auto",
-      }}
-    >
-      <Card
-        className={styles.cardHoverEffect} // Apply the hover effect class here
-        onClick={() => navigate(`/detail/${xfilter.id}`)}
-        title={
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              width: "100%",
-            }}
-          > 
-            <span>{xfilter.author}</span>
-            <tr/>
-            <p
-            className={styles.cardcate}>{xfilter.category}</p>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                handleFollow(xfilter.author);
-              }}
-              className={styles.followButton}
-            >
-              {followStatus[xfilter.author] ? "Following" : "Follow"}
-            </button>
-          </div>
-        }
-        style={{
-          marginBottom: 30,
-          width: 600,
-          height: 400,
-          backgroundColor: categoryColors[xfilter.category] || "#ffffff",
-        }}
-      >
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <div>
-                  {xfilter.content.length > 20 ? (
-                    <p>{`${xfilter.content.substring(0, 40)}...`}</p>
-                  ) : (
-                    <p>{xfilter.content}</p>
-                  )}
-                  <p>
-                    {commentCounts[xfilter.id] === 0 && "댓글이 없습니다"}
-                    {commentCounts[xfilter.id] === 1 && (
-                      <>
-                        <FontAwesomeIcon icon={faComment} /> 1 댓글
-                      </>
-                    )}
-                    {commentCounts[xfilter.id] > 1 && (
-                      <>
-                        <FontAwesomeIcon icon={faComment} /> {commentCounts[xfilter.id]} 댓글
-                      </>
-                    )}
-                  </p>
-                </div>
-                </div>
-      </Card>
+          <Row>
+            {xfilterList.map((xfilter, index) => (
+              <Col
+                span={12}
+                key={xfilter.id}
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  width: "auto",
+                }}
+              >
+                <Card
+                  className={styles.cardHoverEffect}
+                  onClick={() => navigate(`/detail/${xfilter.id}`)}
+                  title={
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        width: "100%",
+                      }}
+                    >
+                      <div className={styles.image_container}>
+                        <img
+                          src={renderImage(xfilter.author)}
+                          alt={`Image ${index + 1}`}
+                        />
+                      </div>
+                      <div className={styles.xfilter_author}>{xfilter.author}</div>
+                      <tr />
+                      <p
+                        className={styles.cardcate}>{xfilter.category}</p>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleFollow(xfilter.author);
+                        }}
+                        className={styles.followButton}
+                      >
+                        {followStatus[xfilter.author] ? "Following" : "Follow"}
+                      </button>
+                    </div>
+                  }
+                  style={{
+                    marginBottom: 30,
+                    width: 600,
+                    height: 400,
+                    backgroundColor: categoryColors[xfilter.category] || "#ffffff",
+                  }}
+                >
+                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+                    <div>
+                      {xfilter.content.length > 20 ? (
+                        <p>{`${xfilter.content.substring(0, 40)}...`}</p>
+                      ) : (
+                        <p>{xfilter.content}</p>
+                      )}
+                      <p>
+                        {commentCounts[xfilter.id] === 0 && "댓글이 없습니다"}
+                        {commentCounts[xfilter.id] === 1 && (
+                          <>
+                            <FontAwesomeIcon icon={faComment} /> 1 댓글
+                          </>
+                        )}
+                        {commentCounts[xfilter.id] > 1 && (
+                          <>
+                            <FontAwesomeIcon icon={faComment} /> {commentCounts[xfilter.id]} 댓글
+                          </>
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                </Card>
               </Col>
             ))}
           </Row>
