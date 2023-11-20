@@ -17,7 +17,7 @@ import {
   HighlightOutlined,
   BugOutlined,
 } from "@ant-design/icons";
-import { Card, Layout, Menu, theme, Input } from "antd";
+import { Card, Layout, Menu, theme, Input, Space, Tooltip } from "antd";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import styles from "./DetailBoard.module.css";
 import {
@@ -83,7 +83,7 @@ const DetailBoard2 = () => {
   const [followStatus, setFollowStatus] = useState({});
   const [followingUsers, setFollowingUsers] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(null);
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState("");
 
   const fetchXfilterList = async () => {
     try {
@@ -584,11 +584,12 @@ const DetailBoard2 = () => {
             justifyContent: "center", // Centers the child horizontally
           }}
         >
-          <div style={{ maxWidth: "800px", width: "100%" }}>
+          <div style={{ maxWidth: "800px", width: "100%", height: "auto" }}>
             <Card
               title={
                 <div
                   style={{
+                    height: "auto",
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
@@ -603,10 +604,7 @@ const DetailBoard2 = () => {
                     {formatDate(xfilter.create_date)}
                   </p>
                   {localStorage.getItem("author") === xfilter.author && (
-                    <button
-                      onClick={handledeleteBoard}
-                      className={styles.del}
-                    >
+                    <button onClick={handledeleteBoard} className={styles.del}>
                       삭제하기
                     </button>
                   )}
@@ -617,22 +615,70 @@ const DetailBoard2 = () => {
             >
               <div className={styles.contentbox}>{xfilter.content}</div>
               <div className={styles.likeContainer}>
+                
                 <button onClick={handlerecommendBoard} className={styles.like}>
                   좋아요❤️ {xfilterLikesCount}
                 </button>
               </div>
 
-              <div className={styles.comment}>
+              <div onSubmit={handlePostComment} className={styles.comment}>
+                <TextArea
+                  style={{
+                    width: 660,
+                    height: 50,
+                  }}
+                  name="content"
+                  id="content"
+                  placeholder="Controlled autosize"
+                  autoSize={{ minRows: 3, maxRows: 5 }}
+                />
 
-                    <TextArea
-                    value={value}
-                    onChange={(e) => setValue(e.target.value)}
-                    placeholder="Controlled autosize"
-                    autoSize={{ minRows: 3, maxRows: 5 }}
-                  />
+                <button type="submit" className={styles.inputbtn}>
+                  댓글<tr></tr>등록
+                </button>
+                
+              </div>
+              {comments.map((comment) => (
+                <Card
+                  title={<div 
+                    style={{
+                      height: "auto",
+                    display: "flex",
+                    alignItems: "center",
+                    width: "100%",
+                    }}>
+                    <span>
+                      {comment.author}
+                    </span>
+                    <tr />
+                    <p className={styles.date}>{formatDate(comment.create_date)}</p>
+                    {localStorage.getItem("author") === comment.author && (
+                        <button
+                          onClick={() => handledeleteComment(comment.id)}
+                          className={styles.commentdel}
+                        >
+                          댓글 삭제
+                        </button>
+                      )}
+                      <button
+                        onClick={() => handlerecommendComment(comment.id)}
+                        className={styles.commentlike}
+                      >
+                        추천하기 ({commentLikesCounts[comment.id] || 0})
+                      </button>
+                      
+                  </div>}
 
-                </div>
-              
+                  bordered={false}
+                  style={{ width: "auto", marginTop:10}}
+                >
+                  <div>
+                    <p>
+                    {comment.content}
+                  </p>
+                  </div>
+                  
+                </Card>))}
             </Card>
           </div>
         </Content>

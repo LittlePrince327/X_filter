@@ -250,7 +250,7 @@ overflow-y: auto; /* Adds a scrollbar if content exceeds max-height */
 
 .boardcard{
   width: 800px;
-  height: 500px;
+  height: auto;
 }
 
 .date{
@@ -271,10 +271,12 @@ overflow-y: auto; /* Adds a scrollbar if content exceeds max-height */
 
 
 .contentbox{
+  margin: 20px 30px 30px 30px;
   height: 300px;
 }
 
 .like{
+  height: 30px;
   margin-right: 20px;
   background-color: rgb(245, 215, 255);
 color: #747474;
@@ -306,3 +308,23 @@ border: 1px solid rgb(255, 187, 187);
     background-color: rgb(177, 130, 130); /* 마우스 오버 시의 배경색 */
     color: white; /* 마우스 오버 시의 글자색 */
     }
+
+    .inputbtn{
+      height: 76px;
+      width: 70px;
+      margin-left: 4px;
+    background-color: #007bff;
+    color: #ffffff;
+    border-radius: 5px;
+    border: 1px solid #007bff;
+    }  
+    .inputbtn:hover {
+      border-radius: 5px;
+      border: 1px solid #356aa1;
+      background-color: #356aa1; /* 마우스 오버 시의 배경색 */
+      color: white; /* 마우스 오버 시의 글자색 */
+      }
+      .commentdate{
+        justify-content: end;
+      }
+      .commentdel{}
