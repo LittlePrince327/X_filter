@@ -64,3 +64,5 @@ def reset_password(request):
     else:
         # 요청 메서드가 POST가 아닌 경우 405 응답을 반환
         return JsonResponse({"error": "Only POST requests are allowed."}, status=405)
+    
+
