@@ -54,34 +54,21 @@ def comment_delete_api(request, comment_id):
 
 # comment 추천 API 엔드포인트
 @csrf_exempt
-@api_view(['POST'])
+@api_view(['POST', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def comment_vote_api(request, comment_id):
-    # 주어진 comment_id에 해당하는 Comment 객체를 가져옴
     comment = get_object_or_404(Comment, pk=comment_id)
-    try:
-        # 요청으로부터 JSON 데이터를 파싱
-        data = json.loads(request.body)
-    except json.JSONDecodeError:
-        # JSON 파싱에 실패한 경우 에러 응답
-        return JsonResponse({'error': 'Invalid JSON data in the request body.'}, status=400)
-
-    # 요청에서 얻은 작성자 정보
-    author_from_request = data.get('author')
-
-    # 본인의 글에는 좋아요 표시를 할 수 없음
-    if comment.author == author_from_request:
-        return JsonResponse({'error': '본인의 글에는 좋아요 표시를 할 수 없습니다.'}, status=400)
-
-    # 이미 투표한 경우 에러 응답
-    if request.user in comment.voter.all():
-        return JsonResponse({'error': '이미 이 Comment에 대해 투표했습니다.'}, status=400)
-
-    # Comment의 투표자에 현재 사용자를 추가하고 저장
-    comment.voter.add(request.user)
-    comment.save()
-
-    return JsonResponse({'success': 'Comment에 투표했습니다.'}, status=200)
+    user = request.user
+    if request.method == 'POST':
+        if user in comment.voter.all():
+            comment.voter.remove(user)
+            return JsonResponse({'message': '댓글 추천이 취소되었습니다.'})
+        else:
+            comment.voter.add(user)
+            return JsonResponse({'message': '댓글이 추천되었습니다.'})
+    elif request.method == 'DELETE':
+        comment.voter.remove(user)
+        return JsonResponse({'message': '댓글 추천이 취소되었습니다.'})
 
 
 @csrf_exempt
