@@ -288,6 +288,7 @@ const DetailBoard2 = () => {
   const [commentUpdated, setCommentUpdated] = useState(false);
   const [xfilterLikesCount, setXfilterLikesCount] = useState(0);
   const [commentLikesCounts, setCommentLikesCounts] = useState({});
+  const [likeClicked, setLikeClicked] = useState(false);
 
   const fetchXfilter = async () => {
     if (token) {
@@ -318,10 +319,10 @@ const DetailBoard2 = () => {
     fetchXfilter();
     fetchComments();
     fetchLikesCount();
-    if (commentUpdated) {
+    if (commentUpdated, likeClicked) {
       window.location.reload();
     }
-  }, [xfilter_id, token, commentUpdated]);
+  }, [xfilter_id, token, commentUpdated, likeClicked]);
 
   useEffect(() => {
     fetchLikesCount();
@@ -406,9 +407,19 @@ const DetailBoard2 = () => {
       const postId = xfilter.id;
       const author = localStorage.getItem("author");
       const response = await recommendBoard(postId, token, author);
-
-      setXfilterLikesCount((prevCount) => prevCount + 1);
-
+      const updatedBoardLikesResponse = await axios.get(
+        `${BASE_URL}board/xfilter/like/${postId}/`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const isAlreadyLiked = response.data.is_already_liked;
+      setXfilterLikesCount((prevCount) =>
+        isAlreadyLiked ? prevCount - 1 : updatedBoardLikesResponse.data.likes_count
+      );
+      setLikeClicked(true);
       console.log(response);
     } catch (error) {
       console.error("게시글 추천 오류:", error);
@@ -470,7 +481,6 @@ const DetailBoard2 = () => {
     try {
       const author = localStorage.getItem("author");
       const response = await recommendComment(commentId, author, token);
-
       const updatedCommentLikesResponse = await axios.get(
         `${BASE_URL}board/comment/like/${commentId}/`,
         {
@@ -479,15 +489,16 @@ const DetailBoard2 = () => {
           },
         }
       );
-
+      const isAlreadyLiked = response.data.is_already_liked;
       setCommentLikesCounts((prevCounts) => ({
         ...prevCounts,
-        [commentId]: updatedCommentLikesResponse.data.likes_count,
+        [commentId]: isAlreadyLiked
+          ? updatedCommentLikesResponse.data.likes_count - 1
+          : updatedCommentLikesResponse.data.likes_count,
       }));
-
       console.log(response);
     } catch (error) {
-      console.error("댓글 추천 오류:", error);
+      console.error("Comment recommendation error:", error);
     }
   };
 
@@ -621,18 +632,14 @@ const DetailBoard2 = () => {
                   좋아요❤️ {xfilterLikesCount}
                 </button>
               </div>
-
               <div className={styles.comment}>
-
                     <TextArea
                     value={value}
                     onChange={(e) => setValue(e.target.value)}
                     placeholder="Controlled autosize"
                     autoSize={{ minRows: 3, maxRows: 5 }}
                   />
-
                 </div>
-              
             </Card>
           </div>
         </Content>
