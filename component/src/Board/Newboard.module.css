@@ -47,23 +47,53 @@
 .searchInput {
     flex: 1;
     border-radius: 5px;
-    border: 1px solid #007bff;
+    border: 1px solid #0e2843;
     width:auto;
     height:30px;
 }
-.bord_btn{
-  background-color: #007bff;
+
+.logout{
+  background-color: rgb(17, 46, 76);
   color: #fff;
   border-radius: 5px;
-  border: 1px solid #007bff;
+  border: 1px solid rgb(17, 46, 76);
+  width: 80px;
+  height: 30px;
+}
+
+.logout:hover {
+  border-radius: 5px;
+  border: 1px solid #4b627a;
+  background-color: #4b627a; /* 마우스 오버 시의 배경색 */
+  color: white; /* 마우스 오버 시의 글자색 */
+}
+
+.followButton{
+  background-color: #8ebfff;
+  color: #fff;
+  border-radius: 5px;
+  border: 1px solid #8ebfff;
+}
+.followButton:hover {
+  border-radius: 5px;
+  border: 1px solid #356aa1;
+  background-color: #356aa1; /* 마우스 오버 시의 배경색 */
+  color: white; /* 마우스 오버 시의 글자색 */
+}
+
+.bord_btn{
+  background-color: rgb(17, 46, 76);
+  color: #fff;
+  border-radius: 5px;
+  border: 1px solid rgb(17, 46, 76);
   left: -20px;
   width: 60px;
   height: 30px;
 }
 .bord_btn:hover {
   border-radius: 5px;
-  border: 1px solid #007bff;
-  background-color: #2465d6; /* 마우스 오버 시의 배경색 */
+  border: 1px solid #4b627a;
+  background-color: #4b627a; /* 마우스 오버 시의 배경색 */
   color: white; /* 마우스 오버 시의 글자색 */
 }
 
@@ -139,6 +169,27 @@
     margin-left: 40px;
     height: 70px; /* 로고 이미지의 높이 */
 }
+.siderp{
+  margin-left: 50px;
+  color:white;
+  font-size: 20px;
+  font-family: 'HSBombaram21-Regular';
+}
+
+@font-face {
+  font-family: 'HSBombaram21-Regular';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/HSBombaram21-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.headerContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
 
 .followingContainer {
   padding: 16px;
@@ -157,4 +208,42 @@
 
 .followingContainer li {
   margin-bottom: 8px;
+}
+
+.followli {
+  display: grid;
+  grid-template-columns: 0 1fr;
+  grid-gap: 2.5em;
+  align-items: center;
+  font-size: 15px;
+
+
+  @if ($multicolumn == false) {
+    max-width: 25ch;
+  }
+}
+
+ul li::before {
+  content: attr(data-icon);
+  font-size: 1.25em;
+}
+
+.followa{
+  color: #fff;
+}
+.cardcate{
+  color: #a6a6a6;
+  font-size: 12px;
+  flex: auto;
+  margin-left: 20px;
+}
+
+.modal{
+  width: 1000px;
+  height: 800px;
+}
+
+.customModalContent {
+  max-height: 800px; /* Your desired height */
+  overflow-y: auto; /* Adds a scrollbar if content exceeds max-height */
 }
