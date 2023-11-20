@@ -632,18 +632,14 @@ const DetailBoard2 = () => {
                   좋아요❤️ {xfilterLikesCount}
                 </button>
               </div>
-
               <div className={styles.comment}>
-
                     <TextArea
                     value={value}
                     onChange={(e) => setValue(e.target.value)}
                     placeholder="Controlled autosize"
                     autoSize={{ minRows: 3, maxRows: 5 }}
                   />
-
                 </div>
-              
             </Card>
           </div>
         </Content>
