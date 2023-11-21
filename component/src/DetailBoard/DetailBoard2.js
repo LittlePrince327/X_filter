@@ -319,7 +319,7 @@ const DetailBoard2 = () => {
     fetchXfilter();
     fetchComments();
     fetchLikesCount();
-    if (commentUpdated, likeClicked) {
+    if ((commentUpdated, likeClicked)) {
       window.location.reload();
     }
   }, [xfilter_id, token, commentUpdated, likeClicked]);
@@ -417,7 +417,9 @@ const DetailBoard2 = () => {
       );
       const isAlreadyLiked = response.data.is_already_liked;
       setXfilterLikesCount((prevCount) =>
-        isAlreadyLiked ? prevCount - 1 : updatedBoardLikesResponse.data.likes_count
+        isAlreadyLiked
+          ? prevCount - 1
+          : updatedBoardLikesResponse.data.likes_count
       );
       setLikeClicked(true);
       console.log(response);
@@ -428,7 +430,7 @@ const DetailBoard2 = () => {
 
   const handlePostComment = async (event) => {
     event.preventDefault();
-    const content = event.target.content.value;
+    const content = event.target.content.value; // 이제 예상대로 작동해야 합니다
     const author = localStorage.getItem("author");
     const create_date = new Date().toISOString();
 
@@ -626,13 +628,12 @@ const DetailBoard2 = () => {
             >
               <div className={styles.contentbox}>{xfilter.content}</div>
               <div className={styles.likeContainer}>
-                
                 <button onClick={handlerecommendBoard} className={styles.like}>
                   좋아요❤️ {xfilterLikesCount}
                 </button>
               </div>
 
-              <div onSubmit={handlePostComment} className={styles.comment}>
+              <form onSubmit={handlePostComment} className={styles.comment}>
                 <TextArea
                   style={{
                     width: 660,
@@ -647,49 +648,54 @@ const DetailBoard2 = () => {
                 <button type="submit" className={styles.inputbtn}>
                   댓글<tr></tr>등록
                 </button>
-                
-              </div>
+              </form>
               {comments.map((comment) => (
                 <Card
-                  title={<div 
-                    style={{
-                      height: "auto",
-                    display: "flex",
-                    alignItems: "center",
-                    width: "100%",
-                    }}>
-                    <span>
-                      {comment.author}
-                    </span>
-                    <tr />
-                    <p className={styles.date}>{formatDate(comment.create_date)}</p>
-                    {localStorage.getItem("author") === comment.author && (
-                        <button
-                          onClick={() => handledeleteComment(comment.id)}
-                          className={styles.commentdel}
-                        >
-                          댓글 삭제
-                        </button>
-                      )}
-                      <button
-                        onClick={() => handlerecommendComment(comment.id)}
-                        className={styles.commentlike}
-                      >
-                        추천하기 ({commentLikesCounts[comment.id] || 0})
-                      </button>
+                  title={
+                    <div
+                      style={{
+                        height: "auto",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        width: "100%",
+                      }}
                       
-                  </div>}
-
+                    >
+                      <div style={{ display: "flex", alignItems: "center" }}>
+                        <span>{comment.author}</span>
+                        <tr />
+                        <p className={styles.commentdate}>
+                          {formatDate(comment.create_date)}
+                        </p>
+                        
+                      </div>
+                      <div>
+                        {localStorage.getItem("author") === comment.author && (
+                          <button
+                            onClick={() => handledeleteComment(comment.id)}
+                            className={styles.commentdel}
+                          >
+                            댓글 삭제
+                          </button>
+                        )}
+                        <button
+                          onClick={() => handlerecommendComment(comment.id)}
+                          className={styles.commentlike}
+                        >
+                          추천💙 {commentLikesCounts[comment.id] || 0}
+                        </button>
+                      </div>
+                    </div>
+                  }
                   bordered={false}
-                  style={{ width: "auto", marginTop:10}}
+                  style={{ width: "auto", marginTop: 10, background:"#ededed" }}
                 >
                   <div>
-                    <p>
-                    {comment.content}
-                  </p>
+                    <p>{comment.content}</p>
                   </div>
-                  
-                </Card>))}
+                </Card>
+              ))}
             </Card>
           </div>
         </Content>
