@@ -130,6 +130,7 @@ const Newboard = () => {
   const [followStatus, setFollowStatus] = useState({});
   const [followingUsers, setFollowingUsers] = useState([]);
   const [commentCounts, setCommentCounts] = useState({});
+  const [likesCount, setLikesCount] = useState({});
 
   const fetchXfilterList = async () => {
     try {
@@ -317,11 +318,34 @@ const Newboard = () => {
     }
   };
 
+  const fetchLikesCount = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const counts = {};
+
+      for (const xfilter of xfilterList) {
+        const response = await axios.get(
+          `${BASE_URL}board/xfilter/like/${xfilter.id}/`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        counts[xfilter.id] = response.data.likes_count;
+      }
+      setLikesCount(counts);
+    } catch (error) {
+      console.error("Error fetching likes counts:", error);
+    }
+  };
+
   useEffect(() => {
     fetchXfilterList();
     fetchUserInfoAndSaveToLocalStorage();
     fetchFollowingUsers();
     fetchCommentCounts();
+    fetchLikesCount();
     const storedFollowStatus = JSON.parse(localStorage.getItem("followStatus")) || {};
     setFollowStatus(storedFollowStatus);
   }, []);
@@ -332,9 +356,8 @@ const Newboard = () => {
 
   useEffect(() => {
     fetchCommentCounts();
+    fetchLikesCount();
   }, [xfilterList]);
-
-
 
   const categoryColors = {
     "Daily": "#FEE7E4",
@@ -462,7 +485,7 @@ const Newboard = () => {
                         justifyContent: "space-between",
                         alignItems: "center",
                         width: "100%",
-                       
+
                       }}
                     >
                       <div className={styles.image_container}>
@@ -493,14 +516,14 @@ const Newboard = () => {
                     backgroundColor: categoryColors[xfilter.category] || "#ffffff",
                   }}
                 >
-                 <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+                  <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                     <div>
                       {xfilter.content.length > 20 ? (
                         <p>{`${xfilter.content.substring(0, 40)}...`}</p>
                       ) : (
                         <p>{xfilter.content}</p>
                       )}
-                      
+
                     </div>
                     <div className={styles.commentcounts}>
                       <p>
@@ -515,8 +538,14 @@ const Newboard = () => {
                             <FontAwesomeIcon icon={faComment} /> {commentCounts[xfilter.id]} 댓글
                           </>
                         )}
+                        <br/>
+                        {likesCount[xfilter.id] > 0 && (
+                          <>
+                            <LikeOutlined /> {likesCount[xfilter.id]} 좋아요
+                          </>
+                        )}
                       </p>
-                      </div>
+                    </div>
                   </div>
                 </Card>
               </Col>
