@@ -319,10 +319,10 @@ const DetailBoard2 = () => {
     fetchXfilter();
     fetchComments();
     fetchLikesCount();
-    if ((commentUpdated, likeClicked)) {
+    if (commentUpdated) {
       window.location.reload();
     }
-  }, [xfilter_id, token, commentUpdated, likeClicked]);
+  }, [xfilter_id, token, commentUpdated]);
 
   useEffect(() => {
     fetchLikesCount();
@@ -336,29 +336,19 @@ const DetailBoard2 = () => {
 
   const fetchLikesCount = async () => {
     try {
-      const xfilterLikesResponse = await axios.get(
-        `${BASE_URL}board/xfilter/like/${xfilter_id}/`,
-        {
+      const xfilterLikesResponse = await axios.get(`${BASE_URL}board/xfilter/like/${xfilter_id}/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setXfilterLikesCount(xfilterLikesResponse.data.likes_count);
+      const commentLikesPromises = comments.map(async (comment) => {
+        const commentLikesResponse = await axios.get(`${BASE_URL}board/comment/like/${comment.id}/`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
-      );
-      setXfilterLikesCount(xfilterLikesResponse.data.likes_count);
-
-      const commentLikesPromises = comments.map(async (comment) => {
-        const commentLikesResponse = await axios.get(
-          `${BASE_URL}board/comment/like/${comment.id}/`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        return {
-          commentId: comment.id,
-          likesCount: commentLikesResponse.data.likes_count,
-        };
+        });
+        return { commentId: comment.id, likesCount: commentLikesResponse.data.likes_count };
       });
 
       const commentLikes = await Promise.all(commentLikesPromises);
@@ -368,7 +358,7 @@ const DetailBoard2 = () => {
       });
       setCommentLikesCounts(commentLikesCountMap);
     } catch (error) {
-      console.error("Likes count fetching error:", error);
+      console.error('Likes count fetching error:', error);
     }
   };
 
@@ -405,32 +395,20 @@ const DetailBoard2 = () => {
   const handlerecommendBoard = async () => {
     try {
       const postId = xfilter.id;
-      const author = localStorage.getItem("author");
+      const author = localStorage.getItem('author');
       const response = await recommendBoard(postId, token, author);
-      const updatedBoardLikesResponse = await axios.get(
-        `${BASE_URL}board/xfilter/like/${postId}/`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      const isAlreadyLiked = response.data.is_already_liked;
-      setXfilterLikesCount((prevCount) =>
-        isAlreadyLiked
-          ? prevCount - 1
-          : updatedBoardLikesResponse.data.likes_count
-      );
-      setLikeClicked(true);
+  
+      setXfilterLikesCount((prevCount) => prevCount + 1);
+  
       console.log(response);
     } catch (error) {
-      console.error("게시글 추천 오류:", error);
+      console.error('게시글 추천 오류:', error);
     }
   };
 
   const handlePostComment = async (event) => {
     event.preventDefault();
-    const content = event.target.content.value; // 이제 예상대로 작동해야 합니다
+    const content = event.target.content.value; 
     const author = localStorage.getItem("author");
     const create_date = new Date().toISOString();
 
@@ -481,26 +459,21 @@ const DetailBoard2 = () => {
 
   const handlerecommendComment = async (commentId) => {
     try {
-      const author = localStorage.getItem("author");
+      const author = localStorage.getItem('author');
       const response = await recommendComment(commentId, author, token);
-      const updatedCommentLikesResponse = await axios.get(
-        `${BASE_URL}board/comment/like/${commentId}/`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      const isAlreadyLiked = response.data.is_already_liked;
+  
+      const updatedCommentLikesResponse = await axios.get(`${BASE_URL}board/comment/like/${commentId}/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setCommentLikesCounts((prevCounts) => ({
         ...prevCounts,
-        [commentId]: isAlreadyLiked
-          ? updatedCommentLikesResponse.data.likes_count - 1
-          : updatedCommentLikesResponse.data.likes_count,
+        [commentId]: updatedCommentLikesResponse.data.likes_count,
       }));
       console.log(response);
     } catch (error) {
-      console.error("Comment recommendation error:", error);
+      console.error('댓글 추천 오류:', error);
     }
   };
 
