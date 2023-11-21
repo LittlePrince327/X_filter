@@ -45,7 +45,7 @@ function FindUsername() {
         />
         <button className={`joinInput mt-20 ${styles.button}`} type="button" onClick={handleSearchUsername}>아이디 찾기</button>
       </div>
-      {username && <p>사용자 아이디: {username}</p>}
+      {username && <p className={styles.usernameParagraph}>사용자 아이디: {username}</p>}
       {errorMessage && <p>{errorMessage}</p>}
     </div>
         </form>

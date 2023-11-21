@@ -101,6 +101,10 @@ AUTH_PASSWORD_VALIDATORS = [                                                    
     # },
 ]
 
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 
 LANGUAGE_CODE = 'ko-kr'                                                                # 기본 언어 코드
 
