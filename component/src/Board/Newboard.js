@@ -527,7 +527,7 @@ const Newboard = () => {
                     </div>
                     <div className={styles.commentcounts}>
                       <p>
-                        {commentCounts[xfilter.id] === 0 && "댓글이 없습니다"}
+                        {commentCounts[xfilter.id] === 0 && ""}
                         {commentCounts[xfilter.id] === 1 && (
                           <>
                             <FontAwesomeIcon icon={faComment} /> 1 댓글
