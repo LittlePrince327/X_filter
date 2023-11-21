@@ -36,16 +36,24 @@ import { get_user_info } from "../api";
 import logo from "./logo100.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComment } from "@fortawesome/free-solid-svg-icons";
-import image1 from "../images/image1.jpg";
-import image2 from "../images/image2.jpg";
-import image3 from "../images/image3.jpg";
-import image4 from "../images/image4.jpg";
-import image5 from "../images/image5.jpg";
-import image6 from "../images/image6.jpg";
-import image7 from "../images/image7.jpg";
-import image8 from "../images/image8.jpg";
-import image9 from "../images/image9.jpg";
-import image10 from "../images/image10.jpg";
+import image2 from "../images/image2.png";
+import image1 from "../images/image1.png";
+import image3 from "../images/image3.png";
+import image4 from "../images/image4.png";
+import image5 from "../images/image5.png";
+import image6 from "../images/image6.png";
+import image7 from "../images/image7.png";
+import image8 from "../images/image8.png";
+import image9 from "../images/image9.png";
+import image10 from "../images/image10.png";
+// import image11 from "../images/image11.png";
+// import image12 from "../images/image12.png";
+// import image13 from "../images/image13.png";
+// import image14 from "../images/image14.png";
+// import image15 from "../images/image15.png";
+// import image16 from "../images/image16.png";
+// import image17 from "../images/image17.png";
+// import image18 from "../images/image18.png";
 
 const { Search } = Input;
 const BASE_URL = "http://localhost:8000/";
@@ -454,6 +462,7 @@ const Newboard = () => {
                         justifyContent: "space-between",
                         alignItems: "center",
                         width: "100%",
+                       
                       }}
                     >
                       <div className={styles.image_container}>
@@ -484,13 +493,16 @@ const Newboard = () => {
                     backgroundColor: categoryColors[xfilter.category] || "#ffffff",
                   }}
                 >
-                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+                 <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                     <div>
                       {xfilter.content.length > 20 ? (
                         <p>{`${xfilter.content.substring(0, 40)}...`}</p>
                       ) : (
                         <p>{xfilter.content}</p>
                       )}
+                      
+                    </div>
+                    <div className={styles.commentcounts}>
                       <p>
                         {commentCounts[xfilter.id] === 0 && "댓글이 없습니다"}
                         {commentCounts[xfilter.id] === 1 && (
@@ -504,7 +516,7 @@ const Newboard = () => {
                           </>
                         )}
                       </p>
-                    </div>
+                      </div>
                   </div>
                 </Card>
               </Col>

@@ -267,3 +267,9 @@ ul li::before {
   position:relative;
   left:20px;
 }
+
+.commentcounts{
+  margin-top: 200px;
+  text-align: right; /* Aligns content inside the div to the left */
+  padding: 10px 0; /* Optional padding, adjust as needed */
+}

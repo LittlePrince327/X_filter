@@ -17,7 +17,7 @@ import {
   HighlightOutlined,
   BugOutlined,
 } from "@ant-design/icons";
-import { Card, Layout, Menu, theme, Input } from "antd";
+import { Card, Layout, Menu, theme, Input, Space, Tooltip } from "antd";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import styles from "./DetailBoard.module.css";
 import {
@@ -83,7 +83,7 @@ const DetailBoard2 = () => {
   const [followStatus, setFollowStatus] = useState({});
   const [followingUsers, setFollowingUsers] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(null);
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState("");
 
   const fetchXfilterList = async () => {
     try {
@@ -319,7 +319,7 @@ const DetailBoard2 = () => {
     fetchXfilter();
     fetchComments();
     fetchLikesCount();
-    if (commentUpdated, likeClicked) {
+    if ((commentUpdated, likeClicked)) {
       window.location.reload();
     }
   }, [xfilter_id, token, commentUpdated, likeClicked]);
@@ -417,7 +417,9 @@ const DetailBoard2 = () => {
       );
       const isAlreadyLiked = response.data.is_already_liked;
       setXfilterLikesCount((prevCount) =>
-        isAlreadyLiked ? prevCount - 1 : updatedBoardLikesResponse.data.likes_count
+        isAlreadyLiked
+          ? prevCount - 1
+          : updatedBoardLikesResponse.data.likes_count
       );
       setLikeClicked(true);
       console.log(response);
@@ -428,7 +430,7 @@ const DetailBoard2 = () => {
 
   const handlePostComment = async (event) => {
     event.preventDefault();
-    const content = event.target.content.value;
+    const content = event.target.content.value; // 이제 예상대로 작동해야 합니다
     const author = localStorage.getItem("author");
     const create_date = new Date().toISOString();
 
@@ -595,11 +597,12 @@ const DetailBoard2 = () => {
             justifyContent: "center", // Centers the child horizontally
           }}
         >
-          <div style={{ maxWidth: "800px", width: "100%" }}>
+          <div style={{ maxWidth: "800px", width: "100%", height: "auto" }}>
             <Card
               title={
                 <div
                   style={{
+                    height: "auto",
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
@@ -614,10 +617,7 @@ const DetailBoard2 = () => {
                     {formatDate(xfilter.create_date)}
                   </p>
                   {localStorage.getItem("author") === xfilter.author && (
-                    <button
-                      onClick={handledeleteBoard}
-                      className={styles.del}
-                    >
+                    <button onClick={handledeleteBoard} className={styles.del}>
                       삭제하기
                     </button>
                   )}
@@ -632,14 +632,70 @@ const DetailBoard2 = () => {
                   좋아요❤️ {xfilterLikesCount}
                 </button>
               </div>
-              <div className={styles.comment}>
-                    <TextArea
-                    value={value}
-                    onChange={(e) => setValue(e.target.value)}
-                    placeholder="Controlled autosize"
-                    autoSize={{ minRows: 3, maxRows: 5 }}
-                  />
-                </div>
+
+              <form onSubmit={handlePostComment} className={styles.comment}>
+                <TextArea
+                  style={{
+                    width: 660,
+                    height: 50,
+                  }}
+                  name="content"
+                  id="content"
+                  placeholder="Controlled autosize"
+                  autoSize={{ minRows: 3, maxRows: 5 }}
+                />
+
+                <button type="submit" className={styles.inputbtn}>
+                  댓글<tr></tr>등록
+                </button>
+              </form>
+              {comments.map((comment) => (
+                <Card
+                  title={
+                    <div
+                      style={{
+                        height: "auto",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        width: "100%",
+                      }}
+                      
+                    >
+                      <div style={{ display: "flex", alignItems: "center" }}>
+                        <span>{comment.author}</span>
+                        <tr />
+                        <p className={styles.commentdate}>
+                          {formatDate(comment.create_date)}
+                        </p>
+                        
+                      </div>
+                      <div>
+                        {localStorage.getItem("author") === comment.author && (
+                          <button
+                            onClick={() => handledeleteComment(comment.id)}
+                            className={styles.commentdel}
+                          >
+                            댓글 삭제
+                          </button>
+                        )}
+                        <button
+                          onClick={() => handlerecommendComment(comment.id)}
+                          className={styles.commentlike}
+                        >
+                          추천💙 {commentLikesCounts[comment.id] || 0}
+                        </button>
+                      </div>
+                    </div>
+                  }
+                  bordered={false}
+                  style={{ width: "auto", marginTop: 10, background:"#ededed" }}
+                >
+                  <div>
+                    <p>{comment.content}</p>
+                  </div>
+                </Card>
+              ))}
             </Card>
           </div>
         </Content>
