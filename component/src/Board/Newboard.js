@@ -538,7 +538,7 @@ const Newboard = () => {
                             <FontAwesomeIcon icon={faComment} /> {commentCounts[xfilter.id]} 댓글
                           </>
                         )}
-                        {/* Display the number of likes */}
+                        <br/>
                         {likesCount[xfilter.id] > 0 && (
                           <>
                             <LikeOutlined /> {likesCount[xfilter.id]} 좋아요
