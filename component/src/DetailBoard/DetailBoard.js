@@ -384,6 +384,7 @@ const DetailBoard = () => {
     try {
       const response = await deleteBoard(postId, userToken);
       console.log(response.data);
+      navigate('/newboard');
     } catch (error) {
       console.error(
         "게시물 삭제 중 오류:",
@@ -460,7 +461,6 @@ const DetailBoard = () => {
       console.error("댓글 삭제 오류:", error);
     }
   };
-
   const handlerecommendComment = async (commentId) => {
     try {
       const author = localStorage.getItem('author');
