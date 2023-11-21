@@ -375,7 +375,7 @@ const DetailBoard2 = () => {
   const fetchComments = async () => {
     try {
       const commentsResponse = await axios.get(
-        `${BASE_URL}board/xfilter/comment?xfilter_id=${xfilter_id}`,
+        `${BASE_URL}board/xfilter/comment?xfilter_id=${xfilter_id}`,  
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -456,7 +456,7 @@ const DetailBoard2 = () => {
     try {
       const token = localStorage.getItem("token");
       const commentsResponse = await axios.get(
-        `${BASE_URL}board/xfilter/comment`,
+        `${BASE_URL}board/xfilter/comment?xfilter_id=${xfilter_id}`,  
         {
           headers: {
             Authorization: `Bearer ${token}`,
