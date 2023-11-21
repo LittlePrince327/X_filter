@@ -396,11 +396,15 @@ const DetailBoard2 = () => {
     try {
       const postId = xfilter.id;
       const author = localStorage.getItem('author');
-      const response = await recommendBoard(postId, token, author);
-  
-      setXfilterLikesCount((prevCount) => prevCount + 1);
-  
-      console.log(response);
+      const postResponse = await recommendBoard(postId, token, author);
+
+      const getResponse = await axios.get(`${BASE_URL}board/xfilter/like/${postId}/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const updatedLikesCount = getResponse.data.likes_count;
+      setXfilterLikesCount(updatedLikesCount);
     } catch (error) {
       console.error('게시글 추천 오류:', error);
     }
