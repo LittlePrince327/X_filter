@@ -394,7 +394,7 @@ const Newboard = () => {
       />
       <div
         style={{
-          width: collapsed ? "80px" : "200px",
+          width: collapsed ? "80px" : "250px",
           height: "100vh",
           backgroundColor: "#001529",
           position: "fixed",
@@ -413,6 +413,9 @@ const Newboard = () => {
         >
           {items.map((item) => (
             <Menu.Item
+              style={{
+                width:250
+              }}
               key={item.key}
               icon={item.icon}
               onClick={() => handleCategoryChange(item.label)}
@@ -458,6 +461,7 @@ const Newboard = () => {
 
         <Content
           style={{
+            marginLeft:30,
             overflow: "auto",
             width: "100%",
             height: "calc(100vh - 64px)",
