@@ -455,14 +455,14 @@ const Makeboard = () => {
             message={
               <Marquee pauseOnHover gradient={false}>
                 XNS는 자동으로 문장을 필터링하여 욕설과 혐오표현을 포함한
-                부적절한 언어를 제거합니다. 우리는 모든 사용자를 존중하고
-                포용하는 커뮤니티를 조성하는 것을 목표로 합니다.
+                부적절한 언어를 제거합니다. &nbsp;&nbsp;
+                XNS는 모든 사용자들이 존중받는 커뮤니티를 조성하는 것을 목표로 합니다.
               </Marquee>
             }
           />
           <div
             style={{
-              margin: "20px 40px 40px 40px",
+              margin: "20px 30px 0px 40px",
             }}
           >
             카테고리:&nbsp;&nbsp;
@@ -483,7 +483,7 @@ const Makeboard = () => {
               display: "flex",
               justifyContent: "space-between",
               marginRight: 100,
-              marginTop: 70,
+              marginTop: 60,
             }}
           >
             <form onSubmit={handlepostBoard} style={{ marginRight: "20px" }}>
@@ -524,10 +524,9 @@ const Makeboard = () => {
                 <div>
                   {" "}
                   <Paragraph
-                    copyable
+                    copyable={{ text: "복사된문장" }}
                     style={{
-                      margin: "auto",
-                    }}
+                      margin: "auto",}}
                   >
                     복사하기
                   </Paragraph>
