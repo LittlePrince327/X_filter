@@ -514,9 +514,9 @@ const Makeboard = () => {
               <Button type="primary" danger>
                 필터링하기
               </Button>
-                <Button type="primary" disabled>
+                {/* <Button type="primary" disabled>
                 게시불가
-              </Button>         
+              </Button>          */}
             </form>
             <Card
               title="필터링된 문장"
@@ -538,7 +538,9 @@ const Makeboard = () => {
                 height: 500,
               }}
             >
-              <p>욕설은 나빠요!!</p>
+              <p>아 오늘 점심 먹으러 충장로 나왔는데
+사람 진짜 많더라 .. 오늘 무슨 축제 있냐?
+어째튼 심심한데 저녁에 영화볼 친구 구함 !!</p>
             </Card>
           </div>
         </Content>
