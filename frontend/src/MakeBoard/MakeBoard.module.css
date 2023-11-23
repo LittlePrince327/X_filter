@@ -1,0 +1,54 @@
+/* Detail.module.css */
+
+.container {
+    width: 100%;
+    height:100px;
+  }
+  
+  /* 스타일링 조절을 위한 추가적인 클래스 */
+  
+  .top-section {
+    margin-bottom: 20px;
+    width:100px;
+    height:500px;
+  }
+  
+  .bottom-section {
+    margin-top: 20px;
+    width:100px;
+  }
+  
+  /* textarea 스타일링 */
+  textarea {
+    width: 100%;
+
+    height:300px;
+
+  }
+  
+  /* 버튼 스타일링 */
+  .btn {
+    margin: 5px;
+  }
+  
+  .btn-primary {
+    background-color: #007bff;
+    color: white;
+    border: none;
+  }
+  
+  .btn-outline-success {
+    color: #28a745;
+    border: 1px solid #28a745;
+  }
+  
+  .btn-outline-secondary {
+    color: #6c757d;
+    border: 1px solid #6c757d;
+  }
+  
+  .btn-outline-danger {
+    color: #dc3545;
+    border: 1px solid #dc3545;
+  }
+  
