@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Join from './Join/Join';
 import Signup from './Signup/Signup';
 import FindUsername from './FindUsername/FindUsername';
 import ResetPassword from './ResetPassword/ResetPassword';
@@ -17,7 +16,6 @@ function App() {
         <Route path="/" element={<Main />} />
         <Route path="/detaliboard" element={<DetailBoard />}/>
         <Route path="/Board" element={<Board />}/>
-        <Route path="/join" element={<Join />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/findusername" element={<FindUsername />} />
         <Route path="/resetpassword" element={<ResetPassword />} />
