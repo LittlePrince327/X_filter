@@ -367,7 +367,7 @@ const Newboard = () => {
     "Entertainment": "#E9D9FF",
     "Science and Nature": "#FFFCD9",
     "Gaming": "#FFD9FD",
-    "Books and Literature": "#FEE7E0",
+    "Books and Literature": "#BFE6F5",
     "Health and Fitness": "#E3F0D8",
     "Travel": "#C7D0F1",
     "Food and Cooking": "#F1E3C7",
@@ -394,7 +394,7 @@ const Newboard = () => {
       />
       <div
         style={{
-          width: collapsed ? "80px" : "200px",
+          width: collapsed ? "80px" : "250px",
           height: "100vh",
           backgroundColor: "#001529",
           position: "fixed",
@@ -413,6 +413,9 @@ const Newboard = () => {
         >
           {items.map((item) => (
             <Menu.Item
+              style={{
+                width:250
+              }}
               key={item.key}
               icon={item.icon}
               onClick={() => handleCategoryChange(item.label)}
@@ -458,6 +461,7 @@ const Newboard = () => {
 
         <Content
           style={{
+            marginLeft:30,
             overflow: "auto",
             width: "100%",
             height: "calc(100vh - 64px)",
@@ -517,9 +521,9 @@ const Newboard = () => {
                   }}
                 >
                   <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                    <div>
+                    <div style={{height: 120}}>
                       {xfilter.content.length > 20 ? (
-                        <p>{`${xfilter.content.substring(0, 40)}...`}</p>
+                        <p>{`${xfilter.content.substring(0, 200)}...`}</p>
                       ) : (
                         <p>{xfilter.content}</p>
                       )}
