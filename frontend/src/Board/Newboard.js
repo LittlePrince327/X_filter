@@ -352,6 +352,11 @@ const Newboard = () => {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/");
+  };
+
   useEffect(() => {
     fetchXfilterList();
     fetchUserInfoAndSaveToLocalStorage();
@@ -464,9 +469,9 @@ const Newboard = () => {
               </button>
             </div>
             <div>
-              <Link to="/">
-                <button className={styles.logout}>로그아웃</button>
-              </Link>
+              <button className={styles.logout} onClick={handleLogout}>
+                로그아웃
+              </button>
             </div>
           </div>
         </Header>
