@@ -74,7 +74,7 @@ function ResetPassword() {
       </form>
     </div>
     <footer className={styles.footer}>
-      <p>저작권 © 2023 회사명. 모든 권리 보유.</p>
+      <p>ⓒ XNS Company. All Rights Reserved.</p>
     </footer>
   </div>
   );
