@@ -130,7 +130,7 @@ const Makeboard = () => {
         userToken
       );
       console.log(response);
-      navigate("/newboard");
+      navigate("/board");
     } catch (error) {
       console.error("게시물 제출 오류:", error);
     }
@@ -386,7 +386,7 @@ const Makeboard = () => {
           left: 0,
         }}
       >
-        <Link to="/newboard">
+        <Link to="/board">
           <img src={logo} alt="Logo" className={styles.logo} />
         </Link>
         <Menu

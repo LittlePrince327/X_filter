@@ -6,7 +6,7 @@ import FindUsername from './FindUsername/FindUsername';
 import ResetPassword from './ResetPassword/ResetPassword';
 import MakeBoard from './MakeBoard/MakeBoard'; 
 import Main from './Main/Main';
-import Newboard from './Board/Newboard';
+import Board from './Board/Board';
 import DetailBoard from './DetailBoard/DetailBoard';
 
 
@@ -16,7 +16,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="/detaliboard" element={<DetailBoard />}/>
-        <Route path="/newboard" element={<Newboard />}/>
+        <Route path="/Board" element={<Board />}/>
         <Route path="/join" element={<Join />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/findusername" element={<FindUsername />} />

@@ -28,7 +28,7 @@ const Main = () => {
           console.log(response.data.access);
           if (response.status === 200) {
             localStorage.setItem("token", response.data.access);
-            navigate("/newboard");
+            navigate("/board");
           } else {
             return Promise.reject(response.data);
           }

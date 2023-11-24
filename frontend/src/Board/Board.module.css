@@ -6,7 +6,7 @@
     display: flex;
     flex-direction: column;
     height: 20%;
-    width: 100%;
+    /* width: 100%; */
     background-color: #fff; /* Set the background color to white */
   }
   
@@ -23,31 +23,85 @@
     height:50px;
   }
   
+  .menu{
+    width: 200px;
+  }
 
   .searchBtn {
     position:relative;
-    top:0px;
     width:100px;
     height:50px;
     left:-10px;
   }
 
   .searchContainer {
+    margin-left: 30px;
+    height: 64px;
+    width: 300px;
     display: flex;
     align-items: center;
     position:relative;
-    left:1000px;
+    /* left:1000px; */
 }
 
 .searchInput {
     flex: 1;
-    margin-right: 10px;
-    width:200px;
-    height:50px;
+    border-radius: 5px;
+    border: 1px solid #0e2843;
+    width:auto;
+    height:30px;
 }
+
+.logout{
+  background-color: rgb(17, 46, 76);
+  color: #fff;
+  border-radius: 5px;
+  border: 1px solid rgb(17, 46, 76);
+  width: 80px;
+  height: 30px;
+}
+
+.logout:hover {
+  border-radius: 5px;
+  border: 1px solid #4b627a;
+  background-color: #4b627a; /* 마우스 오버 시의 배경색 */
+  color: white; /* 마우스 오버 시의 글자색 */
+}
+
+.followButton{
+  background-color: #8ebfff;
+  color: #fff;
+  border-radius: 5px;
+  border: 1px solid #8ebfff;
+}
+.followButton:hover {
+  border-radius: 5px;
+  border: 1px solid #356aa1;
+  background-color: #356aa1; /* 마우스 오버 시의 배경색 */
+  color: white; /* 마우스 오버 시의 글자색 */
+}
+
 .bord_btn{
-  width: 50px;
-  height: 50px;
+  background-color: rgb(17, 46, 76);
+  color: #fff;
+  border-radius: 5px;
+  border: 1px solid rgb(17, 46, 76);
+  left: -20px;
+  width: 60px;
+  height: 30px;
+}
+.bord_btn:hover {
+  border-radius: 5px;
+  border: 1px solid #4b627a;
+  background-color: #4b627a; /* 마우스 오버 시의 배경색 */
+  color: white; /* 마우스 오버 시의 글자색 */
+}
+
+.cardHoverEffect:hover {
+  width: 800;
+  height: 500;
+  box-shadow: 1px 2px 9px #a6a6a6; /* Change the color and size as needed */
+  transition: box-shadow 0.3s ease-in-out;
 }
   /* Adjust styles for smaller screens */
   @media (max-width: 768px) {
@@ -110,4 +164,112 @@
     background-color: #007bff;
     color: #fff;
   }
-  
+
+.logo{
+    margin-left: 60px;
+    height: 70px; /* 로고 이미지의 높이 */
+}
+.siderp{
+  margin-left: 50px;
+  color:white;
+  font-size: 20px;
+  font-family: 'HSBombaram21-Regular';
+}
+
+@font-face {
+  font-family: 'HSBombaram21-Regular';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/HSBombaram21-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.headerContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+
+.followingContainer {
+  padding: 16px;
+  background-color: #fff;
+  margin-top: 20px;
+}
+
+.followingContainer h3 {
+  margin-bottom: 10px;
+}
+
+.followingContainer ul {
+  list-style: none;
+  padding: 0;
+}
+
+.followingContainer li {
+  margin-bottom: 8px;
+}
+
+.followli {
+  display: grid;
+  grid-template-columns: 0 1fr;
+  grid-gap: 2.5em;
+  align-items: center;
+  font-size: 15px;
+
+
+  @if ($multicolumn == false) {
+    max-width: 25ch;
+  }
+}
+
+ul li::before {
+  content: attr(data-icon);
+  font-size: 1.25em;
+}
+
+.followa{
+  color: #fff;
+}
+.cardcate{
+  color: #a6a6a6;
+  font-size: 12px;
+  flex: auto;
+  margin-left: 50px;
+}
+
+.modal{
+  width: 1000px;
+  height: 800px;
+}
+
+.customModalContent {
+  max-height: 800px; /* Your desired height */
+  overflow-y: auto; /* Adds a scrollbar if content exceeds max-height */
+}
+
+.image_container {
+  width: 37px;
+  height: 37px;
+  object-fit: cover;
+  border-radius: 50%;
+  overflow: hidden; 
+}
+
+
+.image_container img {
+  width: 100%;
+  height: 100%;
+}
+
+
+.xfilter_author{
+  position:relative;
+  left:20px;
+}
+
+.commentcounts{
+  margin-top: 100px;
+  text-align: right; /* Aligns content inside the div to the left */
+  padding: 10px 0; /* Optional padding, adjust as needed */
+}

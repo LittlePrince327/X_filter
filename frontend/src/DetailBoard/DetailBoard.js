@@ -384,7 +384,7 @@ const DetailBoard = () => {
     try {
       const response = await deleteBoard(postId, userToken);
       console.log(response.data);
-      navigate('/newboard');
+      navigate('/board');
     } catch (error) {
       console.error(
         "게시물 삭제 중 오류:",
@@ -520,7 +520,7 @@ const DetailBoard = () => {
           left: 0,
         }}
       >
-        <Link to="/newboard">
+        <Link to="/board">
           <img src={logo} alt="Logo" className={styles.logo} />
         </Link>
         <Menu
