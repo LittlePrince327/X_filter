@@ -97,20 +97,21 @@ const getRandomImage = () => {
 };
 
 const items = [
-  getItem("All", "1", <HeartOutlined />),
-  getItem("Daily", "2", <UserOutlined />),
-  getItem("Politics", "3", <RadarChartOutlined />),
-  getItem("Sports", "4", <TrophyOutlined />),
-  getItem("Technology", "5", <DesktopOutlined />),
-  getItem("Entertainment", "6", <StarOutlined />),
-  getItem("Science and Nature", "7", <ExperimentOutlined />),
-  getItem("Gaming", "8", <LikeOutlined />),
-  getItem("Books and Literature", "9", <ReadOutlined />),
-  getItem("Health and Fitness", "10", <MedicineBoxOutlined />),
-  getItem("Travel", "11", <CarOutlined />),
-  getItem("Food and Cooking", "12", <CoffeeOutlined />),
-  getItem("Art and Creativity", "13", <HighlightOutlined />),
-  getItem("Technology Help/Support", "14", <BugOutlined />),
+  getItem("My List", "1", <UserOutlined />),
+  getItem("All", "2", <HeartOutlined />),
+  getItem("Daily", "3", <UserOutlined />),
+  getItem("Politics", "4", <RadarChartOutlined />),
+  getItem("Sports", "5", <TrophyOutlined />),
+  getItem("Technology", "6", <DesktopOutlined />),
+  getItem("Entertainment", "7", <StarOutlined />),
+  getItem("Science and Nature", "8", <ExperimentOutlined />),
+  getItem("Gaming", "9", <LikeOutlined />),
+  getItem("Books and Literature", "10", <ReadOutlined />),
+  getItem("Health and Fitness", "11", <MedicineBoxOutlined />),
+  getItem("Travel", "12", <CarOutlined />),
+  getItem("Food and Cooking", "13", <CoffeeOutlined />),
+  getItem("Art and Creativity", "14", <HighlightOutlined />),
+  getItem("Technology Help/Support", "15", <BugOutlined />),
 ];
 
 const Newboard = () => {
@@ -178,6 +179,16 @@ const Newboard = () => {
             Authorization: `Bearer ${token}`,
           },
         });
+      } else if (category === "My List") {
+        const authorName = localStorage.getItem("author");
+        response = await axios.get(
+          `${BASE_URL}board/xfilter/?author_name=${authorName}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
       } else {
         response = await axios.get(
           `${BASE_URL}board/xfilter/?category=${category}`,
@@ -188,6 +199,7 @@ const Newboard = () => {
           }
         );
       }
+
       setXfilterList(response.data);
       setSelectedCategory(category);
     } catch (error) {
@@ -414,7 +426,7 @@ const Newboard = () => {
           {items.map((item) => (
             <Menu.Item
               style={{
-                width:250
+                width: 250
               }}
               key={item.key}
               icon={item.icon}
@@ -461,7 +473,7 @@ const Newboard = () => {
 
         <Content
           style={{
-            marginLeft:30,
+            marginLeft: 30,
             overflow: "auto",
             width: "100%",
             height: "calc(100vh - 64px)",
@@ -521,7 +533,7 @@ const Newboard = () => {
                   }}
                 >
                   <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                    <div style={{height: 120}}>
+                    <div style={{ height: 120 }}>
                       {xfilter.content.length > 20 ? (
                         <p>{`${xfilter.content.substring(0, 200)}...`}</p>
                       ) : (
@@ -542,7 +554,7 @@ const Newboard = () => {
                             <FontAwesomeIcon icon={faComment} /> {commentCounts[xfilter.id]} 댓글
                           </>
                         )}
-                        <br/>
+                        <br />
                         {likesCount[xfilter.id] > 0 && (
                           <>
                             <LikeOutlined /> {likesCount[xfilter.id]} 좋아요

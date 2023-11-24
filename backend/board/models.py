@@ -2,6 +2,7 @@ from django.db import models
 from login.models import CustomUser
 
 class Xfilter(models.Model):
+    My_List = 'My List'
     ALL = 'All'
     DAILY = 'Daily'
     SPORTS = 'Sports'
@@ -18,6 +19,7 @@ class Xfilter(models.Model):
     TECH_SUPPORT = 'Technology Help/Support'
 
     CATEGORY_CHOICES = [
+        (My_List, '내 글'),
         (ALL, '전체'),
         (DAILY, '일상'),
         (SPORTS, '스포츠'),
