@@ -294,6 +294,12 @@ const Makeboard = () => {
     }
   };
 
+  // 로그아웃시 로컬스토리지 데이터 초기화
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/");
+  };
+
 
   useEffect(() => {
     fetchXfilterList();
@@ -372,9 +378,9 @@ const Makeboard = () => {
               </button>
             </div>
             <div>
-              <Link to="/">
-                <button className={styles.logout}>로그아웃</button>
-              </Link>
+              <button className={styles.logout} onClick={handleLogout}>
+                로그아웃
+              </button>
             </div>
           </div>
         </Header>

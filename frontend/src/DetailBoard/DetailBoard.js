@@ -31,7 +31,7 @@ import logo from "./logo100.png";
 
 const { TextArea } = Input;
 const BASE_URL = "http://localhost:8000/";
-const { Header, Content, Footer } = Layout;                 
+const { Header, Content, Footer } = Layout;
 
 function getItem(label, key, icon) {
   return {
@@ -43,7 +43,7 @@ function getItem(label, key, icon) {
 
 
 const DetailBoard = () => {
-  const [collapsed, setCollapsed] = useState(false);                                   
+  const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
 
   const [xfilterList, setXfilterList] = useState([]);
@@ -68,7 +68,7 @@ const DetailBoard = () => {
     }
   };
 
-  
+
   // 검색 기능 ("/board" 페이지에서만 실행)
   const handleSearch = async () => {
     try {
@@ -239,7 +239,7 @@ const DetailBoard = () => {
   const fetchComments = async () => {
     try {
       const commentsResponse = await axios.get(
-        `${BASE_URL}board/xfilter/comment?xfilter_id=${xfilter_id}`,  
+        `${BASE_URL}board/xfilter/comment?xfilter_id=${xfilter_id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -293,7 +293,7 @@ const DetailBoard = () => {
 
   const handlePostComment = async (event) => {
     event.preventDefault();
-    const content = event.target.content.value; 
+    const content = event.target.content.value;
     const author = localStorage.getItem("author");
     const create_date = new Date().toISOString();
 
@@ -321,7 +321,7 @@ const DetailBoard = () => {
     try {
       const token = localStorage.getItem("token");
       const commentsResponse = await axios.get(
-        `${BASE_URL}board/xfilter/comment?xfilter_id=${xfilter_id}`,  
+        `${BASE_URL}board/xfilter/comment?xfilter_id=${xfilter_id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -351,7 +351,7 @@ const DetailBoard = () => {
     try {
       const author = localStorage.getItem('author');
       const response = await recommendComment(commentId, author, token);
-  
+
       const updatedCommentLikesResponse = await axios.get(`${BASE_URL}board/comment/like/${commentId}/`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -365,6 +365,12 @@ const DetailBoard = () => {
     } catch (error) {
       console.error('댓글 추천 오류:', error);
     }
+  };
+
+  // 로그아웃시 로컬스토리지 데이터 초기화
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/");
   };
 
   const formatDate = (dateString) => {
@@ -440,9 +446,9 @@ const DetailBoard = () => {
               </button>
             </div>
             <div>
-              <Link to="/">
-                <button className={styles.logout}>로그아웃</button>
-              </Link>
+              <button className={styles.logout} onClick={handleLogout}>
+                로그아웃
+              </button>
             </div>
           </div>
         </Header>
@@ -452,7 +458,7 @@ const DetailBoard = () => {
             overflow: "auto",
             width: "100%",
             paddingTop: 40,
-            display: "flex", 
+            display: "flex",
             justifyContent: "center",
           }}
         >
@@ -519,7 +525,7 @@ const DetailBoard = () => {
                         alignItems: "center",
                         width: "100%",
                       }}
-                      
+
                     >
                       <div style={{ display: "flex", alignItems: "center" }}>
                         <span>{comment.author}</span>
@@ -527,7 +533,7 @@ const DetailBoard = () => {
                         <p className={styles.commentdate}>
                           {formatDate(comment.create_date)}
                         </p>
-                        
+
                       </div>
                       <div>
                         {localStorage.getItem("author") === comment.author && (
@@ -548,7 +554,7 @@ const DetailBoard = () => {
                     </div>
                   }
                   bordered={false}
-                  style={{ width: "auto", marginTop: 10, background:"#ededed" }}
+                  style={{ width: "auto", marginTop: 10, background: "#ededed" }}
                 >
                   <div>
                     <p>{comment.content}</p>
