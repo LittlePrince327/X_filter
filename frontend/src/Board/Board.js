@@ -520,7 +520,7 @@ const Board = () => {
                   }
                   style={{
                     marginBottom: 30,
-                    width: 600,
+                    width: 500,
                     height: 400,
                     backgroundColor: categoryColors[xfilter.category] || "#ffffff",
                   }}
@@ -528,7 +528,7 @@ const Board = () => {
                   <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                     <div style={{ height: 120 }}>
                       {xfilter.content.length > 20 ? (
-                        <p>{`${xfilter.content.substring(0, 200)}...`}</p>
+                        <p>{`${xfilter.content.substring(0, 50)}...`}</p>
                       ) : (
                         <p>{xfilter.content}</p>
                       )}
