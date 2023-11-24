@@ -19,16 +19,16 @@ import {
 } from "@ant-design/icons";
 import {
   FloatButton,
-  Breadcrumb,
+  Breadcrumb,                                             // 이거
   Layout,
   Menu,
   theme,
   Input,
-  Space,
+  Space,                                                  // 이거
   Card,
   Row,
   Col,
-  Modal
+  Modal                                                   // 이거
 } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./Board.module.css";
@@ -46,18 +46,18 @@ import image7 from "../images/image7.png";
 import image8 from "../images/image8.png";
 import image9 from "../images/image9.png";
 import image10 from "../images/image10.png";
-// import image11 from "../images/image11.png";
-// import image12 from "../images/image12.png";
-// import image13 from "../images/image13.png";
-// import image14 from "../images/image14.png";
-// import image15 from "../images/image15.png";
-// import image16 from "../images/image16.png";
-// import image17 from "../images/image17.png";
-// import image18 from "../images/image18.png";
+// import image11 from "../images/image11.png";                            // 이거
+// import image12 from "../images/image12.png";                            // 이거
+// import image13 from "../images/image13.png";                            // 이거
+// import image14 from "../images/image14.png";                            // 이거
+// import image15 from "../images/image15.png";                            // 이거
+// import image16 from "../images/image16.png";                            // 이거
+// import image17 from "../images/image17.png";                            // 이거
+// import image18 from "../images/image18.png";                            // 이거
 
-const { Search } = Input;
+const { Search } = Input;                                                  // 이거
 const BASE_URL = "http://localhost:8000/";
-const suffix = (
+const suffix = (                                                           // 이거
   <AudioOutlined
     style={{
       fontSize: 16,
@@ -65,7 +65,7 @@ const suffix = (
     }}
   />
 );
-const { Header, Content, Footer, Sider } = Layout;
+const { Header, Content, Footer, Sider } = Layout;                         // 이거
 
 function getItem(label, key, icon) {
   return {
@@ -115,10 +115,10 @@ const items = [
 ];
 
 const Board = () => {
-  const [modal2Open, setModal2Open] = useState(false);
-  const [collapsed, setCollapsed] = useState(false);
+  const [modal2Open, setModal2Open] = useState(false);                          // 이거
+  const [collapsed, setCollapsed] = useState(false);                            // 이거
   const {
-    token: { colorBgContainer },
+    token: { colorBgContainer },                                                // 이거
   } = theme.useToken();
   const navigate = useNavigate();
 
@@ -133,6 +133,9 @@ const Board = () => {
   const [commentCounts, setCommentCounts] = useState({});
   const [likesCount, setLikesCount] = useState({});
 
+
+
+  // 게시글 불러오기
   const fetchXfilterList = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -147,6 +150,9 @@ const Board = () => {
     }
   };
 
+
+
+  // 게시글 검색
   const handleSearch = async () => {
     try {
       if (searchTerm.trim() !== "") {
@@ -168,11 +174,12 @@ const Board = () => {
     }
   };
 
+
+  // 카테고리별 게시글 불러오기
   const handleCategoryChange = async (category) => {
     try {
       const token = localStorage.getItem("token");
       let response;
-
       if (category === "All") {
         response = await axios.get(`${BASE_URL}board/xfilter/`, {
           headers: {
@@ -199,7 +206,6 @@ const Board = () => {
           }
         );
       }
-
       setXfilterList(response.data);
       setSelectedCategory(category);
     } catch (error) {
@@ -210,14 +216,14 @@ const Board = () => {
     }
   };
 
+
+  // 로그인 사용자 정보 로컬스토리지에 저장
   const fetchUserInfoAndSaveToLocalStorage = async () => {
     try {
       const token = localStorage.getItem("token");
       if (token) {
         const userData = await get_user_info(token);
-
         const fullName = userData.full_name;
-
         if (fullName) {
           localStorage.setItem("author", fullName);
         }
@@ -229,16 +235,16 @@ const Board = () => {
     }
   };
 
+
+  // 팔로우 기능
   const handleFollow = async (author) => {
     try {
       const token = localStorage.getItem("token");
       const follower_id = localStorage.getItem("author");
-
       if (!token) {
         console.log("User not logged in");
         return;
       }
-
       const response = await axios.post(
         `${BASE_URL}api/follow/`,
         { following_id: author, follower_id: follower_id },
@@ -248,15 +254,12 @@ const Board = () => {
           },
         }
       );
-
       if (response.data.message === "Success") {
         const isFollowing = response.data.is_following;
-
         setFollowStatus((prevStatus) => ({
           ...prevStatus,
           [author]: isFollowing,
         }));
-
         fetchXfilterList();
         console.log(isFollowing ? "Followed" : "Unfollowed");
       } else {
@@ -267,6 +270,8 @@ const Board = () => {
     }
   };
 
+
+  // 팔로우 목록 불러오기
   const fetchFollowingUsers = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -277,7 +282,6 @@ const Board = () => {
       });
       console.log(response.data);
       setFollowingUsers(response.data);
-
       const updatedFollowStatus = response.data.reduce(
         (status, user) => ({
           ...status,
@@ -291,7 +295,9 @@ const Board = () => {
     }
   };
 
-  const fetchPostsFromUser = async (username, userId) => {
+
+  // 팔로우중인 사용자가 작성한 게시글 불러오기
+  const fetchPostsFromUser = async (username) => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(`${BASE_URL}board/xfilter/`, {
@@ -308,11 +314,12 @@ const Board = () => {
     }
   };
 
+
+  // 게시글별 댓글 개수 표시
   const fetchCommentCounts = async () => {
     try {
       const token = localStorage.getItem("token");
       const counts = {};
-
       for (const xfilter of xfilterList) {
         const response = await axios.get(
           `${BASE_URL}board/xfilter/comments_count/${xfilter.id}`,
@@ -330,11 +337,12 @@ const Board = () => {
     }
   };
 
+
+  // 게시글별 좋아요 개수 표시
   const fetchLikesCount = async () => {
     try {
       const token = localStorage.getItem("token");
       const counts = {};
-
       for (const xfilter of xfilterList) {
         const response = await axios.get(
           `${BASE_URL}board/xfilter/like/${xfilter.id}/`,
@@ -352,10 +360,12 @@ const Board = () => {
     }
   };
 
+  // 로그아웃시 로컬스토리지 데이터 초기화
   const handleLogout = () => {
     localStorage.clear();
     navigate("/");
   };
+
 
   useEffect(() => {
     fetchXfilterList();
@@ -376,6 +386,8 @@ const Board = () => {
     fetchLikesCount();
   }, [xfilterList]);
 
+
+
   const categoryColors = {
     "Daily": "#FEE7E4",
     "Politics": "#E4FBEF",
@@ -391,6 +403,7 @@ const Board = () => {
     "Art and Creativity": "#DDDDDD",
     "Technology Help/Support": "#D2EEFF"
   };
+
 
   return (
     <Layout
