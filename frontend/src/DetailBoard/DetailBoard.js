@@ -682,7 +682,7 @@ const DetailBoard = () => {
             textAlign: "center",
           }}
         >
-          경빈's Design ©2023 Created by SeHuuuui
+          ⓒ XNS Company. All Rights Reserved.
         </Footer>
       </Layout>
       <div

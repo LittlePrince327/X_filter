@@ -550,7 +550,7 @@ const Makeboard = () => {
             textAlign: "center",
           }}
         >
-          XNS Design ©2023 Created by XNS Designer
+          ⓒ XNS Company. All Rights Reserved.
         </Footer>
       </Layout>
       <div
