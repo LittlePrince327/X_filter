@@ -52,7 +52,7 @@ function Join() {
         <h1 className='heading'>X_FILTER</h1>
         <div>
           <input
-            placeholder='Name'
+            placeholder='User ID'
             className='joinInput'
             type='text'
             onChange={(event) => setName(event.target.value)}
