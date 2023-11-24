@@ -17,7 +17,6 @@ function ResetPassword() {
         setErrorMessage('올바른 이메일 주소를 입력해주세요.');
         return;
       }
-
       Axios.post('http://localhost:8000/idpassword/resetpassword', {
         email: email,
         username: username,
@@ -39,6 +38,7 @@ function ResetPassword() {
     window.location.href = 'http://localhost:8000/idpassword/password_reset/';
   };
 
+  
   return (
     <div className={styles.outerContainer}>
     <header className={styles.header}>

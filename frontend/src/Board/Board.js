@@ -19,16 +19,12 @@ import {
 } from "@ant-design/icons";
 import {
   FloatButton,
-  Breadcrumb,                                             // 이거
   Layout,
   Menu,
   theme,
-  Input,
-  Space,                                                  // 이거
   Card,
   Row,
   Col,
-  Modal                                                   // 이거
 } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./Board.module.css";
@@ -46,26 +42,10 @@ import image7 from "../images/image7.png";
 import image8 from "../images/image8.png";
 import image9 from "../images/image9.png";
 import image10 from "../images/image10.png";
-// import image11 from "../images/image11.png";                            // 이거
-// import image12 from "../images/image12.png";                            // 이거
-// import image13 from "../images/image13.png";                            // 이거
-// import image14 from "../images/image14.png";                            // 이거
-// import image15 from "../images/image15.png";                            // 이거
-// import image16 from "../images/image16.png";                            // 이거
-// import image17 from "../images/image17.png";                            // 이거
-// import image18 from "../images/image18.png";                            // 이거
 
-const { Search } = Input;                                                  // 이거
+
 const BASE_URL = "http://localhost:8000/";
-const suffix = (                                                           // 이거
-  <AudioOutlined
-    style={{
-      fontSize: 16,
-      color: "#1677ff",
-    }}
-  />
-);
-const { Header, Content, Footer, Sider } = Layout;                         // 이거
+const { Header, Content, Footer } = Layout;                     
 
 function getItem(label, key, icon) {
   return {
@@ -96,6 +76,7 @@ const getRandomImage = () => {
   return images[randomIndex];
 };
 
+
 const items = [
   getItem("My List", "1", <UserOutlined />),
   getItem("All", "2", <HeartOutlined />),
@@ -115,11 +96,7 @@ const items = [
 ];
 
 const Board = () => {
-  const [modal2Open, setModal2Open] = useState(false);                          // 이거
-  const [collapsed, setCollapsed] = useState(false);                            // 이거
-  const {
-    token: { colorBgContainer },                                                // 이거
-  } = theme.useToken();
+  const [collapsed, setCollapsed] = useState(false);                            
   const navigate = useNavigate();
 
   const handleFloatButtonClick = () => {

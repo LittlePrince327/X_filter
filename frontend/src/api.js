@@ -23,7 +23,7 @@ async function postBoard(content, author, create_date, category, userToken) {
     content: content,
     author: author,
     create_date: create_date,
-    category: category,  // Include the category information
+    category: category,  
   };
 
   const headerOption = {
@@ -44,7 +44,7 @@ async function deleteBoard(postId, userToken) {
         Authorization: `Bearer ${userToken}`
       }
     });
-    return response.data; // 삭제 후 성공적인 응답 데이터 반환
+    return response.data; 
   } catch (error) {
     console.error('게시글 삭제 오류:', error);
     throw error;
@@ -109,11 +109,9 @@ async function deleteComment(commentId, userToken) {
 
 async function recommendComment(commentId, author, userToken) {
   try {
-    // Extract the actual ID from the commentId object
     const actualCommentId = commentId.id;
-
     const body = {
-      commentId: actualCommentId, // Use the extracted ID
+      commentId: actualCommentId, 
       author: author,
     };
     const headerOption = {
@@ -122,7 +120,7 @@ async function recommendComment(commentId, author, userToken) {
       },
     };
     const response = await axios.post(
-      `${BASE_URL}board/comment/vote/${commentId}/`, // Use the extracted ID in the URL
+      `${BASE_URL}board/comment/vote/${commentId}/`, 
       body,
       headerOption
     );
@@ -132,9 +130,6 @@ async function recommendComment(commentId, author, userToken) {
     throw error;
   }
 }
-
-
-
 
 export { 
   get_user_info,

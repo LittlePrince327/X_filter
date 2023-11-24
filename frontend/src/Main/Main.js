@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Axios from "axios";
-import "./Main.css"; // Main.css 파일 임포트
+import "./Main.css"; 
 import { Card } from "antd";
 import logo from './logo100.png';
 
@@ -18,7 +18,6 @@ const Main = () => {
         username: username,
         password: password,
       };
-
       Axios.post("http://localhost:8000/api/user-login/", requestData, {
         headers: {
           "Content-Type": "application/json",
@@ -39,14 +38,6 @@ const Main = () => {
     } else {
       setLoginError("아이디와 비밀번호를 입력해주세요.");
     }
-  };
-
-  const handleFindUsername = () => {
-    navigate("/findusername");
-  };
-
-  const handleForgotPassword = () => {
-    navigate("/resetpassword");
   };
 
   return (

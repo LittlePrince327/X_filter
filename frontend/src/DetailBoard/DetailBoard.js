@@ -17,11 +17,10 @@ import {
   HighlightOutlined,
   BugOutlined,
 } from "@ant-design/icons";
-import { Card, Layout, Menu, theme, Input, Space, Tooltip } from "antd";
+import { Card, Layout, Menu, theme, Input } from "antd";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import styles from "./DetailBoard.module.css";
 import {
-  get_user_info,
   postComment,
   deleteBoard,
   recommendBoard,
@@ -32,15 +31,7 @@ import logo from "./logo100.png";
 
 const { TextArea } = Input;
 const BASE_URL = "http://localhost:8000/";
-const suffix = (
-  <AudioOutlined
-    style={{
-      fontSize: 16,
-      color: "#1677ff",
-    }}
-  />
-);
-const { Header, Content, Footer, Sider } = Layout;
+const { Header, Content, Footer } = Layout;                 
 
 function getItem(label, key, icon) {
   return {
@@ -50,41 +41,19 @@ function getItem(label, key, icon) {
   };
 }
 
-const items = [
-  getItem("All", "1", <HeartOutlined />),
-  getItem("Daily", "2", <UserOutlined />),
-  getItem("Politics", "3", <RadarChartOutlined />),
-  getItem("Sports", "4", <TrophyOutlined />),
-  getItem("Technology", "5", <DesktopOutlined />),
-  getItem("Entertainment", "6", <StarOutlined />),
-  getItem("Science and Nature", "7", <ExperimentOutlined />),
-  getItem("Gaming", "8", <LikeOutlined />),
-  getItem("Books and Literature", "9", <ReadOutlined />),
-  getItem("Health and Fitness", "10", <MedicineBoxOutlined />),
-  getItem("Travel", "11", <CarOutlined />),
-  getItem("Food and Cooking", "12", <CoffeeOutlined />),
-  getItem("Art and Creativity", "13", <HighlightOutlined />),
-  getItem("Technology Help/Support", "14", <BugOutlined />),
-];
 
 const DetailBoard = () => {
-  const [collapsed, setCollapsed] = useState(false);
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
+  const [collapsed, setCollapsed] = useState(false);                                   
   const navigate = useNavigate();
 
-  const handleFloatButtonClick = () => {
-    navigate("/makeboard");
-  };
   const [xfilterList, setXfilterList] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [followStatus, setFollowStatus] = useState({});
   const [followingUsers, setFollowingUsers] = useState([]);
-  const [selectedUserId, setSelectedUserId] = useState(null);
-  const [value, setValue] = useState("");
 
+
+  // 게시글 데이터 불러오기
   const fetchXfilterList = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -99,6 +68,8 @@ const DetailBoard = () => {
     }
   };
 
+  
+  // 검색 기능 ("/board" 페이지에서만 실행)
   const handleSearch = async () => {
     try {
       if (searchTerm.trim() !== "") {
@@ -120,97 +91,9 @@ const DetailBoard = () => {
     }
   };
 
-  const handleCategoryChange = async (category) => {
-    try {
-      const token = localStorage.getItem("token");
-      let response;
-
-      if (category === "All") {
-        response = await axios.get(`${BASE_URL}board/xfilter/`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-      } else {
-        response = await axios.get(
-          `${BASE_URL}board/xfilter/?category=${category}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-      }
-      setXfilterList(response.data);
-      setSelectedCategory(category);
-    } catch (error) {
-      console.error(
-        `${category} 카테고리 xfilters를 가져오는 중 오류 발생:`,
-        error
-      );
-    }
-  };
-
-  const fetchUserInfoAndSaveToLocalStorage = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      if (token) {
-        const userData = await get_user_info(token);
-
-        const fullName = userData.full_name;
-
-        if (fullName) {
-          localStorage.setItem("author", fullName);
-        }
-      } else {
-        console.error("토큰이 존재하지 않습니다.");
-      }
-    } catch (error) {
-      console.error("사용자 정보를 가져오는 데 문제가 발생했습니다:", error);
-    }
-  };
-
-  const handleFollow = async (author) => {
-    try {
-      const token = localStorage.getItem("token");
-      const follower_id = localStorage.getItem("author");
-
-      if (!token) {
-        console.log("User not logged in");
-        return;
-      }
-
-      const response = await axios.post(
-        `${BASE_URL}api/follow/`,
-        { following_id: author, follower_id: follower_id },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (response.data.message === "Success") {
-        const isFollowing = response.data.is_following;
-
-        setFollowStatus((prevStatus) => ({
-          ...prevStatus,
-          [author]: isFollowing,
-        }));
-
-        fetchXfilterList();
-        console.log(isFollowing ? "Followed" : "Unfollowed");
-      } else {
-        console.error("Follow request failed");
-      }
-    } catch (error) {
-      console.error("Error handling follow:", error);
-    }
-  };
 
   useEffect(() => {
     fetchXfilterList();
-    fetchUserInfoAndSaveToLocalStorage();
     fetchFollowingUsers();
     const storedFollowStatus =
       JSON.parse(localStorage.getItem("followStatus")) || {};
@@ -221,6 +104,8 @@ const DetailBoard = () => {
     localStorage.setItem("followStatus", JSON.stringify(followStatus));
   }, [followStatus]);
 
+
+  // 팔로우 목록 불러오기
   const fetchFollowingUsers = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -245,7 +130,9 @@ const DetailBoard = () => {
     }
   };
 
-  const fetchPostsFromUser = async (username, userId) => {
+
+  // 
+  const fetchPostsFromUser = async (username) => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(`${BASE_URL}board/xfilter/`, {
@@ -262,22 +149,6 @@ const DetailBoard = () => {
     }
   };
 
-  const categoryColors = {
-    Daily: "#FEE7E4",
-    Politics: "#E4FBEF",
-    Sports: "#E0F3FB",
-    Technology: "#FEF6E7",
-    Entertainment: "#E9D9FF",
-    "Science and Nature": "#FFFCD9",
-    Gaming: "#FFD9FD",
-    "Books and Literature": "#FEE7E0",
-    "Health and Fitness": "#E3F0D8",
-    Travel: "#C7D0F1",
-    "Food and Cooking": "#F1E3C7",
-    "Art and Creativity": "#DDDDDD",
-    "Technology Help/Support": "#D2EEFF",
-    // ... add more categories and their corresponding colors
-  };
 
   const { id: xfilter_id } = useParams();
   const [xfilter, setXfilter] = useState(null);
@@ -288,7 +159,7 @@ const DetailBoard = () => {
   const [commentUpdated, setCommentUpdated] = useState(false);
   const [xfilterLikesCount, setXfilterLikesCount] = useState(0);
   const [commentLikesCounts, setCommentLikesCounts] = useState({});
-  const [likeClicked, setLikeClicked] = useState(false);
+
 
   const fetchXfilter = async () => {
     if (token) {
@@ -297,7 +168,6 @@ const DetailBoard = () => {
           Authorization: `Bearer ${token}`,
         },
       };
-
       try {
         const response = await axios.get(
           `${BASE_URL}board/xfilter/${xfilter_id}/`,
@@ -334,6 +204,8 @@ const DetailBoard = () => {
     }
   }, [xfilter, comments, token]);
 
+
+
   const fetchLikesCount = async () => {
     try {
       const xfilterLikesResponse = await axios.get(`${BASE_URL}board/xfilter/like/${xfilter_id}/`, {
@@ -362,6 +234,8 @@ const DetailBoard = () => {
     }
   };
 
+
+
   const fetchComments = async () => {
     try {
       const commentsResponse = await axios.get(
@@ -378,6 +252,8 @@ const DetailBoard = () => {
     }
   };
 
+
+
   const handledeleteBoard = async () => {
     const userToken = localStorage.getItem("token");
     const postId = xfilter.id;
@@ -392,6 +268,8 @@ const DetailBoard = () => {
       );
     }
   };
+
+
 
   const handlerecommendBoard = async () => {
     try {
@@ -410,6 +288,8 @@ const DetailBoard = () => {
       console.error('게시글 추천 오류:', error);
     }
   };
+
+
 
   const handlePostComment = async (event) => {
     event.preventDefault();
@@ -435,6 +315,8 @@ const DetailBoard = () => {
     }
   };
 
+
+
   const updateComments = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -452,6 +334,8 @@ const DetailBoard = () => {
     }
   };
 
+
+
   const handledeleteComment = async (commentId) => {
     try {
       const response = await deleteComment(commentId, token);
@@ -461,6 +345,8 @@ const DetailBoard = () => {
       console.error("댓글 삭제 오류:", error);
     }
   };
+
+
   const handlerecommendComment = async (commentId) => {
     try {
       const author = localStorage.getItem('author');
@@ -479,10 +365,6 @@ const DetailBoard = () => {
     } catch (error) {
       console.error('댓글 추천 오류:', error);
     }
-  };
-
-  const handleCommentButton = () => {
-    setIsCommenting(!isCommenting);
   };
 
   const formatDate = (dateString) => {
@@ -570,8 +452,8 @@ const DetailBoard = () => {
             overflow: "auto",
             width: "100%",
             paddingTop: 40,
-            display: "flex", // Added for flexbox layout
-            justifyContent: "center", // Centers the child horizontally
+            display: "flex", 
+            justifyContent: "center",
           }}
         >
           <div style={{ maxWidth: "800px", width: "100%", height: "auto" }}>

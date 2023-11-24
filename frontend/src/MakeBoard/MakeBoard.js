@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
   DesktopOutlined,
@@ -16,9 +16,6 @@ import {
   CoffeeOutlined,
   HighlightOutlined,
   BugOutlined,
-  CheckOutlined,
-  SmileFilled,
-  SmileOutlined,
 } from "@ant-design/icons";
 import {
   Layout,
@@ -56,16 +53,8 @@ const tagsData = [
   "Art and Creativity",
   "Technology Help/Support",
 ];
-const { Search } = Input;
+
 const BASE_URL = "http://localhost:8000/";
-const suffix = (
-  <AudioOutlined
-    style={{
-      fontSize: 16,
-      color: "#1677ff",
-    }}
-  />
-);
 const { Header, Content, Footer } = Layout;
 
 function getItem(label, key, icon) {
@@ -75,6 +64,7 @@ function getItem(label, key, icon) {
     label,
   };
 }
+
 const { TextArea } = Input;
 const onChange = (e) => {
   console.log("Change:", e.target.value);
@@ -110,17 +100,13 @@ const Makeboard = () => {
     setSelectedTags(nextSelectedTags);
   };
 
-  useEffect(() => {
-    // Any additional setup you want to perform on component mount
-  }, []);
 
   const handlepostBoard = async (event) => {
     event.preventDefault();
     const content = event.target.content.value;
     const author = localStorage.getItem("author");
     const create_date = new Date().toISOString();
-    const category = selectedTags[0] || "All"; // Default to 'All' if no category is selected
-
+    const category = selectedTags[0] || "All";
     try {
       const response = await postBoard(
         content,
@@ -135,15 +121,8 @@ const Makeboard = () => {
       console.error("게시물 제출 오류:", error);
     }
   };
-  const [modal2Open, setModal2Open] = useState(false);
-  const [collapsed, setCollapsed] = useState(false);
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
 
-  const handleFloatButtonClick = () => {
-    navigate("/makeboard");
-  };
+  const [collapsed, setCollapsed] = useState(false);
   const [xfilterList, setXfilterList] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -315,33 +294,11 @@ const Makeboard = () => {
     }
   };
 
-  const fetchCommentCounts = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const counts = {};
-
-      for (const xfilter of xfilterList) {
-        const response = await axios.get(
-          `${BASE_URL}board/xfilter/comments_count/${xfilter.id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        counts[xfilter.id] = response.data.comment_count;
-      }
-      setCommentCounts(counts);
-    } catch (error) {
-      console.error("Error fetching comment counts:", error);
-    }
-  };
 
   useEffect(() => {
     fetchXfilterList();
     fetchUserInfoAndSaveToLocalStorage();
     fetchFollowingUsers();
-    fetchCommentCounts();
     const storedFollowStatus =
       JSON.parse(localStorage.getItem("followStatus")) || {};
     setFollowStatus(storedFollowStatus);
@@ -351,25 +308,6 @@ const Makeboard = () => {
     localStorage.setItem("followStatus", JSON.stringify(followStatus));
   }, [followStatus]);
 
-  useEffect(() => {
-    fetchCommentCounts();
-  }, [xfilterList]);
-
-  const categoryColors = {
-    Daily: "#FEE7E4",
-    Politics: "#E4FBEF",
-    Sports: "#E0F3FB",
-    Technology: "#FEF6E7",
-    Entertainment: "#E9D9FF",
-    "Science and Nature": "#FFFCD9",
-    Gaming: "#FFD9FD",
-    "Books and Literature": "#FEE7E0",
-    "Health and Fitness": "#E3F0D8",
-    Travel: "#C7D0F1",
-    "Food and Cooking": "#F1E3C7",
-    "Art and Creativity": "#DDDDDD",
-    "Technology Help/Support": "#D2EEFF",
-  };
 
   return (
     <Layout
@@ -490,11 +428,11 @@ const Makeboard = () => {
               <div className={styles.posttitle}>
                 어떤이야기를 들려주실건가요?
               </div>
-             
+
               <div className={styles.textarea}>
                 <TextArea
                   showCount
-                  name="content" // 이 부분이 중요합니다
+                  name="content"
                   id="content"
                   maxLength={400}
                   onChange={onChange}
@@ -509,12 +447,12 @@ const Makeboard = () => {
                 />
               </div>
               <button type="submit" className={styles.postbtn2}>
-                  게시하기
-                </button>
+                게시하기
+              </button>
               <Button type="primary" danger>
                 필터링하기
               </Button>
-                {/* <Button type="primary" disabled>
+              {/* <Button type="primary" disabled>
                 게시불가
               </Button>          */}
             </form>
@@ -526,7 +464,8 @@ const Makeboard = () => {
                   <Paragraph
                     copyable={{ text: "복사된문장" }}
                     style={{
-                      margin: "auto",}}
+                      margin: "auto",
+                    }}
                   >
                     복사하기
                   </Paragraph>
@@ -539,8 +478,8 @@ const Makeboard = () => {
               }}
             >
               <p>아 오늘 점심 먹으러 충장로 나왔는데
-사람 진짜 많더라 .. 오늘 무슨 축제 있냐?
-어째튼 심심한데 저녁에 영화볼 친구 구함 !!</p>
+                사람 진짜 많더라 .. 오늘 무슨 축제 있냐?
+                어째튼 심심한데 저녁에 영화볼 친구 구함 !!</p>
             </Card>
           </div>
         </Content>
