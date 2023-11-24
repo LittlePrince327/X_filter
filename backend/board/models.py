@@ -55,3 +55,11 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.content[:50]  
+    
+
+class Report(models.Model):
+    content = models.TextField()  # Change this line
+    author = models.TextField()   # Change this line
+
+    def __str__(self):
+        return f'Report - {self.content}'

@@ -210,7 +210,7 @@
   margin-bottom: 8px;
 }
 
-.followli {
+/* .followli {
   display: grid;
   grid-template-columns: 0 1fr;
   grid-gap: 2.5em;
@@ -220,7 +220,7 @@
   @if ($multicolumn == false) {
     max-width: 25ch;
   }
-}
+} */
 
 ul li::before {
   content: attr(data-icon);
@@ -344,6 +344,21 @@ ul li::before {
   color: white; /* 마우스 오버 시의 글자색 */
 }
 
+.reportBtn {
+  display: flex;
+  justify-content: flex-end; /* Aligns children (button) to the right */
+  background-color: #878686;
+  color: #000000;
+  border-radius: 5px;
+  border: 1px solid #878686;
+}
+.reportBtn:hover {
+  border-radius: 5px;
+  border: 1px solid #35a15d;
+  background-color: #35a15d; /* 마우스 오버 시의 배경색 */
+  color: white; /* 마우스 오버 시의 글자색 */
+}
+
 
 .commentdel {
   margin-bottom: 5px;
@@ -353,6 +368,7 @@ ul li::before {
   color: #000000;
   border-radius: 5px;
   border: 1px solid rgb(255, 187, 187);
+  right:0px;
 }
 .commentdel:hover {
   border-radius: 5px;

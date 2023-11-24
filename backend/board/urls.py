@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import xfilter_views, comment_views, base_views
+from .views import xfilter_views, comment_views, base_views, report_views
 
 app_name = 'board'
 
@@ -21,4 +21,7 @@ urlpatterns = [
     path('comment/delete/<int:comment_id>/', comment_views.comment_delete_api, name='comment_delete'),                # 댓글 삭제
     path('comment/vote/<int:comment_id>/', comment_views.comment_vote_api, name='comment_vote'),                      # 댓글 좋아요
     path('comment/like/<int:comment_id>/', comment_views.comment_likes_count_api, name='comment_like_count'),         # 댓글 좋아요 수
+
+    # report
+    path('xfilter/report/', report_views.report_item_api, name='xfilter-report')                                         # 신고하기                                
 ]

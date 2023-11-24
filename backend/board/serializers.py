@@ -1,4 +1,4 @@
-from .models import Xfilter, Comment
+from .models import Xfilter, Comment, Report
 from rest_framework import serializers
 
 class XfilterSerializer(serializers.ModelSerializer):
@@ -11,3 +11,11 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ['id', 'content', 'create_date', 'author', 'xfilter_id']  
+
+
+
+class ReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Report
+        fields = ['id', 'content', 'author']  
+

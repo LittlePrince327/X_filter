@@ -28,6 +28,8 @@ import {
   recommendComment,
 } from "../api";
 import logo from "./logo100.png";
+import { message } from 'antd';
+
 
 const { TextArea } = Input;
 const BASE_URL = "http://localhost:8000/";
@@ -367,11 +369,38 @@ const DetailBoard = () => {
     }
   };
 
+
+  // 게시글 및 댓글 신고
+  const handleReport = async (content, author) => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.post(
+        `${BASE_URL}board/xfilter/report/`,
+        {
+          content: content,
+          author: author,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      message.success('신고가 정상적으로 등록되었습니다.');
+    } catch (error) {
+      console.error("Error reporting:", error);
+      message.error('이미 신고가 등록된 글입니다.');
+    }
+  };
+
+
   // 로그아웃시 로컬스토리지 데이터 초기화
   const handleLogout = () => {
     localStorage.clear();
     navigate("/");
   };
+
+
 
   const formatDate = (dateString) => {
     const options = {
@@ -486,6 +515,14 @@ const DetailBoard = () => {
                       삭제하기
                     </button>
                   )}
+                  <button
+                    onClick={() =>
+                      handleReport(xfilter.content, xfilter.author)
+                    }
+                    className={styles.reportBtn}
+                  >
+                    신고하기
+                  </button>
                 </div>
               }
               bordered={false}
@@ -544,6 +581,14 @@ const DetailBoard = () => {
                             댓글 삭제
                           </button>
                         )}
+                        <button
+                          onClick={() =>
+                            handleReport(comment.content, comment.author)
+                          }
+                          className={styles.reportBtn}
+                        >
+                          신고하기
+                        </button>
                         <button
                           onClick={() => handlerecommendComment(comment.id)}
                           className={styles.commentlike}
