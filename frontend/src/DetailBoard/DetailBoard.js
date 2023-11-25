@@ -383,16 +383,16 @@ const DetailBoard = () => {
   const handleReport = async (content, author) => {
     try {
       const token = localStorage.getItem("token");
-      const reporter = localStorage.getItem("author");  // Add this line
-      const category = selectedReportType;  // Make sure to get the selected report type from your state
+      const reporter = localStorage.getItem("author"); 
+      const category = selectedReportType; 
 
       await axios.post(
         `${BASE_URL}board/xfilter/report/`,
         {
           content: content,
           author: author,
-          reporter: reporter,  
-          category: category,  
+          reporter: reporter,
+          category: category,
         },
         {
           headers: {
@@ -408,6 +408,7 @@ const DetailBoard = () => {
     }
   };
 
+
   const openReportModal = () => {
     setModalVisible(true);
   };
@@ -419,9 +420,10 @@ const DetailBoard = () => {
     }
   };
 
+
   const handleReportTypeChange = (value) => {
     setSelectedReportType(value);
-    setCategory(value); 
+    setCategory(value);
   };
 
 
@@ -549,7 +551,7 @@ const DetailBoard = () => {
                     신고하기
                   </button>
                   <Modal
-                    title="Select Report Type"
+                    title="신고 사유를 선택해 주세요."
                     visible={modalVisible}
                     onCancel={() => setModalVisible(false)}
                     footer={[
@@ -562,7 +564,7 @@ const DetailBoard = () => {
                     ]}
                   >
                     <Select
-                      placeholder="Select a report type"
+                      placeholder="신고 사유를 선택해 주세요."
                       style={{ width: "100%" }}
                       onChange={handleReportTypeChange}
                     >
@@ -638,11 +640,14 @@ const DetailBoard = () => {
                             댓글 삭제
                           </button>
                         )}
-                        <button onClick={openReportModal} className={styles.reportBtn}>
+                        <button
+                          onClick={() => handleReport(comment.content, comment.author)}
+                          className={styles.reportBtn}
+                        >
                           신고하기
                         </button>
                         <Modal
-                          title="Select Report Type"
+                          title="신고 사유를 선택해 주세요."
                           visible={modalVisible}
                           onCancel={() => setModalVisible(false)}
                           footer={[
@@ -655,7 +660,7 @@ const DetailBoard = () => {
                           ]}
                         >
                           <Select
-                            placeholder="Select a report type"
+                            placeholder="신고 사유를 선택해 주세요."
                             style={{ width: "100%" }}
                             onChange={handleReportTypeChange}
                           >

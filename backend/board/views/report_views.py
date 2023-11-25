@@ -16,6 +16,7 @@ def report_item_api(request):
                 reporter=data.get('reporter'),
                 category=data.get('category')
             ).first()
+            print(data)
             if existing_report:
                 return JsonResponse({'message': '이미 신고된 내용입니다.'}, status=400)
             serializer = ReportSerializer(data=data)
