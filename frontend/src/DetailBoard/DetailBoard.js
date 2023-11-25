@@ -411,10 +411,6 @@ const DetailBoard = () => {
   };
 
 
-  const openReportModal = () => {
-    setModalVisible(true);
-  };
-
   const submitReport = () => {
     setModalVisible(false);
     if (category) {
@@ -595,7 +591,6 @@ const DetailBoard = () => {
                   좋아요❤️ {xfilterLikesCount}
                 </button>
               </div>
-
               <form onSubmit={handlePostComment} className={styles.comment}>
                 <TextArea
                   style={{
@@ -607,7 +602,6 @@ const DetailBoard = () => {
                   placeholder="Controlled autosize"
                   autoSize={{ minRows: 3, maxRows: 5 }}
                 />
-
                 <button type="submit" className={styles.inputbtn}>
                   댓글<tr></tr>등록
                 </button>
