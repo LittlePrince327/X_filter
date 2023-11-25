@@ -17,5 +17,5 @@ class CommentSerializer(serializers.ModelSerializer):
 class ReportSerializer(serializers.ModelSerializer):
     class Meta:
         model = Report
-        fields = ['id', 'content', 'author']  
+        fields = ['id', 'content', 'author', 'reporter', 'category']
 
