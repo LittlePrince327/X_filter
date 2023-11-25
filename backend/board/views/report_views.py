@@ -18,8 +18,6 @@ def report_item_api(request):
             ).first()
             if existing_report:
                 return JsonResponse({'message': '이미 신고된 내용입니다.'}, status=400)
-            print(data)
-
             serializer = ReportSerializer(data=data)
             if serializer.is_valid():
                 serializer.save()
