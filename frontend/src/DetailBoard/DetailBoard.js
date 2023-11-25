@@ -391,8 +391,8 @@ const DetailBoard = () => {
         {
           content: content,
           author: author,
-          reporter: reporter,  // Add this line
-          category: category,  // Add this line
+          reporter: reporter,  
+          category: category,  
         },
         {
           headers: {
@@ -421,7 +421,7 @@ const DetailBoard = () => {
 
   const handleReportTypeChange = (value) => {
     setSelectedReportType(value);
-    setCategory(value); // Add this line to update the category state
+    setCategory(value); 
   };
 
 
