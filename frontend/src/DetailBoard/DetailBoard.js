@@ -60,6 +60,8 @@ const DetailBoard = () => {
   const [selectedReportType, setSelectedReportType] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [category, setCategory] = useState(null);
+  const [modalVisibleForBoard, setModalVisibleForBoard] = useState(false);
+  const [modalVisibleForComment, setModalVisibleForComment] = useState(false);
 
 
 
@@ -383,8 +385,8 @@ const DetailBoard = () => {
   const handleReport = async (content, author) => {
     try {
       const token = localStorage.getItem("token");
-      const reporter = localStorage.getItem("author"); 
-      const category = selectedReportType; 
+      const reporter = localStorage.getItem("author");
+      const category = selectedReportType;
 
       await axios.post(
         `${BASE_URL}board/xfilter/report/`,
@@ -547,13 +549,13 @@ const DetailBoard = () => {
                       삭제하기
                     </button>
                   )}
-                  <button onClick={openReportModal} className={styles.reportBtn}>
+                  <button onClick={() => setModalVisibleForBoard(true)} className={styles.reportBtn}>
                     신고하기
                   </button>
                   <Modal
                     title="신고 사유를 선택해 주세요."
-                    visible={modalVisible}
-                    onCancel={() => setModalVisible(false)}
+                    visible={modalVisibleForBoard}
+                    onCancel={() => setModalVisibleForBoard(false)}
                     footer={[
                       <Button key="back" onClick={() => setModalVisible(false)}>
                         취소하기
@@ -640,21 +642,18 @@ const DetailBoard = () => {
                             댓글 삭제
                           </button>
                         )}
-                        <button
-                          onClick={() => handleReport(comment.content, comment.author)}
-                          className={styles.reportBtn}
-                        >
+                        <button onClick={() => setModalVisibleForComment(true)} className={styles.reportBtn}>
                           신고하기
                         </button>
                         <Modal
                           title="신고 사유를 선택해 주세요."
-                          visible={modalVisible}
-                          onCancel={() => setModalVisible(false)}
+                          visible={modalVisibleForComment}
+                          onCancel={() => setModalVisibleForComment(false)}
                           footer={[
                             <Button key="back" onClick={() => setModalVisible(false)}>
                               취소하기
                             </Button>,
-                            <Button key="submit" type="primary" onClick={submitReport}>
+                            <Button key="submit" type="primary" onClick={() => handleReport(comment.content, comment.author, selectedReportType)}>
                               신고하기
                             </Button>,
                           ]}
