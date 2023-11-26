@@ -16,6 +16,7 @@ import {
   CoffeeOutlined,
   HighlightOutlined,
   BugOutlined,
+  EllipsisOutlined
 } from "@ant-design/icons";
 import { Card, Layout, Menu, theme, Input } from "antd";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -42,6 +43,25 @@ function getItem(label, key, icon) {
     label,
   };
 }
+
+const items = [
+  getItem("My List", "1", <EllipsisOutlined />),
+  getItem("All", "2", <HeartOutlined />),
+  getItem("Daily", "3", <UserOutlined />),
+  getItem("Politics", "4", <RadarChartOutlined />),
+  getItem("Sports", "5", <TrophyOutlined />),
+  getItem("Technology", "6", <DesktopOutlined />),
+  getItem("Entertainment", "7", <StarOutlined />),
+  getItem("Science and Nature", "8", <ExperimentOutlined />),
+  getItem("Gaming", "9", <LikeOutlined />),
+  getItem("Books and Literature", "10", <ReadOutlined />),
+  getItem("Health and Fitness", "11", <MedicineBoxOutlined />),
+  getItem("Travel", "12", <CarOutlined />),
+  getItem("Food and Cooking", "13", <CoffeeOutlined />),
+  getItem("Art and Creativity", "14", <HighlightOutlined />),
+  getItem("Technology Help/Support", "15", <BugOutlined />),
+];
+
 
 
 const DetailBoard = () => {
@@ -430,7 +450,7 @@ const DetailBoard = () => {
     >
       <div
         style={{
-          width: collapsed ? "80px" : "200px",
+          width: collapsed ? "80px" : "250px",
           height: "100vh",
           backgroundColor: "#001529",
           position: "fixed",
@@ -446,14 +466,26 @@ const DetailBoard = () => {
           defaultSelectedKeys={["1"]}
           mode="inline"
           selectedKeys={[selectedCategory]}
-        ></Menu>
+        >
+          {items.map((item) => (
+            <Menu.Item
+              style={{
+                width: 250
+              }}
+              key={item.key}
+              icon={item.icon}
+            >
+              {item.label}
+            </Menu.Item>
+          ))}
+        </Menu>
       </div>
       <Layout
         style={{
           marginLeft: collapsed ? 80 : 200,
           marginRight: 200,
           height: "100vh",
-        }}
+        }}go
       >
         <Header
           style={{
@@ -515,7 +547,7 @@ const DetailBoard = () => {
                       삭제하기
                     </button>
                   )}
-                  <button
+                  <button 
                     onClick={() =>
                       handleReport(xfilter.content, xfilter.author)
                     }
@@ -585,7 +617,7 @@ const DetailBoard = () => {
                           onClick={() =>
                             handleReport(comment.content, comment.author)
                           }
-                          className={styles.reportBtn}
+                          className={styles.reportBtncom}
                         >
                           신고하기
                         </button>
@@ -627,7 +659,8 @@ const DetailBoard = () => {
           right: 0,
         }}
       >
-        <p className={styles.siderp}>팔로우목록</p>
+        <p className={styles.siderp}>팔로우목록({followingUsers.length})
+        </p>
         <ul>
           {followingUsers.map((user) => (
             <li key={user.id} className={styles.followli} data-icon="🤍">
