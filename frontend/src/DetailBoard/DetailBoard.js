@@ -577,7 +577,6 @@ const DetailBoard = () => {
                       삭제하기
                     </button>
                   )}
-                  <button onClick={() => setModalVisibleForBoard(true)} className={styles.reportBtn}>
                   <button 
                     onClick={() =>
                       handleReport(xfilter.content, xfilter.author)
