@@ -30,6 +30,9 @@ import {
 } from "../api";
 import logo from "./logo100.png";
 import { message } from 'antd';
+import { Modal, Select } from "antd";
+import { Button } from "antd";
+
 
 
 const { TextArea } = Input;
@@ -73,6 +76,14 @@ const DetailBoard = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [followStatus, setFollowStatus] = useState({});
   const [followingUsers, setFollowingUsers] = useState([]);
+  const { Option } = Select;
+  const [selectedReportType, setSelectedReportType] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [category, setCategory] = useState(null);
+  const [modalVisibleForBoard, setModalVisibleForBoard] = useState(false);
+  const [modalVisibleForComment, setModalVisibleForComment] = useState(false);
+
+
 
 
   // 게시글 데이터 불러오기
@@ -394,11 +405,16 @@ const DetailBoard = () => {
   const handleReport = async (content, author) => {
     try {
       const token = localStorage.getItem("token");
+      const reporter = localStorage.getItem("author");
+      const category = selectedReportType;
+
       await axios.post(
         `${BASE_URL}board/xfilter/report/`,
         {
           content: content,
           author: author,
+          reporter: reporter,
+          category: category,
         },
         {
           headers: {
@@ -406,11 +422,26 @@ const DetailBoard = () => {
           },
         }
       );
+
       message.success('신고가 정상적으로 등록되었습니다.');
     } catch (error) {
       console.error("Error reporting:", error);
       message.error('이미 신고가 등록된 글입니다.');
     }
+  };
+
+
+  const submitReport = () => {
+    setModalVisible(false);
+    if (category) {
+      handleReport(xfilter.content, xfilter.author);
+    }
+  };
+
+
+  const handleReportTypeChange = (value) => {
+    setSelectedReportType(value);
+    setCategory(value);
   };
 
 
@@ -513,7 +544,6 @@ const DetailBoard = () => {
             </div>
           </div>
         </Header>
-
         <Content
           style={{
             overflow: "auto",
@@ -547,6 +577,7 @@ const DetailBoard = () => {
                       삭제하기
                     </button>
                   )}
+                  <button onClick={() => setModalVisibleForBoard(true)} className={styles.reportBtn}>
                   <button 
                     onClick={() =>
                       handleReport(xfilter.content, xfilter.author)
@@ -555,6 +586,38 @@ const DetailBoard = () => {
                   >
                     신고하기
                   </button>
+                  <Modal
+                    title="신고 사유를 선택해 주세요."
+                    visible={modalVisibleForBoard}
+                    onCancel={() => setModalVisibleForBoard(false)}
+                    footer={[
+                      <Button key="back" onClick={() => setModalVisible(false)}>
+                        취소하기
+                      </Button>,
+                      <Button key="submit" type="primary" onClick={submitReport}>
+                        신고하기
+                      </Button>,
+                    ]}
+                  >
+                    <Select
+                      placeholder="신고 사유를 선택해 주세요."
+                      style={{ width: "100%" }}
+                      onChange={handleReportTypeChange}
+                    >
+                      <Option value="SPAM">스팸 (Spam)</Option>
+                      <Option value="ADULT_CONTENT">음란 또는 성적 행위 (Obscene or Sexual Activity)</Option>
+                      <Option value="SEXUAL_CRIME_AGAINST_MINORS">아동 및 청소년 대상 성범죄 (Sexual Crimes Against Children and Adolescents)</Option>
+                      <Option value="ABUSE">욕설 폭력 혐오 (Abomination of Profanity and Violence)</Option>
+                      <Option value="ILLEGAL_PRODUCTS_SERVICES">불법 상품 및 서비스 (Illegal Goods and Services)</Option>
+                      <Option value="UNAUTHORIZED_COLLECTION_DISCLOSURE_PERSONAL_INFORMATION">개인정보 무단 수집 및 유포 (Unauthorized Collection and Distribution of Personal Information)</Option>
+                      <Option value="ABNORMAL_SERVICE_USAGE">비정상적인 서비스 이용 (Abnormal Service Use)</Option>
+                      <Option value="SUICIDE_SELF_HARM">자살 및 자해 (Suicidal Self-Harm)</Option>
+                      <Option value="IMPERSONATION">사칭 (Fraudulent Impersonation)</Option>
+                      <Option value="DEFAMATION_COPYRIGHT_INFRINGEMENT">명예훼손 및 저작권 침해 (Defamation and Copyright Infringement)</Option>
+                      <Option value="ILLEGAL_DISTRIBUTION">불법촬영물 및 유통 (Distribution of Illegal Footage, etc.)</Option>
+                      <Option value="ETC">기타 (Other)</Option>
+                    </Select>
+                  </Modal>
                 </div>
               }
               bordered={false}
@@ -566,7 +629,6 @@ const DetailBoard = () => {
                   좋아요❤️ {xfilterLikesCount}
                 </button>
               </div>
-
               <form onSubmit={handlePostComment} className={styles.comment}>
                 <TextArea
                   style={{
@@ -578,7 +640,6 @@ const DetailBoard = () => {
                   placeholder="Controlled autosize"
                   autoSize={{ minRows: 3, maxRows: 5 }}
                 />
-
                 <button type="submit" className={styles.inputbtn}>
                   댓글<tr></tr>등록
                 </button>
@@ -617,10 +678,42 @@ const DetailBoard = () => {
                           onClick={() =>
                             handleReport(comment.content, comment.author)
                           }
-                          className={styles.reportBtncom}
+                          className={styles.reportBtn}
                         >
                           신고하기
                         </button>
+                        <Modal
+                          title="신고 사유를 선택해 주세요."
+                          visible={modalVisibleForComment}
+                          onCancel={() => setModalVisibleForComment(false)}
+                          footer={[
+                            <Button key="back" onClick={() => setModalVisible(false)}>
+                              취소하기
+                            </Button>,
+                            <Button key="submit" type="primary" onClick={() => handleReport(comment.content, comment.author, selectedReportType)}>
+                              신고하기
+                            </Button>,
+                          ]}
+                        >
+                          <Select
+                            placeholder="신고 사유를 선택해 주세요."
+                            style={{ width: "100%" }}
+                            onChange={handleReportTypeChange}
+                          >
+                            <Option value="SPAM">스팸 (Spam)</Option>
+                            <Option value="ADULT_CONTENT">음란 또는 성적 행위 (Obscene or Sexual Activity)</Option>
+                            <Option value="SEXUAL_CRIME_AGAINST_MINORS">아동 및 청소년 대상 성범죄 (Sexual Crimes Against Children and Adolescents)</Option>
+                            <Option value="ABUSE">욕설 폭력 혐오 (Abomination of Profanity and Violence)</Option>
+                            <Option value="ILLEGAL_PRODUCTS_SERVICES">불법 상품 및 서비스 (Illegal Goods and Services)</Option>
+                            <Option value="UNAUTHORIZED_COLLECTION_DISCLOSURE_PERSONAL_INFORMATION">개인정보 무단 수집 및 유포 (Unauthorized Collection and Distribution of Personal Information)</Option>
+                            <Option value="ABNORMAL_SERVICE_USAGE">비정상적인 서비스 이용 (Abnormal Service Use)</Option>
+                            <Option value="SUICIDE_SELF_HARM">자살 및 자해 (Suicidal Self-Harm)</Option>
+                            <Option value="IMPERSONATION">사칭 (Fraudulent Impersonation)</Option>
+                            <Option value="DEFAMATION_COPYRIGHT_INFRINGEMENT">명예훼손 및 저작권 침해 (Defamation and Copyright Infringement)</Option>
+                            <Option value="ILLEGAL_DISTRIBUTION">불법촬영물 및 유통 (Distribution of Illegal Footage, etc.)</Option>
+                            <Option value="ETC">기타 (Other)</Option>
+                          </Select>
+                        </Modal>
                         <button
                           onClick={() => handlerecommendComment(comment.id)}
                           className={styles.commentlike}

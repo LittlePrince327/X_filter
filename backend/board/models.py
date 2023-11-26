@@ -58,8 +58,10 @@ class Comment(models.Model):
     
 
 class Report(models.Model):
-    content = models.TextField()  # Change this line
-    author = models.TextField()   # Change this line
+    content = models.TextField()
+    author = models.TextField()
+    reporter = models.TextField()  
+    category = models.CharField(max_length=200, default="ETC", blank=True)  
 
     def __str__(self):
         return f'Report - {self.content}'
