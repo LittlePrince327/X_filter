@@ -294,7 +294,7 @@ ul li::before {
 }
 
 .del {
-  margin-right: 20px;
+  margin-right: 10px;
   background-color: rgb(255, 187, 187);
   color: #000000;
   border-radius: 5px;
@@ -302,9 +302,9 @@ ul li::before {
 }
 .del:hover {
   border-radius: 5px;
-  border: 1px solid rgb(177, 130, 130);
-  background-color: rgb(177, 130, 130); /* 마우스 오버 시의 배경색 */
-  color: white; /* 마우스 오버 시의 글자색 */
+  border: 1px solid rgb(255, 235, 235);
+  background-color: rgb(255, 231, 231); /* 마우스 오버 시의 배경색 */
+  color: rgb(0, 0, 0); /* 마우스 오버 시의 글자색 */
 }
 
 .inputbtn {
@@ -330,40 +330,56 @@ ul li::before {
 }
 
 .commentlike {
-  display: flex;
-  justify-content: flex-end; /* Aligns children (button) to the right */
-  background-color: #ffe100;
+  margin-right: 10px;
+  background-color: rgb(255, 209, 45);
   color: #000000;
   border-radius: 5px;
-  border: 1px solid #ffe100;
+  border: 1px solid rgb(255, 209, 45);
 }
 .commentlike:hover {
   border-radius: 5px;
-  border: 1px solid #356aa1;
-  background-color: #356aa1; /* 마우스 오버 시의 배경색 */
-  color: white; /* 마우스 오버 시의 글자색 */
+  border: 1px solid rgb(255, 241, 181);
+  background-color: rgb(255, 241, 181); /* 마우스 오버 시의 배경색 */
+  color: rgb(0, 0, 0); /* 마우스 오버 시의 글자색 */
 }
 
+
 .reportBtn {
-  display: flex;
-  justify-content: flex-end; /* Aligns children (button) to the right */
-  background-color: #878686;
-  color: #000000;
+  margin-right: 10px;
+  background-color: rgb(249, 54, 54);
+  color: #ffffff;
   border-radius: 5px;
-  border: 1px solid #878686;
+  border: 1px solid rgb(249, 54, 54);
 }
 .reportBtn:hover {
   border-radius: 5px;
-  border: 1px solid #35a15d;
-  background-color: #35a15d; /* 마우스 오버 시의 배경색 */
+  border: 1px solid rgb(255, 118, 118);
+  background-color: rgb(255, 118, 118); /* 마우스 오버 시의 배경색 */
   color: white; /* 마우스 오버 시의 글자색 */
 }
+
+
+.reportBtnCom {
+  margin-right: 10px;
+  background-color: rgb(249, 54, 54);
+  color: #ffffff;
+  border-radius: 5px;
+  border: 1px solid rgb(249, 54, 54);
+}
+
+.reportBtnCom:hover {
+  border-radius: 5px;
+  border: 1px solid rgb(177, 130, 130);
+  background-color: rgb(177, 130, 130); /* 마우스 오버 시의 배경색 */
+  color: white; /* 마우스 오버 시의 글자색 */
+}
+
 
 
 .commentdel {
   margin-bottom: 5px;
   width: 70px;
-  margin-right: 20px;
+  margin-right: 10px;
   background-color: rgb(255, 187, 187);
   color: #000000;
   border-radius: 5px;
@@ -372,7 +388,7 @@ ul li::before {
 }
 .commentdel:hover {
   border-radius: 5px;
-  border: 1px solid rgb(177, 130, 130);
-  background-color: rgb(177, 130, 130); /* 마우스 오버 시의 배경색 */
-  color: white; /* 마우스 오버 시의 글자색 */
+  border: 1px solid rgb(255, 235, 235);
+  background-color: rgb(255, 231, 231); /* 마우스 오버 시의 배경색 */
+  color: rgb(0, 0, 0); /* 마우스 오버 시의 글자색 */
 }

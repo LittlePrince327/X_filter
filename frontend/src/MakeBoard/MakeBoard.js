@@ -323,7 +323,7 @@ const Makeboard = () => {
     >
       <div
         style={{
-          width: collapsed ? "80px" : "200px",
+          width: collapsed ? "80px" : "250px",
           height: "100vh",
           backgroundColor: "#001529",
           position: "fixed",
@@ -353,7 +353,7 @@ const Makeboard = () => {
       </div>
       <Layout
         style={{
-          marginLeft: collapsed ? 80 : 200,
+          marginLeft: collapsed ? 80 : 250,
           marginRight: 200,
           height: "100vh",
         }}
@@ -507,7 +507,7 @@ const Makeboard = () => {
           right: 0,
         }}
       >
-        <p className={styles.siderp}>팔로우목록</p>
+        <p className={styles.siderp}>팔로우목록 ({followingUsers.length})</p>
         <ul>
           {followingUsers.map((user) => (
             <li key={user.id} className={styles.followli} data-icon="🤍">
