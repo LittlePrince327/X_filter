@@ -23,5 +23,8 @@ urlpatterns = [
     path('comment/like/<int:comment_id>/', comment_views.comment_likes_count_api, name='comment_like_count'),         # 댓글 좋아요 수
 
     # report
-    path('xfilter/report/', report_views.report_item_api, name='xfilter-report')                                         # 신고하기                                
+    path('xfilter/report/', report_views.report_item_api, name='xfilter-report'),                                        # 신고하기      
+
+    # filter
+    path('xfilter/filter/', xfilter_views.boardfilter_create_api, name='boardfilter')
 ]

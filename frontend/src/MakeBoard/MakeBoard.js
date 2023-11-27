@@ -122,6 +122,35 @@ const Makeboard = () => {
     }
   };
 
+  const handleBoardFilterCreate = async (event) => {
+    event.preventDefault();
+    const form = document.getElementById('filterForm');
+    if (form && form.elements.content) {
+      const content = form.elements.content.value;
+      try {
+        const response = await axios.post(
+          `${BASE_URL}/board/xfilter/filter/`,
+          {
+            content: content,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${userToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log(response);
+      } catch (error) {
+        console.error("게시물 제출 오류:", error);
+      }
+    } else {
+      console.error("Form or textarea not found");
+    }
+  };
+  
+
+
   const [collapsed, setCollapsed] = useState(false);
   const [xfilterList, setXfilterList] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -443,7 +472,7 @@ const Makeboard = () => {
               marginTop: 60,
             }}
           >
-            <form onSubmit={handlepostBoard} style={{ marginRight: "20px" }}>
+            <form id="filterForm" onSubmit={handlepostBoard} style={{ marginRight: "20px" }}>
               <div className={styles.posttitle}>
                 어떤이야기를 들려주실건가요?
               </div>
@@ -467,9 +496,14 @@ const Makeboard = () => {
               <button type="submit" className={styles.postbtn2}>
                 게시하기
               </button>
-              <Button type="primary" danger>
+              <Button
+                type="primary"
+                danger
+                onClick={(event) => handleBoardFilterCreate(event)}
+              >
                 필터링하기
               </Button>
+
               {/* <Button type="primary" disabled>
                 게시불가
               </Button>          */}

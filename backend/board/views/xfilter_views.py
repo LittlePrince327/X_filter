@@ -101,3 +101,21 @@ def xfitler_comment_count_api(request, xfilter_id):
     except Exception as e:
         # 예외 발생 시 에러 응답 반환
         return JsonResponse({'message': str(e)}, status=500)
+    
+
+
+@csrf_exempt
+def boardfilter_create_api(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+
+            print(data)
+            print(data)
+            print(data)
+
+            return JsonResponse({'message': 'BoardFilter created'}, status=200)
+        except Exception as e:
+            return JsonResponse({'message': 'Internal Server Error', 'details': str(e)}, status=500)
+    
+    return JsonResponse({'message': 'Only POST requests allowed'}, status=405)
