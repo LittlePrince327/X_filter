@@ -7,7 +7,9 @@
 }
 
 .main_card{
-    left: -10%; 
+  margin: 20px 20px 20px 20px;
+  width: 400px;
+  height: 500px;
 }
 
 .main_text{
@@ -16,8 +18,8 @@
     /* writing-mode: vertical-lr; */
     font-size: 35px;
     position: relative;
-    left: -15%; /* 중앙에서 왼쪽으로 이동 */
     color: #ffffff;
+    margin: 20px 20px 20px 20px;
 }
 
 .main_footer{
@@ -150,16 +152,6 @@ html, body {
     margin-top: 20px;
   }
   
-  @media (min-width: 320px) and (max-width: 480px) {
-    .joinOuterContainer {
-      height: 100%;
-    }
-  
-    .joinInnerContainer {
-      width: 90%;
-    }
-  }
-  
   button:focus {
     outline: 0;
   }
@@ -175,4 +167,19 @@ html, body {
     &::placeholder {
       color: #ccc; /* 회색으로 변경 */
     }
+  }
+
+  @media (max-width: 768px) {
+    .maincontainer {
+      display: flex;
+    align-items: center; /* vertically centers child items */
+    justify-content: center; /* horizontally centers child items */
+    }
+    .main_text{
+      display: none;
+  }
+  .main_card{
+    align-items: center;
+    justify-content: center;
+}
   }

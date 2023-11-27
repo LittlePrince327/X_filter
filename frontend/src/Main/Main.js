@@ -57,10 +57,6 @@ const Main = () => {
        className="main_card"
         title="지금 로그인 및 회원가입 하기"
         bordered={false}
-        style={{
-          width: 400,
-          height: 500,
-        }}
       >
         <div>
           <input

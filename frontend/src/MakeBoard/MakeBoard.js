@@ -409,7 +409,7 @@ const Makeboard = () => {
               margin: "20px 30px 0px 40px",
             }}
           >
-            카테고리:&nbsp;&nbsp;
+            카테고리:
             <Space size={[0, 8]} wrap>
               {tagsData.map((tag) => (
                 <CheckableTag

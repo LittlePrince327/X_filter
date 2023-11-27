@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
+  TableOutlined,
   DesktopOutlined,
   RadarChartOutlined,
   HeartOutlined,
@@ -14,7 +15,7 @@ import {
   CarOutlined,
   CoffeeOutlined,
   HighlightOutlined,
-  BugOutlined
+  BugOutlined,
 } from "@ant-design/icons";
 import {
   FloatButton,
@@ -23,6 +24,8 @@ import {
   Card,
   Row,
   Col,
+  Drawer,
+  Button,
 } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./Board.module.css";
@@ -41,9 +44,8 @@ import image8 from "../images/image8.png";
 import image9 from "../images/image9.png";
 import image10 from "../images/image10.png";
 
-
 const BASE_URL = "http://localhost:8000/";
-const { Header, Content, Footer } = Layout;                     
+const { Header, Content, Footer } = Layout;
 
 function getItem(label, key, icon) {
   return {
@@ -69,16 +71,26 @@ const renderImage = (author) => {
 };
 
 const getRandomImage = () => {
-  const images = [image1, image2, image3, image4, image5, image6, image7, image8, image9, image10];
+  const images = [
+    image1,
+    image2,
+    image3,
+    image4,
+    image5,
+    image6,
+    image7,
+    image8,
+    image9,
+    image10,
+  ];
   const randomIndex = Math.floor(Math.random() * images.length);
   return images[randomIndex];
 };
 
-
 const items = [
   getItem("My List", "1", <UserOutlined />),
   getItem("All", "2", <HeartOutlined />),
-  getItem("Daily", "3", <UserOutlined />),
+  getItem("Daily", "3", <TableOutlined />),
   getItem("Politics", "4", <RadarChartOutlined />),
   getItem("Sports", "5", <TrophyOutlined />),
   getItem("Technology", "6", <DesktopOutlined />),
@@ -94,8 +106,9 @@ const items = [
 ];
 
 const Board = () => {
-  const [collapsed, setCollapsed] = useState(false);                            
+  const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
 
   const handleFloatButtonClick = () => {
     navigate("/makeboard");
@@ -108,7 +121,13 @@ const Board = () => {
   const [commentCounts, setCommentCounts] = useState({});
   const [likesCount, setLikesCount] = useState({});
 
+  const showDrawer = () => {
+    setOpen(true);
+  };
 
+  const onClose = () => {
+    setOpen(false);
+  };
 
   // 게시글 불러오기
   const fetchXfilterList = async () => {
@@ -124,8 +143,6 @@ const Board = () => {
       console.error("Error fetching xfilters:", error);
     }
   };
-
-
 
   // 게시글 검색
   const handleSearch = async () => {
@@ -148,7 +165,6 @@ const Board = () => {
       console.error("Error fetching filtered xfilters:", error);
     }
   };
-
 
   // 카테고리별 게시글 불러오기
   const handleCategoryChange = async (category) => {
@@ -191,7 +207,6 @@ const Board = () => {
     }
   };
 
-
   // 로그인 사용자 정보 로컬스토리지에 저장
   const fetchUserInfoAndSaveToLocalStorage = async () => {
     try {
@@ -209,7 +224,6 @@ const Board = () => {
       console.error("사용자 정보를 가져오는 데 문제가 발생했습니다:", error);
     }
   };
-
 
   // 팔로우 기능
   const handleFollow = async (author) => {
@@ -245,7 +259,6 @@ const Board = () => {
     }
   };
 
-
   // 팔로우 목록 불러오기
   const fetchFollowingUsers = async () => {
     try {
@@ -270,7 +283,6 @@ const Board = () => {
     }
   };
 
-
   // 팔로우중인 사용자가 작성한 게시글 불러오기
   const fetchPostsFromUser = async (username) => {
     try {
@@ -288,7 +300,6 @@ const Board = () => {
       console.error("Error fetching posts from user:", error);
     }
   };
-
 
   // 게시글별 댓글 개수 표시
   const fetchCommentCounts = async () => {
@@ -311,7 +322,6 @@ const Board = () => {
       console.error("Error fetching comment counts:", error);
     }
   };
-
 
   // 게시글별 좋아요 개수 표시
   const fetchLikesCount = async () => {
@@ -341,14 +351,14 @@ const Board = () => {
     navigate("/");
   };
 
-
   useEffect(() => {
     fetchXfilterList();
     fetchUserInfoAndSaveToLocalStorage();
     fetchFollowingUsers();
     fetchCommentCounts();
     fetchLikesCount();
-    const storedFollowStatus = JSON.parse(localStorage.getItem("followStatus")) || {};
+    const storedFollowStatus =
+      JSON.parse(localStorage.getItem("followStatus")) || {};
     setFollowStatus(storedFollowStatus);
   }, []);
 
@@ -361,88 +371,33 @@ const Board = () => {
     fetchLikesCount();
   }, [xfilterList]);
 
-
-
   const categoryColors = {
-    "Daily": "#FEE7E4",
-    "Politics": "#E4FBEF",
-    "Sports": "#E0F3FB",
-    "Technology": "#FEF6E7",
-    "Entertainment": "#E9D9FF",
+    Daily: "#FEE7E4",
+    Politics: "#E4FBEF",
+    Sports: "#E0F3FB",
+    Technology: "#FEF6E7",
+    Entertainment: "#E9D9FF",
     "Science and Nature": "#FFFCD9",
-    "Gaming": "#FFD9FD",
+    Gaming: "#FFD9FD",
     "Books and Literature": "#BFE6F5",
     "Health and Fitness": "#E3F0D8",
-    "Travel": "#C7D0F1",
+    Travel: "#C7D0F1",
     "Food and Cooking": "#F1E3C7",
     "Art and Creativity": "#DDDDDD",
-    "Technology Help/Support": "#D2EEFF"
+    "Technology Help/Support": "#D2EEFF",
   };
 
-
   return (
-    <Layout
-      style={{
-        minHeight: "100vh",
-      }}
-    >
+    <Layout className={styles.boardbase}>
       <FloatButton
-        style={{
-          marginBottom: 40,
-          marginRight: 250,
-          width: 60,
-          height: 60,
-        }}
+        className={styles.flotbutton}
         type="primary"
         onClick={handleFloatButtonClick}
         tooltip={<div>새 게시물 작성</div>}
       />
-      <div
-        style={{
-          width: collapsed ? "80px" : "250px",
-          height: "100vh",
-          backgroundColor: "#001529",
-          position: "fixed",
-          left: 0,
-        }}
-      >
-        <Link to="/board">
-          <img src={logo} alt="Logo" className={styles.logo} />
-        </Link>
-        <Menu
-          className={styles.menu}
-          theme="dark"
-          defaultSelectedKeys={["1"]}
-          mode="inline"
-          selectedKeys={[selectedCategory]}
-        >
-          {items.map((item) => (
-            <Menu.Item
-              style={{
-                width: 250
-              }}
-              key={item.key}
-              icon={item.icon}
-              onClick={() => handleCategoryChange(item.label)}
-            >
-              {item.label}
-            </Menu.Item>
-          ))}
-        </Menu>
-      </div>
-      <Layout
-        style={{
-          marginLeft: collapsed ? 80 : 200,
-          marginRight: 200,
-          height: "100vh",
-        }}
-      >
-        <Header
-          style={{
-            backgroundColor: "#ffff",
-            width: "100%",
-          }}
-        >
+      
+      <Layout className={styles.boardlayout}>
+        <Header className={styles.boardheader}>
           <div className={styles.headerContainer}>
             <div className={styles.searchContainer}>
               <input
@@ -464,28 +419,38 @@ const Board = () => {
           </div>
         </Header>
 
-        <Content
-          style={{
-            marginLeft: 30,
-            overflow: "auto",
-            width: "100%",
-            height: "calc(100vh - 64px)",
-            paddingTop: 20,
-          }}
-        >
+        <Content className={styles.boardcardcont}>
           <Row>
+          <div className={styles.board}>
+        <Link to="/board">
+          <img src={logo} alt="Logo" className={styles.logo} />
+        </Link>
+
+        <Menu
+          className={styles.menu}
+          theme="dark"
+          defaultSelectedKeys={["1"]}
+          mode="inline"
+          selectedKeys={[selectedCategory]}
+        >
+          {items.map((item) => (
+            <Menu.Item
+              className={styles.menuitem}
+              key={item.key}
+              icon={item.icon}
+              onClick={() => handleCategoryChange(item.label)}
+            >
+              {item.label}
+            </Menu.Item>
+          ))}
+        </Menu>
+
+      </div>
             {xfilterList.map((xfilter, index) => (
-              <Col
-                span={12}
-                key={xfilter.id}
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  width: "auto",
-                }}
-              >
+              <Col span={12} key={xfilter.id} className={styles.cardcol}>
+                
                 <Card
-                  className={styles.cardHoverEffect}
+                  className={`${styles.cardHoverEffect} ${styles.cardstyle}`}
                   onClick={() => navigate(`/detail/${xfilter.id}`)}
                   title={
                     <div
@@ -494,7 +459,6 @@ const Board = () => {
                         justifyContent: "space-between",
                         alignItems: "center",
                         width: "100%",
-
                       }}
                     >
                       <div className={styles.image_container}>
@@ -503,10 +467,11 @@ const Board = () => {
                           alt={`Image ${index + 1}`}
                         />
                       </div>
-                      <div className={styles.xfilter_author}>{xfilter.author}</div>
-                      <tr />
-                      <p
-                        className={styles.cardcate}>{xfilter.category}</p>
+                      <div className={styles.xfilter_author}>
+                        {xfilter.author}
+                      </div>
+                      <tr /><tr />
+                      <p className={styles.cardcate}>{xfilter.category}</p>
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
@@ -519,20 +484,23 @@ const Board = () => {
                     </div>
                   }
                   style={{
-                    marginBottom: 30,
-                    width: 500,
-                    height: 400,
-                    backgroundColor: categoryColors[xfilter.category] || "#ffffff",
+                    backgroundColor:
+                      categoryColors[xfilter.category] || "#ffffff",
                   }}
                 >
-                  <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "space-between",
+                    }}
+                  >
                     <div style={{ height: 120 }}>
                       {xfilter.content.length > 20 ? (
                         <p>{`${xfilter.content.substring(0, 50)}...`}</p>
                       ) : (
                         <p>{xfilter.content}</p>
                       )}
-
                     </div>
                     <div className={styles.commentcounts}>
                       <p>
@@ -544,7 +512,8 @@ const Board = () => {
                         )}
                         {commentCounts[xfilter.id] > 1 && (
                           <>
-                            <FontAwesomeIcon icon={faComment} /> {commentCounts[xfilter.id]} 댓글
+                            <FontAwesomeIcon icon={faComment} />{" "}
+                            {commentCounts[xfilter.id]} 댓글
                           </>
                         )}
                         <br />
@@ -563,25 +532,16 @@ const Board = () => {
         </Content>
         <Footer
           style={{
-            width: "auto",
+            width: "100%",
             textAlign: "center",
           }}
         >
           ⓒ XNS Company. All Rights Reserved.
         </Footer>
       </Layout>
-      <div
-        style={{
-          width: collapsed ? "80px" : "200px",
-          height: "100vh",
-          backgroundColor: "#001529",
-          position: "fixed",
-          right: 0,
-        }}
-      >
-        <p className={styles.siderp}>
-          팔로우목록 ({followingUsers.length})
-        </p>
+      <div className={styles.boardfollow}>
+
+        <p className={styles.siderp}>팔로우목록 ({followingUsers.length})</p>
         <ul>
           {followingUsers.map((user) => (
             <li key={user.id} className={styles.followli} data-icon="🤍">
