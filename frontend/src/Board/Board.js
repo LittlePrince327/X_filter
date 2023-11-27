@@ -43,7 +43,7 @@ import image10 from "../images/image10.png";
 
 
 const BASE_URL = "http://localhost:8000/";
-const { Header, Content, Footer } = Layout;                     
+const { Header, Content, Footer } = Layout;
 
 function getItem(label, key, icon) {
   return {
@@ -94,7 +94,7 @@ const items = [
 ];
 
 const Board = () => {
-  const [collapsed, setCollapsed] = useState(false);                            
+  const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
 
   const handleFloatButtonClick = () => {
@@ -107,6 +107,15 @@ const Board = () => {
   const [followingUsers, setFollowingUsers] = useState([]);
   const [commentCounts, setCommentCounts] = useState({});
   const [likesCount, setLikesCount] = useState({});
+  const [showFollowers, setShowFollowers] = useState(false);
+  const [showFollowing, setShowFollowing] = useState(false);
+  const [followers, setFollowers] = useState([]);
+  const [showFollowList, setShowFollowList] = useState(true);
+
+  const toggleFollowList = (showFollowing) => {
+    setShowFollowList(showFollowing);
+  };
+
 
 
 
@@ -250,14 +259,21 @@ const Board = () => {
   const fetchFollowingUsers = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(`${BASE_URL}api/get_following_users/`, {
+      const followingResponse = await axios.get(`${BASE_URL}api/get_following_users/`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(response.data);
-      setFollowingUsers(response.data);
-      const updatedFollowStatus = response.data.reduce(
+      setFollowingUsers(followingResponse.data);
+
+      const followersResponse = await axios.get(`${BASE_URL}api/get_followers/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setFollowers(followersResponse.data);
+
+      const updatedFollowStatus = followingResponse.data.reduce(
         (status, user) => ({
           ...status,
           [user.full_name]: true,
@@ -266,9 +282,12 @@ const Board = () => {
       );
       setFollowStatus(updatedFollowStatus);
     } catch (error) {
-      console.error("Error fetching following users:", error);
+      console.error("Error fetching following and followers:", error);
     }
   };
+
+
+
 
 
   // 팔로우중인 사용자가 작성한 게시글 불러오기
@@ -579,25 +598,53 @@ const Board = () => {
           right: 0,
         }}
       >
-        <p className={styles.siderp}>
-          팔로우목록 ({followingUsers.length})
-        </p>
-        <ul>
-          {followingUsers.map((user) => (
-            <li key={user.id} className={styles.followli} data-icon="🤍">
-              <a
-                className={styles.followa}
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  fetchPostsFromUser(user.full_name, user.id);
-                }}
-              >
-                {user.full_name}
-              </a>
-            </li>
-          ))}
-        </ul>
+        <p className={styles.siderp}>팔로우 목록</p>
+        <div className={styles.siderButtons}>
+          <button onClick={() => toggleFollowList(true)}>Following<br/>({followingUsers.length})</button>
+          <button onClick={() => toggleFollowList(false)}>Follower<br/>({followers.length})</button>
+        </div>
+        {showFollowList && (
+          <>
+            <p className={styles.siderp}>Following</p>
+            <ul>
+              {followingUsers.map((user) => (
+                <li key={user.id} className={styles.followli} data-icon="🤍">
+                  <a
+                    className={styles.followa}
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      fetchPostsFromUser(user.full_name, user.id);
+                    }}
+                  >
+                    {user.full_name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+        {!showFollowList && (
+          <>
+            <p className={styles.siderp}>Follwers</p>
+            <ul>
+              {followers.map((follower) => (
+                <li key={follower.id} className={styles.followli} data-icon="🤍">
+                  <a
+                    className={styles.followa}
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      fetchPostsFromUser(follower.full_name, follower.id);
+                    }}
+                  >
+                    {follower.full_name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
       </div>
     </Layout>
   );

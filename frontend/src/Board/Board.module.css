@@ -176,6 +176,20 @@
   font-family: 'HSBombaram21-Regular';
 }
 
+.siderButtons button {
+  width: 100px; /* Adjust the width as needed */
+  background-color: #8ebfff;
+  color: #fff;
+  border-radius: 5px;
+  border: 1px solid #8ebfff;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.siderButtons button:hover {
+  background-color: #0050b3; /* Change the color on hover as needed */
+}
+
 @font-face {
   font-family: 'HSBombaram21-Regular';
   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/HSBombaram21-Regular.woff2') format('woff2');

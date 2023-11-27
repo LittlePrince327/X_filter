@@ -120,3 +120,15 @@ def get_following_users(request):
         return Response(serializer.data)
     except Exception as e:
         return Response({'message': 'Error', 'error': str(e)})
+    
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_followers(request):
+    try:
+        user = request.user
+        followers = user.followers.all()
+        serializer = CustomUserSerializer(followers, many=True)
+        return Response(serializer.data)
+    except Exception as e:
+        return Response({'message': 'Error', 'error': str(e)})
