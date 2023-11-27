@@ -507,7 +507,7 @@ const Makeboard = () => {
           right: 0,
         }}
       >
-        <p className={styles.siderp}>팔로우목록({followingUsers.length})</p>
+        <p className={styles.siderp}>팔로우목록</p>
         <ul>
           {followingUsers.map((user) => (
             <li key={user.id} className={styles.followli} data-icon="🤍">

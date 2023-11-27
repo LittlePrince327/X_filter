@@ -14,8 +14,7 @@ import {
   CarOutlined,
   CoffeeOutlined,
   HighlightOutlined,
-  BugOutlined,
-  EllipsisOutlined 
+  BugOutlined
 } from "@ant-design/icons";
 import {
   FloatButton,
@@ -77,7 +76,7 @@ const getRandomImage = () => {
 
 
 const items = [
-  getItem("My List", "1", <EllipsisOutlined />),
+  getItem("My List", "1", <UserOutlined />),
   getItem("All", "2", <HeartOutlined />),
   getItem("Daily", "3", <UserOutlined />),
   getItem("Politics", "4", <RadarChartOutlined />),

@@ -24,7 +24,7 @@
 }
 
 .menu {
-  width: 250px;
+  width: 200px;
 }
 
 .searchBtn {
@@ -166,7 +166,7 @@
 }
 
 .logo {
-  margin-left: 60px;
+  margin-left: 40px;
   height: 70px; /* 로고 이미지의 높이 */
 }
 .siderp {
@@ -339,24 +339,24 @@ ul li::before {
 }
 .commentlike:hover {
   border-radius: 5px;
-  border: 1px solid #fff2a8;
-  background-color: #fff2a8; /* 마우스 오버 시의 배경색 */
-  color: rgb(0, 0, 0); /* 마우스 오버 시의 글자색 */
+  border: 1px solid #356aa1;
+  background-color: #356aa1; /* 마우스 오버 시의 배경색 */
+  color: white; /* 마우스 오버 시의 글자색 */
 }
 
 .reportBtn {
   display: flex;
   justify-content: flex-end; /* Aligns children (button) to the right */
-  background-color: #ff7777;
-  color: #ffffff;
+  background-color: #878686;
+  color: #000000;
   border-radius: 5px;
-  border: 1px solid #ff7777;
+  border: 1px solid #878686;
 }
 .reportBtn:hover {
   border-radius: 5px;
-  border: 1px solid #fab1b1;
-  background-color: #fab1b1; /* 마우스 오버 시의 배경색 */
-  color: rgb(116, 111, 111); /* 마우스 오버 시의 글자색 */
+  border: 1px solid #35a15d;
+  background-color: #35a15d; /* 마우스 오버 시의 배경색 */
+  color: white; /* 마우스 오버 시의 글자색 */
 }
 
 
@@ -375,20 +375,4 @@ ul li::before {
   border: 1px solid rgb(177, 130, 130);
   background-color: rgb(177, 130, 130); /* 마우스 오버 시의 배경색 */
   color: white; /* 마우스 오버 시의 글자색 */
-}
-
-.reportBtncom{
-  margin-bottom: 5px;
-  display: flex;
-  justify-content: flex-end; /* Aligns children (button) to the right */
-  background-color: #ff7777;
-  color: #ffffff;
-  border-radius: 5px;
-  border: 1px solid #ff7777;
-}
-.reportBtncom:hover {
-  border-radius: 5px;
-  border: 1px solid #fab1b1;
-  background-color: #fab1b1; /* 마우스 오버 시의 배경색 */
-  color: rgb(116, 111, 111); /* 마우스 오버 시의 글자색 */
 }
