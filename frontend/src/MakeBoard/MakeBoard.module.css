@@ -310,3 +310,17 @@ padding: 10px 0; /* Optional padding, adjust as needed */
   border: 1px solid #6ca7e5;
   border-radius: 10%;
   }
+
+.siderButtons button {
+    width: 100px; /* Adjust the width as needed */
+    background-color: #8ebfff;
+    color: #fff;
+    border-radius: 5px;
+    border: 1px solid #8ebfff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+.siderButtons button:hover {
+    background-color: #0050b3; /* Change the color on hover as needed */
+  }

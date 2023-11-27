@@ -117,8 +117,6 @@ const Board = () => {
   };
 
 
-
-
   // 게시글 불러오기
   const fetchXfilterList = async () => {
     try {
@@ -287,9 +285,6 @@ const Board = () => {
   };
 
 
-
-
-
   // 팔로우중인 사용자가 작성한 게시글 불러오기
   const fetchPostsFromUser = async (username) => {
     try {
@@ -359,7 +354,6 @@ const Board = () => {
     localStorage.clear();
     navigate("/");
   };
-
 
   useEffect(() => {
     fetchXfilterList();

@@ -376,3 +376,17 @@ ul li::before {
   background-color: rgb(177, 130, 130); /* 마우스 오버 시의 배경색 */
   color: white; /* 마우스 오버 시의 글자색 */
 }
+
+.siderButtons button {
+  width: 100px; /* Adjust the width as needed */
+  background-color: #8ebfff;
+  color: #fff;
+  border-radius: 5px;
+  border: 1px solid #8ebfff;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.siderButtons button:hover {
+  background-color: #0050b3; /* Change the color on hover as needed */
+}

@@ -50,7 +50,6 @@ function getItem(label, key, icon) {
 const DetailBoard = () => {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
-
   const [xfilterList, setXfilterList] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -62,9 +61,12 @@ const DetailBoard = () => {
   const [category, setCategory] = useState(null);
   const [modalVisibleForBoard, setModalVisibleForBoard] = useState(false);
   const [modalVisibleForComment, setModalVisibleForComment] = useState(false);
+  const [followers, setFollowers] = useState([]);
+  const [showFollowList, setShowFollowList] = useState(true);
 
-
-
+  const toggleFollowList = (showFollowing) => {
+    setShowFollowList(showFollowing);
+  };
 
   // 게시글 데이터 불러오기
   const fetchXfilterList = async () => {
@@ -122,15 +124,21 @@ const DetailBoard = () => {
   const fetchFollowingUsers = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(`${BASE_URL}api/get_following_users/`, {
+      const followingResponse = await axios.get(`${BASE_URL}api/get_following_users/`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(response.data);
-      setFollowingUsers(response.data);
+      setFollowingUsers(followingResponse.data);
 
-      const updatedFollowStatus = response.data.reduce(
+      const followersResponse = await axios.get(`${BASE_URL}api/get_followers/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setFollowers(followersResponse.data);
+
+      const updatedFollowStatus = followingResponse.data.reduce(
         (status, user) => ({
           ...status,
           [user.full_name]: true,
@@ -139,7 +147,7 @@ const DetailBoard = () => {
       );
       setFollowStatus(updatedFollowStatus);
     } catch (error) {
-      console.error("Error fetching following users:", error);
+      console.error("Error fetching following and followers:", error);
     }
   };
 
@@ -709,23 +717,53 @@ const DetailBoard = () => {
           right: 0,
         }}
       >
-        <p className={styles.siderp}>팔로우목록</p>
-        <ul>
-          {followingUsers.map((user) => (
-            <li key={user.id} className={styles.followli} data-icon="🤍">
-              <a
-                className={styles.followa}
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  fetchPostsFromUser(user.full_name, user.id);
-                }}
-              >
-                {user.full_name}
-              </a>
-            </li>
-          ))}
-        </ul>
+        <p className={styles.siderp}>팔로우 목록</p>
+        <div className={styles.siderButtons}>
+          <button onClick={() => toggleFollowList(true)}>Following<br />({followingUsers.length})</button>
+          <button onClick={() => toggleFollowList(false)}>Follower<br />({followers.length})</button>
+        </div>
+        {showFollowList && (
+          <>
+            <p className={styles.siderp}>Following</p>
+            <ul>
+              {followingUsers.map((user) => (
+                <li key={user.id} className={styles.followli} data-icon="🤍">
+                  <a
+                    className={styles.followa}
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      fetchPostsFromUser(user.full_name, user.id);
+                    }}
+                  >
+                    {user.full_name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+        {!showFollowList && (
+          <>
+            <p className={styles.siderp}>Follwers</p>
+            <ul>
+              {followers.map((follower) => (
+                <li key={follower.id} className={styles.followli} data-icon="🤍">
+                  <a
+                    className={styles.followa}
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      fetchPostsFromUser(follower.full_name, follower.id);
+                    }}
+                  >
+                    {follower.full_name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
       </div>
     </Layout>
   );

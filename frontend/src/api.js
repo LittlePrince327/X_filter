@@ -25,13 +25,11 @@ async function postBoard(content, author, create_date, category, userToken) {
     create_date: create_date,
     category: category,  
   };
-
   const headerOption = {
     headers: {
       Authorization: `Bearer ${userToken}`,
     },
   };
-
   const response = await axios.post(`${BASE_URL}/board/xfilter/create`, body, headerOption);
   const data = response.data;
   return data;
