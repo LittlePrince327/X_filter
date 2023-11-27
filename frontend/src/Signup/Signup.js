@@ -18,6 +18,7 @@ function Signup() {
   const [passwordMismatch, setPasswordMismatch] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [usernameError, setUsernameError] = useState(false);
+  const [signupError, setSignupError] = useState(null);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -56,15 +57,15 @@ function Signup() {
       setPasswordMismatch(true);
       return;
     }
-
+  
     if (emailError || usernameError) {
       return;
     }
-
+  
     try {
       const response = await axios.post('http://localhost:8000/api/user-signup/', formData);
       console.log('API response:', response);
-
+  
       if (response.status === 201) {
         console.log('Sign up successful!', response.data);
         navigate('/');
@@ -73,8 +74,15 @@ function Signup() {
       }
     } catch (error) {
       console.error('Sign up failed:', error);
+  
+      if (error.response && error.response.data && error.response.data.error === 'User with this full_name already exists.') {
+        setSignupError('이미 사용 중인 이름입니다.');
+      } else {
+        setSignupError('회원가입 중 오류가 발생했습니다.');
+      }
     }
   };
+  
 
   useEffect(() => {
     if (passwordMismatch) {
@@ -148,6 +156,7 @@ function Signup() {
           {usernameError && <p className={styles.errorMessage}>이메일 형식의 닉네임은 사용할 수 없습니다.</p>}
           {passwordMismatch && <p className={styles.errorMessage}>비밀번호가 일치하지 않습니다.</p>}
           {emailError && <p className={styles.errorMessage}>유효하지 않은 이메일 형식입니다.</p>}
+          {signupError && <p className={styles.errorMessage}>이미 사용중인 이름입니다.</p>}
           <button className={`joinInput mt-20 ${styles.button}`} type="button" onClick={handleSignup}>
             회원가입
           </button>

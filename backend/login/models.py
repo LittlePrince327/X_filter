@@ -9,6 +9,9 @@ class CustomUserManager(BaseUserManager):
         # 이메일이 없으면 에러 발생
         if not email:
             raise ValueError('The Email field must be set')
+        # full_name이 이미 존재하는지 확인
+        if CustomUser.objects.filter(full_name__iexact=full_name).exists():
+            raise ValueError('User with this full_name already exists.')
         # 이메일을 소문자로 통일
         email = self.normalize_email(email)
         # 사용자 모델을 생성하고 필드 값을 설정
