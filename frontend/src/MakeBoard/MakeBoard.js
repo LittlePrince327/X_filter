@@ -34,6 +34,7 @@ import styles from "./MakeBoard.module.css";
 import { get_user_info, postBoard } from "../api";
 import logo from "./logo100.png";
 import Marquee from "react-fast-marquee";
+import { Modal } from "antd";
 
 const { Paragraph } = Typography;
 const { CheckableTag } = Tag;
@@ -91,16 +92,33 @@ const Makeboard = () => {
   const [userToken, setUserToken] = useState("");
   const navigate = useNavigate();
   const [selectedTags, setSelectedTags] = useState([]);
+  const [collapsed, setCollapsed] = useState(false);
+  const [xfilterList, setXfilterList] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [followStatus, setFollowStatus] = useState({});
+  const [followingUsers, setFollowingUsers] = useState([]);
+  const [followers, setFollowers] = useState([]);
+  const [showFollowList, setShowFollowList] = useState(true);
+  const [loadingFilter, setLoadingFilter] = useState(false);
+  const [filteredText, setFilteredText] = useState("");
 
+
+  // 카테고리 선택
   const handleChange = (tag, checked) => {
-    const nextSelectedTags = checked
-      ? [...selectedTags, tag]
-      : selectedTags.filter((t) => t !== tag);
+    const nextSelectedTags = checked ? [tag] : [];
     console.log("You are interested in: ", nextSelectedTags);
     setSelectedTags(nextSelectedTags);
   };
 
 
+  // 팔로잉 리스트
+  const toggleFollowList = (showFollowing) => {
+    setShowFollowList(showFollowing);
+  };
+
+
+  // 게시글 게시하기
   const handlepostBoard = async (event) => {
     event.preventDefault();
     const content = event.target.content.value;
@@ -123,18 +141,27 @@ const Makeboard = () => {
   };
 
 
-  const handleBoardFilterCreate = async (event) => {
+  // 게시글 필터링하기
+  const handleBoardFilter = async (event) => {
     event.preventDefault();
     const form = document.getElementById('filterForm');
 
     if (form && form.elements.content) {
       const content = form.elements.content.value;
-
+      let infoModal;
       try {
         setLoadingFilter(true);
+        infoModal = Modal.info({
+          title: "Filtering in Progress",
+          content: "Please wait while we filter the content...",
+          maskClosable: false,
+        });
+
         const response = await axios.post(
           `${BASE_URL}/board/xfilter/filter/`,
-          { content: content },
+          {
+            content: content,
+          },
           {
             headers: {
               Authorization: `Bearer ${userToken}`,
@@ -142,12 +169,16 @@ const Makeboard = () => {
             },
           }
         );
-
         console.log(response);
+        setFilteredText(response.data.result);
       } catch (error) {
         console.error("게시물 제출 오류:", error);
-      } finally {
+      }
+      finally {
         setLoadingFilter(false);
+        if (infoModal) {
+          infoModal.destroy();
+        }
       }
     } else {
       console.error("Form or textarea not found");
@@ -155,22 +186,7 @@ const Makeboard = () => {
   };
 
 
-
-  const [collapsed, setCollapsed] = useState(false);
-  const [xfilterList, setXfilterList] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const [followStatus, setFollowStatus] = useState({});
-  const [followingUsers, setFollowingUsers] = useState([]);
-  const [commentCounts, setCommentCounts] = useState({});
-  const [followers, setFollowers] = useState([]);
-  const [showFollowList, setShowFollowList] = useState(true);
-  const [loadingFilter, setLoadingFilter] = useState(false);
-
-  const toggleFollowList = (showFollowing) => {
-    setShowFollowList(showFollowing);
-  };
-
+  // 게시글 불러오기
   const fetchXfilterList = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -185,6 +201,8 @@ const Makeboard = () => {
     }
   };
 
+
+  // 검색하기
   const handleSearch = async () => {
     try {
       if (searchTerm.trim() !== "") {
@@ -205,6 +223,7 @@ const Makeboard = () => {
       console.error("Error fetching filtered xfilters:", error);
     }
   };
+
 
   const handleCategoryChange = async (category) => {
     try {
@@ -237,6 +256,7 @@ const Makeboard = () => {
     }
   };
 
+  
   const fetchUserInfoAndSaveToLocalStorage = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -256,43 +276,6 @@ const Makeboard = () => {
     }
   };
 
-  const handleFollow = async (author) => {
-    try {
-      const token = localStorage.getItem("token");
-      const follower_id = localStorage.getItem("author");
-
-      if (!token) {
-        console.log("User not logged in");
-        return;
-      }
-
-      const response = await axios.post(
-        `${BASE_URL}api/follow/`,
-        { following_id: author, follower_id: follower_id },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (response.data.message === "Success") {
-        const isFollowing = response.data.is_following;
-
-        setFollowStatus((prevStatus) => ({
-          ...prevStatus,
-          [author]: isFollowing,
-        }));
-
-        fetchXfilterList();
-        console.log(isFollowing ? "Followed" : "Unfollowed");
-      } else {
-        console.error("Follow request failed");
-      }
-    } catch (error) {
-      console.error("Error handling follow:", error);
-    }
-  };
 
   // 팔로우 목록 불러오기
   const fetchFollowingUsers = async () => {
@@ -325,6 +308,7 @@ const Makeboard = () => {
     }
   };
 
+
   const fetchPostsFromUser = async (username, userId) => {
     try {
       const token = localStorage.getItem("token");
@@ -342,6 +326,7 @@ const Makeboard = () => {
     }
   };
 
+
   // 로그아웃시 로컬스토리지 데이터 초기화
   const handleLogout = () => {
     localStorage.clear();
@@ -357,6 +342,7 @@ const Makeboard = () => {
       JSON.parse(localStorage.getItem("followStatus")) || {};
     setFollowStatus(storedFollowStatus);
   }, []);
+
 
   useEffect(() => {
     localStorage.setItem("followStatus", JSON.stringify(followStatus));
@@ -432,7 +418,6 @@ const Makeboard = () => {
             </div>
           </div>
         </Header>
-
         <Content
           style={{
             overflow: "auto",
@@ -480,7 +465,7 @@ const Makeboard = () => {
           >
             <form id="filterForm" onSubmit={handlepostBoard} style={{ marginRight: "20px" }}>
               <div className={styles.posttitle}>
-                어떤이야기를 들려주실건가요?
+                어떤 이야기를 들려주실건가요?
               </div>
               <div className={styles.textarea}>
                 <TextArea
@@ -505,12 +490,10 @@ const Makeboard = () => {
               <Button
                 type="primary"
                 danger
-                loading={loadingFilter} 
-                onClick={(event) => handleBoardFilterCreate(event)}
+                onClick={(event) => handleBoardFilter(event)}
               >
                 필터링하기
               </Button>
-
               {/* <Button type="primary" disabled>
                 게시불가
               </Button>          */}

@@ -70,6 +70,7 @@ def get_user_info(request):
         return Response({'error': '사용자를 찾을 수 없습니다.'}, status=404)
 
 
+# 팔로우
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def follow_user(request):
@@ -110,6 +111,8 @@ def follow_user(request):
     except Exception as e:
         return Response({'message': 'Error', 'error': str(e)})
     
+
+# 팔로우 정보 불러오기    
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_following_users(request):
@@ -122,6 +125,7 @@ def get_following_users(request):
         return Response({'message': 'Error', 'error': str(e)})
     
 
+# 팔로워 정보 불러오기
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_followers(request):
