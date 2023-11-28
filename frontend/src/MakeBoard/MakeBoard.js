@@ -122,17 +122,19 @@ const Makeboard = () => {
     }
   };
 
+
   const handleBoardFilterCreate = async (event) => {
     event.preventDefault();
     const form = document.getElementById('filterForm');
+
     if (form && form.elements.content) {
       const content = form.elements.content.value;
+
       try {
+        setLoadingFilter(true);
         const response = await axios.post(
           `${BASE_URL}/board/xfilter/filter/`,
-          {
-            content: content,
-          },
+          { content: content },
           {
             headers: {
               Authorization: `Bearer ${userToken}`,
@@ -140,15 +142,18 @@ const Makeboard = () => {
             },
           }
         );
+
         console.log(response);
       } catch (error) {
         console.error("게시물 제출 오류:", error);
+      } finally {
+        setLoadingFilter(false);
       }
     } else {
       console.error("Form or textarea not found");
     }
   };
-  
+
 
 
   const [collapsed, setCollapsed] = useState(false);
@@ -160,6 +165,7 @@ const Makeboard = () => {
   const [commentCounts, setCommentCounts] = useState({});
   const [followers, setFollowers] = useState([]);
   const [showFollowList, setShowFollowList] = useState(true);
+  const [loadingFilter, setLoadingFilter] = useState(false);
 
   const toggleFollowList = (showFollowing) => {
     setShowFollowList(showFollowing);
@@ -499,6 +505,7 @@ const Makeboard = () => {
               <Button
                 type="primary"
                 danger
+                loading={loadingFilter} 
                 onClick={(event) => handleBoardFilterCreate(event)}
               >
                 필터링하기
