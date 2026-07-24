@@ -36,12 +36,14 @@ SNS 게시글·캡션·채팅 문장에서 비속어를 탐지하고, 문맥을 
 - `AI_Model/beomi_KcELECTRA-base/`: KcELECTRA 비교 실험
 - `AI_Model/LSTM/`: 대체 문장 생성 및 BLEU 실험
 - `AI_Model/RNN/`: RNN 생성 실험
+- `backend/`: Django REST Framework 기반 SNS API
 - `evaluation/`: 분류·생성 모델 재평가 스크립트
 - `docs/XFILTER_METRICS.md`: 지표 출처와 재검증 기준
 
 ## 담당 역할
 
-- 비속어 데이터 전처리 및 중복 제거
+- AI 구조 설계 및 비속어 데이터 전처리
 - KcBERT·KcELECTRA·RandomForest·Logistic Regression 비교
 - KcBERT 분류 모델 학습·평가 및 혼동행렬 기반 오류 분석
-- RNN·LSTM 기반 대체 문장 생성 로직 설계
+- RNN·Ko-GPT2·ET5 등 대체 문장 생성 모델 실험
+- Django REST Framework 기반 게시글 API 구현
