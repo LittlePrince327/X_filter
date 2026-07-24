@@ -20,15 +20,22 @@ SNS 게시글·캡션·채팅 문장에서 비속어를 탐지하고, 문맥을 
 
 ## 프로젝트 결과 기록
 
-| 구분 | 모델 | 지표 |
-|---|---|---|
-| 비속어 분류 | KcBERT | Accuracy 0.96 |
-| 비속어 분류 | KcBERT | Precision 0.97 |
-| 비속어 분류 | KcBERT | Recall 0.95 |
-| 비속어 분류 | KcBERT | F1 0.96 |
-| 대체 문장 생성 | RNN·LSTM | BLEU 73 |
+### 분류 모델 비교
 
-위 수치는 기존 이력서·경력기술서 등 프로젝트 결과 기록을 기준으로 통일했습니다. 저장소에는 KcELECTRA·KcBERT를 포함한 중간 실험 노트북이 함께 있으며, 실험 조건에 따라 중간 출력값이 다를 수 있습니다. 동일 평가셋을 이용한 재평가 방법은 [`docs/XFILTER_METRICS.md`](docs/XFILTER_METRICS.md)와 `evaluation/` 스크립트에 정리했습니다.
+| 모델 | Accuracy | Precision | Recall | F1 |
+|---|---:|---:|---:|---:|
+| Logistic Regression | 0.90 | 0.92 | 0.87 | 0.87 |
+| RandomForest | 0.87 | 0.88 | 0.85 | 0.86 |
+| KcELECTRA | 0.85 | 0.87 | 0.89 | 0.88 |
+| **KcBERT** | **0.96** | **0.97** | **0.95** | **0.96** |
+
+KcBERT가 Accuracy와 F1에서 비교 모델 중 가장 높은 성능을 기록해 최종 분류 모델로 선정됐습니다. 혼동행렬을 활용해 예측 오류 유형을 함께 확인했습니다.
+
+### 대체 문장 생성
+
+- RNN·LSTM 기반 대체문 생성 결과: **BLEU 73**
+
+위 비교표와 BLEU 수치는 기존 이력서·포트폴리오 등 프로젝트 결과 기록을 기준으로 통일했습니다. 저장소에는 KcELECTRA·KcBERT를 포함한 중간 실험 노트북이 함께 있으며, 실험 조건에 따라 중간 출력값이 다를 수 있습니다. 동일 평가셋을 이용한 재평가 방법은 [`docs/XFILTER_METRICS.md`](docs/XFILTER_METRICS.md)와 `evaluation/` 스크립트에 정리했습니다.
 
 ## 프로젝트 구조
 
