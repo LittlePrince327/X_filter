@@ -53,4 +53,4 @@ KcBERT가 Accuracy와 F1에서 비교 모델 중 가장 높은 성능을 기록�
 - KcBERT·KcELECTRA·RandomForest·Logistic Regression 비교
 - KcBERT 분류 모델 학습·평가 및 혼동행렬 기반 오류 분석
 - RNN·Ko-GPT2·ET5 등 대체 문장 생성 모델 실험
-- Django REST Framework 기반 게시글 API 구현
+- Django REST API 엔드포인트 구현
