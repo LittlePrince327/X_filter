@@ -38,8 +38,7 @@ Positive class: **비속어(label 1)**
 
 ## 대체 표현 생성
 
-- 사전 기반 치환 로직 구현
-- RNN·LSTM 기반 대체 문장 생성 실험
+- 팀 코드에 사전 기반 치환 로직과 RNN·LSTM 기반 대체 문장 생성 실험이 존재합니다.
 - 과거 프로젝트 문서에는 **BLEU 73**이 기록되어 있으나, 최종 원시 예측·참조 문장과 평가 로그를 한 세트로 확보한 뒤 재평가가 필요합니다.
 
 ## 프로젝트 구조
@@ -54,8 +53,14 @@ Positive class: **비속어(label 1)**
 
 ## 담당 역할
 
-- AI 구조 설계 및 비속어 데이터 전처리 공동 수행
-- KcBERT·KcELECTRA·RandomForest·Logistic Regression 비교
-- KcBERT 분류 모델 학습·평가 및 혼동행렬 기반 오류 분석
-- RNN·Ko-GPT2·ET5 등 대체 문장 생성 모델 실험
-- Django REST API 엔드포인트 골격 구현
+- AI/Algorithm·Data Modeling 파트 공동 참여
+- `Sentence data.xlsx`·`word_list.xlsx` 직접 추가·정리 및 알고리즘 진행 기록
+- KcBERT·KcELECTRA·RandomForest·Logistic Regression 등 분류 모델 비교·실험 참여
+- RNN·LSTM·Ko-GPT2·ET5 등 대체 문장 생성 모델 비교·실험 참여
+- AI 브랜치 결과물을 `main`에 통합해 팀 최종 산출물 정리
+
+## 구현 경계
+
+- **KcBERT 지표는 팀 최종 모델 결과**이며, 보존된 최종 KcBERT 노트북의 개인 단독 원저작을 주장하지 않습니다.
+- 팀 서비스에는 Django REST API 필터 endpoint 골격이 존재하지만, 개인 직접 endpoint 구현으로 표기하지 않습니다.
+- 보존된 최종 `main` 기준 `/board/xfilter/filter/` 경로에서 KcBERT/RNN·LSTM 추론 runtime 연결은 확인되지 않았습니다.
