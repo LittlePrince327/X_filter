@@ -64,3 +64,7 @@ Positive class: **비속어(label 1)**
 - **KcBERT 지표는 팀 최종 모델 결과**이며, 보존된 최종 KcBERT 노트북의 개인 단독 원저작을 주장하지 않습니다.
 - 팀 서비스에는 Django REST API 필터 endpoint 골격이 존재하지만, 개인 직접 endpoint 구현으로 표기하지 않습니다.
 - 보존된 최종 `main` 기준 `/board/xfilter/filter/` 경로에서 KcBERT/RNN·LSTM 추론 runtime 연결은 확인되지 않았습니다.
+
+## Notion 프로젝트 소개
+
+- [X-filter / 비속어·욕설 필터링](https://app.notion.com/p/3cc3ec04c6ec81d6a08fca2e06860fef)
